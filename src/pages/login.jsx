@@ -42,9 +42,13 @@ export default function Login() {
 
       let friendlyError = 'Login failed. Please try again.';
       if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/popup-closed-by-user') {
-        friendlyError = 'Please allow popups for this site and try again.';
+        friendlyError = 'Sign-in popup was closed or blocked by browser.';
       } else if (error?.code === 'auth/cancelled-popup-request') {
         friendlyError = 'Sign-in cancelled. Please try again.';
+      } else if (error?.code === 'auth/unauthorized-domain') {
+        friendlyError = 'Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.';
+      } else if (error?.message) {
+        friendlyError = `Login error: ${error.message}`;
       }
 
       setError(friendlyError);
