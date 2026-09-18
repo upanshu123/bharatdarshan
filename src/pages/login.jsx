@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { auth, googleProvider } from '../config/firebaseConfig';
-import { onAuthStateChanged, signInWithPopup, signInAnonymously } from 'firebase/auth';
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, UserCheck, Sparkles } from 'lucide-react';
+import { MapPin, UserCheck } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,13 +11,40 @@ export default function Login() {
   const [error, setError] = useState('');
   const errorTimeoutRef = useRef(null);
 
+  // Configure Google Provider options for real-world reliability
+  useEffect(() => {
+    try {
+      googleProvider.setCustomParameters({ prompt: 'select_account' });
+    } catch (e) {
+      console.warn('Google provider custom parameters setup:', e);
+    }
+  }, []);
+
   // Get the intended path from Navbar state or query string
   const from = useMemo(() => {
     const query = new URLSearchParams(location.search);
     return location.state?.from || query.get('from') || '/';
   }, [location.search, location.state]);
 
-  // If user is already authenticated, leave login screen immediately.
+  // Handle redirect result if user came back from Google OAuth redirect page
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          navigate(from, { replace: true });
+        }
+      })
+      .catch((err) => {
+        console.error('Redirect result error:', err);
+        if (err?.code === 'auth/unauthorized-domain') {
+          setError('Domain unauthorized in Firebase Console. Please add bharatdarshan-seven.vercel.app under Authentication -> Settings -> Authorized Domains.');
+        } else if (err?.message) {
+          setError(`Google Sign-in error: ${err.message}`);
+        }
+      });
+  }, [from, navigate]);
+
+  // Check existing auth state
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -36,19 +63,29 @@ export default function Login() {
     setError('');
 
     try {
+      // Step 1: Try Popup Sign-in
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.warn('Google login popup failed/blocked, falling back to guest mode:', error);
-      try {
-        await signInAnonymously(auth);
-      } catch (anonErr) {
-        console.error('Anonymous login failed:', anonErr);
-        setError('Login unavailable right now. Please try again.');
-        if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
-        errorTimeoutRef.current = setTimeout(() => setError(''), 5000);
+    } catch (popupErr) {
+      console.warn('Popup login failed/blocked, initiating Google OAuth Redirect:', popupErr);
+
+      if (popupErr?.code === 'auth/unauthorized-domain') {
+        setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains under Firebase Authentication Settings.');
+        setLoading(false);
+        return;
       }
-    } finally {
-      setLoading(false);
+
+      // Step 2: Fallback to Redirect Sign-in for mobile browsers / popup-blockers
+      try {
+        await signInWithRedirect(auth, googleProvider);
+      } catch (redirectErr) {
+        console.error('Redirect sign-in error:', redirectErr);
+        if (redirectErr?.code === 'auth/unauthorized-domain') {
+          setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains under Firebase Authentication Settings.');
+        } else {
+          setError(redirectErr?.message || 'Google Login failed. Please try again or use Guest mode.');
+        }
+        setLoading(false);
+      }
     }
   };
 
@@ -59,7 +96,6 @@ export default function Login() {
       await signInAnonymously(auth);
     } catch (anonErr) {
       console.error('Guest login failed:', anonErr);
-      // Fallback navigation if even Firebase anonymous auth is disabled
       navigate(from, { replace: true });
     } finally {
       setLoading(false);
@@ -86,8 +122,8 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-white hover:bg-orange-50 disabled:opacity-50 text-slate-950 font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-4 shadow-xl transform hover:-translate-y-0.5 active:scale-95 text-sm"
           >
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-            {loading ? "Verifying..." : "Continue with Google"}
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-6 h-6" />
+            {loading ? "Connecting to Google..." : "Continue with Google"}
           </button>
 
           <button 
@@ -101,7 +137,9 @@ export default function Login() {
         </div>
 
         {error && (
-          <p className="mt-4 text-xs text-red-300 text-center">{error}</p>
+          <div className="mt-4 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-200 text-center leading-relaxed">
+            {error}
+          </div>
         )}
       </div>
     </div>
