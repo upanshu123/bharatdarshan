@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+          http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Homepage — highest priority -->
   <url>
     <loc>https://bharatdarshan-seven.vercel.app/</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Top Destinations page -->
   <url>
     <loc>https://bharatdarshan-seven.vercel.app/top-destinations</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Plan My Yatra — AI itinerary planner -->
   <url>
     <loc>https://bharatdarshan-seven.vercel.app/plan</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Privacy Policy -->
   <url>
     <loc>https://bharatdarshan-seven.vercel.app/privacy</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.4</priority>
   </url>
+
 </urlset>
