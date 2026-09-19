@@ -93,7 +93,7 @@ export default function Navbar() {
       await signOut(auth);
       setShowUserDropdown(false);
       setIsOpen(false);
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.error("Sign out error", error);
     }

@@ -41,27 +41,54 @@ const AppShell = () => {
       <main className="flex-grow">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<><RouteNavbar /><Home /></>} />
           <Route path="/login" element={<><RouteNavbar /><Login /></>} />
-          <Route path="/top-destinations" element={<><RouteNavbar /><TopDestinations /></>} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
 
-          {/* Search */}
-          <Route path="/search" element={<><RouteNavbar /><SearchResults /></>} />
-
-          {/* PlaceDetails */}
-          <Route path="/place/:id" element={<PlaceDetails />} />
-
-          {/* Protected Routes */}
+          {/* Protected Main Routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <RouteNavbar />
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/top-destinations"
+            element={
+              <ProtectedRoute>
+                <RouteNavbar />
+                <TopDestinations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <RouteNavbar />
+                <SearchResults />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/place/:id"
+            element={
+              <ProtectedRoute>
+                <PlaceDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/plan"
             element={
-              <>
+              <ProtectedRoute>
                 <RouteNavbar />
                 <PlanMyYatra />
-              </>
+              </ProtectedRoute>
             }
           />
-
           <Route
             path="/contact"
             element={
@@ -73,8 +100,6 @@ const AppShell = () => {
               </ProtectedRoute>
             }
           />
-          {/* Privacy/Consent Route (no navbar to reduce visual distraction) */}
-          <Route path="/privacy" element={<PrivacyPolicy />} />
         </Routes>
       </main>
 
