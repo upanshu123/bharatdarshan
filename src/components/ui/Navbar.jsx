@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { MapPin, Phone, UserCircle, Menu, X, LogOut, Compass, ChevronRight, Mail } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MapPin, Phone, UserCircle, Menu, X, LogOut, Compass, ChevronRight, Mail, ChevronDown, ShieldCheck } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
@@ -7,15 +7,16 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
-  
   const [showHelpline, setShowHelpline] = useState(false);
-  
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const auth = getAuth();
   const [user, setUser] = useState(null);
+  const dropdownRef = useRef(null);
 
-  // --- FIX 2.0: ROBUST CHECK ---
+  // Light page check for high-contrast navbar
   const isLightPage =
     location.pathname.includes('top-destinations') ||
     location.pathname.includes('/place/') ||
@@ -23,10 +24,10 @@ export default function Navbar() {
     location.pathname.includes('/plan') ||
     location.pathname.includes('/contact');
 
-  // Force "Dark Mode" (Black Text) if scrolled OR if on a light page
+  // Force Dark Mode (Black Text on White Bar) if scrolled OR on a light page
   const isDarkMode = scrolled || isLightPage;
 
-  // 1. Auth State Logic
+  // 1. Auth State Listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -34,23 +35,37 @@ export default function Navbar() {
     return () => unsubscribe();
   }, [auth]);
 
+  // Click outside to close user profile dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Lock scroll when overlay/modal is open
   useEffect(() => {
     const isOverlayOpen = isOpen || showHelpline;
     document.body.style.overflow = isOverlayOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isOpen, showHelpline]);
 
+  // Escape key handler
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key !== 'Escape') return;
       setIsOpen(false);
       setShowHelpline(false);
+      setShowUserDropdown(false);
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  // 2. Scroll Logic
+  // 2. Scroll Hide/Show Logic
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
@@ -76,6 +91,8 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      setShowUserDropdown(false);
+      setIsOpen(false);
       navigate('/');
     } catch (error) {
       console.error("Sign out error", error);
@@ -138,17 +155,98 @@ export default function Navbar() {
 
               <div className={`h-8 w-px transition-colors ${isDarkMode ? 'bg-slate-200' : 'bg-white/20'}`}></div>
 
+              {/* User Profile / Login Section */}
               {user ? (
-                <div className="flex items-center gap-4">
-                  <span className={`text-xs font-black uppercase tracking-widest ${isDarkMode ? 'text-slate-900' : 'text-white'}`}>
-                    {user.displayName?.split(' ')[0] || 'Yatri'}
-                  </span>
-                  <button 
-                    onClick={handleLogout}
-                    className={`p-2 rounded-full transition-all ${isDarkMode ? 'bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    className={`flex items-center gap-3 px-3 py-1.5 rounded-full transition-all border ${
+                      isDarkMode 
+                        ? 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-900' 
+                        : 'bg-white/15 hover:bg-white/25 border-white/20 text-white'
+                    }`}
                   >
-                    <LogOut size={16} />
+                    {user.photoURL ? (
+                      <img 
+                        src={user.photoURL} 
+                        alt={user.displayName || 'User Avatar'} 
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-500/50 shadow-sm"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white flex items-center justify-center font-black text-xs shadow-sm">
+                        {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'Y'}
+                      </div>
+                    )}
+
+                    <span className="text-xs font-black uppercase tracking-wider max-w-[110px] truncate">
+                      {user.displayName?.split(' ')[0] || (user.isAnonymous ? 'Guest' : 'Yatri')}
+                    </span>
+
+                    <ChevronDown size={14} className={`transition-transform duration-300 ${showUserDropdown ? 'rotate-180' : ''}`} />
                   </button>
+
+                  {/* Desktop User Profile Card Dropdown */}
+                  {showUserDropdown && (
+                    <div className="absolute right-0 top-full mt-3 w-80 bg-white rounded-3xl p-5 shadow-2xl border border-slate-100 z-[1100] animate-in fade-in slide-in-from-top-2 duration-200 text-slate-900">
+                      
+                      {/* User Info Header */}
+                      <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
+                        {user.photoURL ? (
+                          <img 
+                            src={user.photoURL} 
+                            alt="Profile" 
+                            className="w-12 h-12 rounded-2xl object-cover ring-2 ring-orange-500/30 shrink-0 shadow-md"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center font-black text-lg shrink-0 shadow-md">
+                            {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'Y'}
+                          </div>
+                        )}
+
+                        <div className="overflow-hidden">
+                          <h4 className="font-black text-sm text-slate-900 truncate">
+                            {user.displayName || (user.isAnonymous ? 'Guest Yatri' : 'Yatri Explorer')}
+                          </h4>
+                          <p className="text-xs text-slate-500 truncate font-medium mt-0.5">
+                            {user.email || 'Guest Explorer Session'}
+                          </p>
+                          <div className="inline-flex items-center gap-1 mt-1.5 px-2.5 py-0.5 rounded-full bg-orange-50 text-[9px] font-black uppercase tracking-widest text-orange-600 border border-orange-100">
+                            <ShieldCheck size={10} /> {user.isAnonymous ? 'Guest Session' : 'Verified Yatri'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Dropdown Options */}
+                      <div className="py-3 space-y-1">
+                        <Link
+                          to="/plan"
+                          onClick={() => setShowUserDropdown(false)}
+                          className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl hover:bg-orange-50 text-slate-700 hover:text-orange-600 font-bold text-xs transition-colors"
+                        >
+                          <Compass size={16} className="text-orange-500" />
+                          Plan My Yatra
+                        </Link>
+                        <button
+                          onClick={() => { setShowHelpline(true); setShowUserDropdown(false); }}
+                          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl hover:bg-orange-50 text-slate-700 hover:text-orange-600 font-bold text-xs transition-colors"
+                        >
+                          <Phone size={16} className="text-orange-500" />
+                          Yatri Support & Helpline
+                        </button>
+                      </div>
+
+                      {/* Log Out */}
+                      <div className="pt-3 border-t border-slate-100">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-red-50 hover:bg-red-100 text-red-600 font-black text-xs uppercase tracking-widest transition-all"
+                        >
+                          <LogOut size={16} /> Log Out
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Link 
@@ -173,43 +271,92 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Drawer */}
           {isOpen && (
             <div className="absolute top-[calc(100%+12px)] left-0 right-0 bg-white rounded-[32px] p-6 shadow-2xl border border-slate-100 md:hidden animate-in fade-in zoom-in-95 duration-300">
               <div className="grid grid-cols-1 gap-3">
-                <Link 
-                  to="/plan" 
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between p-5 bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-500/30"
-                >
-                  <div className="flex items-center gap-3"><Compass size={20} /> Plan My Yatra</div>
-                  <ChevronRight size={18} />
-                </Link>
-                
-                <button 
-                  onClick={() => { setShowHelpline(true); setIsOpen(false); }}
-                  className="flex items-center gap-3 p-5 bg-slate-50 text-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest"
-                >
-                  <Phone size={20} className="text-orange-500" /> Helpline
-                </button>
 
-                <div className="h-px bg-slate-100 my-2"></div>
-
+                {/* Mobile Logged-in User Profile Header */}
                 {user ? (
-                  <button 
-                    onClick={handleLogout}
-                    className="flex items-center justify-center gap-2 p-5 bg-red-50 text-red-600 rounded-2xl font-black text-xs uppercase tracking-widest"
-                  >
-                    <LogOut size={20} /> Logout
-                  </button>
+                  <>
+                    <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-100/50 mb-1">
+                      {user.photoURL ? (
+                        <img 
+                          src={user.photoURL} 
+                          alt={user.displayName || 'Profile'} 
+                          className="w-12 h-12 rounded-2xl object-cover ring-2 ring-orange-500/30 shrink-0 shadow-sm"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center font-black text-lg shrink-0 shadow-sm">
+                          {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'Y'}
+                        </div>
+                      )}
+                      <div className="overflow-hidden">
+                        <h4 className="font-black text-sm text-slate-900 truncate">
+                          {user.displayName || (user.isAnonymous ? 'Guest Yatri' : 'Yatri Explorer')}
+                        </h4>
+                        <p className="text-xs text-slate-500 truncate font-medium">
+                          {user.email || 'Guest Explorer Session'}
+                        </p>
+                        <span className="inline-block text-[9px] font-black uppercase tracking-wider text-orange-600 mt-0.5">
+                          {user.isAnonymous ? 'Guest Session' : '✓ Verified Yatri'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link 
+                      to="/plan" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between p-4 bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-500/30"
+                    >
+                      <div className="flex items-center gap-3"><Compass size={18} /> Plan My Yatra</div>
+                      <ChevronRight size={18} />
+                    </Link>
+
+                    <button 
+                      onClick={() => { setShowHelpline(true); setIsOpen(false); }}
+                      className="w-full flex items-center gap-3 p-4 bg-slate-50 text-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest"
+                    >
+                      <Phone size={18} className="text-orange-500" /> Helpline & Support
+                    </button>
+
+                    <div className="h-px bg-slate-100 my-1"></div>
+
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center justify-center gap-2 p-4 bg-red-50 text-red-600 rounded-2xl font-black text-xs uppercase tracking-widest"
+                    >
+                      <LogOut size={18} /> Logout
+                    </button>
+                  </>
                 ) : (
-                  <Link 
-                    to="/login" 
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center gap-2 p-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest"
-                  >
-                    <UserCircle size={20} /> Access Portal
-                  </Link>
+                  <>
+                    <Link 
+                      to="/plan" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between p-5 bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-500/30"
+                    >
+                      <div className="flex items-center gap-3"><Compass size={20} /> Plan My Yatra</div>
+                      <ChevronRight size={18} />
+                    </Link>
+                    
+                    <button 
+                      onClick={() => { setShowHelpline(true); setIsOpen(false); }}
+                      className="flex items-center gap-3 p-5 bg-slate-50 text-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest"
+                    >
+                      <Phone size={20} className="text-orange-500" /> Helpline
+                    </button>
+
+                    <div className="h-px bg-slate-100 my-2"></div>
+
+                    <Link 
+                      to="/login" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-center gap-2 p-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest"
+                    >
+                      <UserCircle size={20} /> Access Portal / Login
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
