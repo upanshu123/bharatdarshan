@@ -1,5 +1,5 @@
 export const POLICY_VERSION = '2026-05-01-v1';
-export const PRIVACY_KEY = 'bhartdarshan_privacy_version';
+export const PRIVACY_KEY = 'bharatdarshan_privacy_version';
 
 let memoryAcceptedVersion = null;
 

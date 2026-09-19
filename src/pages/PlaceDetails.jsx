@@ -67,7 +67,7 @@ export default function PlaceDetails() {
           {/* Place Title in Center Context */}
           <div className="hidden md:flex items-center gap-2">
              <MapPin size={16} className="text-orange-600" />
-             <span className="font-serif font-black text-slate-900">Bhart<span className="text-orange-600">darshan</span></span>
+             <span className="font-serif font-black text-slate-900">Bharat<span className="text-orange-600">Darshan</span></span>
           </div>
 
           {/* Standalone Plan My Yatra Button */}

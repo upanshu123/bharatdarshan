@@ -29,7 +29,7 @@
 //               <MapPin className="text-white w-6 h-6" />
 //             </div>
 //             <h2 className="text-2xl font-serif font-bold tracking-tight">
-//               Bhart<span className="text-orange-500">darshan</span>
+//               Bharat<span className="text-orange-500">Darshan</span>
 //             </h2>
 //           </div>
 //           <p className="text-slate-400 text-sm leading-relaxed font-medium italic">
@@ -111,7 +111,7 @@
 //             Crafted with <Heart size={14} className="text-red-500 fill-red-500 animate-pulse" /> for <span className="text-white">Incredible India</span>
 //           </p>
 //           <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">
-//             © 2026 Bhartdarshan. All rights reserved.
+//             © 2026 BharatDarshan. All rights reserved.
 //           </p>
 //         </div>
 //       </div>
@@ -144,7 +144,7 @@ export default function Footer() {
               <MapPin className="text-white w-6 h-6" />
             </div>
             <h2 className="text-2xl font-serif font-bold tracking-tight">
-              Bhart<span className="text-orange-500">darshan</span>
+              Bharat<span className="text-orange-500">Darshan</span>
             </h2>
           </div>
           <p className="text-slate-400 text-sm leading-relaxed font-medium italic">
@@ -227,7 +227,7 @@ export default function Footer() {
             Crafted with <Heart size={14} className="text-red-500 fill-red-500 animate-pulse" /> for <span className="text-white">Incredible India</span>
           </p>
           <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">
-            © 2026 Bhartdarshan. All rights reserved.
+            © 2026 BharatDarshan. All rights reserved.
           </p>
         </div>
       </div>

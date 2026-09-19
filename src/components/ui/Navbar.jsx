@@ -106,7 +106,7 @@ export default function Navbar() {
               <div className="flex flex-col">
                 <h1 className={`font-serif font-black leading-none transition-all duration-500
                   ${isDarkMode ? 'text-lg text-slate-900' : 'text-xl md:text-3xl text-white'}`}>
-                  Bhart<span className="text-orange-500">darshan</span>
+                  Bharat<span className="text-orange-500">Darshan</span>
                 </h1>
                 <span className={`text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] mt-1 transition-opacity
                   ${isDarkMode ? 'text-slate-500' : 'text-orange-200'}`}>
