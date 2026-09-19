@@ -893,6 +893,354 @@ const DESTINATION_DATABASE = {
   }
 };
 
+// ============================================================
+// BUDGET-AWARE HOTEL & DINING DATABASE — All 22 Destinations
+// 4 tiers per destination: Budget / Comfort / Luxury / Royal
+// ============================================================
+const BUDGET_HOTELS = {
+  manali: {
+    hotels: {
+      Budget:  { name: "Zostel Manali", type: "Backpacker Hostel", whyPick: "Super affordable dorms & private rooms in Old Manali, great traveller community", approxRate: "₹500–1,200/night" },
+      Comfort: { name: "The Himalayan Hotel Manali", type: "Boutique Heritage Hotel", whyPick: "Century-old colonial building with garden, river views, and warm hospitality", approxRate: "₹3,500–5,000/night" },
+      Luxury:  { name: "Span Resort & Spa", type: "Luxury Mountain Resort", whyPick: "Spacious river-view rooms on the banks of Beas River with a full-service spa", approxRate: "₹7,000–10,000/night" },
+      Royal:   { name: "Solang Valley Resorts", type: "Premium Alpine Resort", whyPick: "Exclusive mountain chalets with private valley views, butler service & gourmet meals", approxRate: "₹15,000–25,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Cafe 1947", specialty: "Himachali Siddu & Rajma Chawal", priceRange: "₹80–200" }, { name: "Dhaba near Bus Stand", specialty: "Dal Makhani & Butter Roti", priceRange: "₹60–150" }],
+      Comfort: [{ name: "Chopsticks Restaurant", specialty: "Tibetan Momos & Thukpa", priceRange: "₹250–500" }, { name: "Drifter's Inn", specialty: "Israeli Shakshuka & Fresh Juice", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Johnson's Cafe Manali", specialty: "Fresh Trout Fish & Apple Pie", priceRange: "₹700–1,500" }, { name: "Casa Bella Vista", specialty: "Continental & Himachali Fusion", priceRange: "₹800–1,800" }],
+      Royal:   [{ name: "Span Restaurant", specialty: "Riverside Fine Dining — Trout & Mountain Lamb", priceRange: "₹2,000–4,000" }, { name: "River Song Dining", specialty: "Gourmet Himalayan & European Cuisine", priceRange: "₹2,500–5,000" }]
+    }
+  },
+  jaipur: {
+    hotels: {
+      Budget:  { name: "Moustache Hostel Jaipur", type: "Premium Backpacker Hostel", whyPick: "Best-rated budget hostel in Pink City with rooftop views and vibrant social scene", approxRate: "₹500–1,500/night" },
+      Comfort: { name: "Umaid Mahal Heritage Hotel", type: "Heritage Haveli Hotel", whyPick: "Converted haveli with rooftop pool, royal décor, and authentic Rajasthani hospitality", approxRate: "₹3,000–5,500/night" },
+      Luxury:  { name: "Shahpura House", type: "Luxury Heritage Property", whyPick: "Authentic royal haveli with courtyard pool, fresco art, and personalised service", approxRate: "₹6,000–10,000/night" },
+      Royal:   { name: "Rambagh Palace (Taj)", type: "5-Star Heritage Palace Hotel", whyPick: "Former royal residence of Maharaja of Jaipur — the ultimate royal Rajasthan experience", approxRate: "₹20,000–50,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Rawat Mishtan Bhandar", specialty: "Pyaaz Kachori — ₹20 each", priceRange: "₹50–150" }, { name: "LMB Sweets Counter", specialty: "Ghewar & Milk Cake", priceRange: "₹50–200" }],
+      Comfort: [{ name: "Peacock Rooftop Restaurant", specialty: "Rajasthani Thali & Dal Baati", priceRange: "₹400–800" }, { name: "Handi Restaurant", specialty: "Laal Maas & Butter Chicken", priceRange: "₹350–700" }],
+      Luxury:  [{ name: "Suvarna Mahal (Rambagh)", specialty: "Royal Mughlai Cuisine", priceRange: "₹2,000–4,000" }, { name: "Baradari Restaurant", specialty: "Rajasthani Fine Dining", priceRange: "₹1,500–3,000" }],
+      Royal:   [{ name: "1135 AD Nahargarh Fort", specialty: "Medieval Royal Mughlai Banquet", priceRange: "₹3,000–6,000" }, { name: "Suvarna Mahal Rambagh Palace", specialty: "Heritage Royal Dining Experience", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  udaipur: {
+    hotels: {
+      Budget:  { name: "Nukkad Hostel Udaipur", type: "Lake-View Hostel", whyPick: "Affordable lake-view dorms and private rooms steps from City Palace and ghats", approxRate: "₹500–1,400/night" },
+      Comfort: { name: "Udai Niwas Hotel", type: "Heritage Boutique Hotel", whyPick: "Charming heritage property with rooftop terrace overlooking Lake Pichola", approxRate: "₹2,500–5,000/night" },
+      Luxury:  { name: "Fateh Prakash Palace", type: "Heritage Palace Hotel", whyPick: "Inside the City Palace complex — original royal rooms with direct lake views", approxRate: "₹10,000–18,000/night" },
+      Royal:   { name: "Taj Lake Palace", type: "5-Star Heritage Lake Palace", whyPick: "Iconic floating white marble palace on Lake Pichola — India's most romantic hotel", approxRate: "₹35,000–80,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Millets of Mewar", specialty: "Organic Rajasthani Thali", priceRange: "₹200–400" }, { name: "Natraj Dining Hall", specialty: "Rajasthani Unlimited Thali", priceRange: "₹150–300" }],
+      Comfort: [{ name: "Lotus Cafe Udaipur", specialty: "Rajasthani Kadhi & Gatte ki Sabzi", priceRange: "₹300–600" }, { name: "Ambrai Restaurant", specialty: "Dal Baati & Laal Maas", priceRange: "₹600–1,200" }],
+      Luxury:  [{ name: "1559 AD Udaipur", specialty: "Royal Mewari Heritage Cuisine", priceRange: "₹1,500–3,000" }, { name: "Upre by 1559 AD", specialty: "Fine Dining Lake View", priceRange: "₹1,200–2,500" }],
+      Royal:   [{ name: "Jharokha Restaurant (Taj Lake Palace)", specialty: "Maharana Royal Banquet Dinner", priceRange: "₹4,000–8,000" }, { name: "Neel Kamal (Lake Palace)", specialty: "Lake Pichola Fine Dining", priceRange: "₹5,000–10,000" }]
+    }
+  },
+  jodhpur: {
+    hotels: {
+      Budget:  { name: "Hostel Jodhan", type: "Budget Guesthouse", whyPick: "Affordable clean rooms in the Blue City lanes with fort views from the rooftop", approxRate: "₹600–1,500/night" },
+      Comfort: { name: "Pal Haveli", type: "Heritage Haveli", whyPick: "19th-century haveli beside Gulab Sagar lake with rooftop restaurant and sunset views", approxRate: "₹3,000–5,500/night" },
+      Luxury:  { name: "RAAS Jodhpur", type: "Boutique Heritage Resort", whyPick: "Luxury hotel crafted around an 18th-century haveli facing the magnificent Mehrangarh Fort", approxRate: "₹12,000–20,000/night" },
+      Royal:   { name: "Umaid Bhawan Palace Hotel", type: "5-Star Royal Heritage Palace", whyPick: "Living royal palace of the Jodhpur Royal Family — the grandest hotel in Rajasthan", approxRate: "₹25,000–60,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Janta Sweet Home", specialty: "Mawa Kachori & Mirchi Bada", priceRange: "₹50–150" }, { name: "Shri Mishrilal Hotel", specialty: "Makhania Lassi & Pyaaz Kachori", priceRange: "₹40–120" }],
+      Comfort: [{ name: "Gypsy Restaurant", specialty: "Rajasthani Unlimited Thali", priceRange: "₹400–700" }, { name: "Stepwell Cafe", specialty: "Cold Brew & Rajasthani Fusion", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Indique Rooftop Restaurant", specialty: "Laal Maas with Fort View", priceRange: "₹800–1,800" }, { name: "Pillars Restaurant (RAAS)", specialty: "Fine Rajasthani & Continental", priceRange: "₹1,500–3,000" }],
+      Royal:   [{ name: "Risala (Umaid Bhawan)", specialty: "Royal Marwari Heritage Dining", priceRange: "₹3,500–7,000" }, { name: "Trophy Bar Dining (Umaid Bhawan)", specialty: "Colonial Royal Banquet Experience", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  varanasi: {
+    hotels: {
+      Budget:  { name: "Shiva Ganga Guest House", type: "Budget Ghat Guesthouse", whyPick: "Affordable rooms steps from the Ganges ghats with basic amenities and local feel", approxRate: "₹600–1,200/night" },
+      Comfort: { name: "Suryauday Haveli", type: "Boutique Ghat Hotel", whyPick: "Heritage haveli at Shivala Ghat with sunrise Ganges views from every room", approxRate: "₹3,000–6,000/night" },
+      Luxury:  { name: "BrijRama Palace", type: "Heritage Palace on Ghats", whyPick: "18th-century palace directly on Darbhanga Ghat — the finest heritage hotel in Varanasi", approxRate: "₹10,000–18,000/night" },
+      Royal:   { name: "Taj Ganges Varanasi", type: "5-Star Luxury Heritage Hotel", whyPick: "Palatial garden property with Ganges views, fine dining, and world-class spa services", approxRate: "₹15,000–30,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Kashi Chat Bhandar", specialty: "Tamatar Chat in Kulhad", priceRange: "₹30–100" }, { name: "Blue Lassi Shop", specialty: "Pomegranate Rabri Lassi", priceRange: "₹70–120" }],
+      Comfort: [{ name: "Baati Chokha Restaurant", specialty: "Authentic UP Baati Chokha", priceRange: "₹250–500" }, { name: "Aadha Cafe", specialty: "Malaiyo & Banarasi Thandai", priceRange: "₹150–350" }],
+      Luxury:  [{ name: "Darbhanga Restaurant (BrijRama)", specialty: "Royal Awadhi & Banarasi Cuisine", priceRange: "₹1,000–2,500" }, { name: "Dum Pukht (ITC)", specialty: "Slow-cooked Awadhi Dum Biryani", priceRange: "₹1,500–3,000" }],
+      Royal:   [{ name: "Varuna (Taj Ganges)", specialty: "Heritage Banarasi Fine Dining", priceRange: "₹3,000–6,000" }, { name: "Darbhanga Banquet (BrijRama)", specialty: "Royal Ganga-View Dinner", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  agra: {
+    hotels: {
+      Budget:  { name: "Zostel Agra", type: "Budget Hostel near Taj Ganj", whyPick: "Affordable clean dormitories and private rooms within walking distance of the Taj Mahal", approxRate: "₹500–1,200/night" },
+      Comfort: { name: "Trident Agra", type: "5-Star Garden Resort", whyPick: "Sprawling garden property close to the Taj Mahal with large pool and comfortable rooms", approxRate: "₹6,000–10,000/night" },
+      Luxury:  { name: "ITC Mughal Agra", type: "5-Star Heritage Luxury Hotel", whyPick: "Sprawling Mughal-style hotel with world-class spa, multiple restaurants, and Taj Mahal views", approxRate: "₹12,000–22,000/night" },
+      Royal:   { name: "Oberoi Amarvilas", type: "6-Star Ultra-Luxury Resort", whyPick: "Every single room has an unobstructed view of the Taj Mahal — the world's most exclusive hotel location", approxRate: "₹45,000–1,00,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Agra Chat House", specialty: "Bedai Aloo Sabzi & Jalebi", priceRange: "₹50–150" }, { name: "Brijwasi Sweets", specialty: "Agra Petha in 20+ flavours", priceRange: "₹100–300" }],
+      Comfort: [{ name: "Pinch of Spice", specialty: "Mughlai Dum Biryani & Korma", priceRange: "₹500–1,000" }, { name: "Dasaprakash Restaurant", specialty: "Agra Special Thali", priceRange: "₹400–800" }],
+      Luxury:  [{ name: "Peshawri (ITC Mughal)", specialty: "Frontier Raan & Dal Bukhara", priceRange: "₹2,000–4,000" }, { name: "Esphahan (Amarvilas)", specialty: "Mughal Fine Dining", priceRange: "₹3,000–5,000" }],
+      Royal:   [{ name: "Esphahan at Oberoi Amarvilas", specialty: "Royal Mughal Gourmet with Taj View", priceRange: "₹5,000–10,000" }, { name: "Bellevue Restaurant (Amarvilas)", specialty: "International & Mughal Fine Dining", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  rishikesh: {
+    hotels: {
+      Budget:  { name: "Zostel Rishikesh", type: "River-View Hostel", whyPick: "Best budget hostel on the Ganges banks with yoga and outdoor adventure packages", approxRate: "₹500–1,200/night" },
+      Comfort: { name: "Aloha on the Ganges", type: "Wellness Resort", whyPick: "Yoga, Ayurveda, and meditation retreat with serene Ganges riverfront views", approxRate: "₹4,000–7,000/night" },
+      Luxury:  { name: "Ananda in the Himalayas", type: "5-Star Luxury Wellness Retreat", whyPick: "World-renowned destination spa in a Viceregal Palace with Himalayan valley views", approxRate: "₹18,000–35,000/night" },
+      Royal:   { name: "Taj Rishikesh Resort & Spa", type: "5-Star Ultra-Luxury Riverside Resort", whyPick: "Private villa suites alongside the sacred Ganges with infinity pools and private yoga pavilions", approxRate: "₹25,000–60,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Chotiwala Restaurant", specialty: "Aloo Puri & Rajma Chawal", priceRange: "₹80–200" }, { name: "German Bakery Rishikesh", specialty: "Whole Wheat Pancakes & Honey", priceRange: "₹150–300" }],
+      Comfort: [{ name: "Little Buddha Cafe", specialty: "Organic Thali & Ginger Lassi", priceRange: "₹300–600" }, { name: "Freedom Cafe", specialty: "Israeli Hummus & Mediterranean Bowls", priceRange: "₹350–700" }],
+      Luxury:  [{ name: "Oasis Restaurant (Ananda)", specialty: "Sattvic Ayurvedic Cuisine", priceRange: "₹1,500–3,000" }, { name: "Terrazzo (Taj Rishikesh)", specialty: "Indian & International Fine Dining", priceRange: "₹2,000–4,000" }],
+      Royal:   [{ name: "Terrazzo Restaurant (Taj)", specialty: "Luxury Riverfront Fine Dining", priceRange: "₹3,500–7,000" }, { name: "Ananda Dining Room", specialty: "Gourmet Royal Wellness Cuisine", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  shimla: {
+    hotels: {
+      Budget:  { name: "YMCA Shimla", type: "Budget Colonial Guesthouse", whyPick: "Historic 1881 YMCA building on The Ridge — best budget value with mountain views", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Hotel Combermere", type: "Heritage Hotel", whyPick: "Colonial-era property near Mall Road with comfortable rooms and valley views", approxRate: "₹3,000–5,500/night" },
+      Luxury:  { name: "The Oberoi Cecil", type: "5-Star Colonial Heritage Hotel", whyPick: "Grand 1884 heritage hotel with Himalayan panoramas, fireplace suites, and fine dining", approxRate: "₹10,000–18,000/night" },
+      Royal:   { name: "Wildflower Hall (Oberoi)", type: "6-Star Mountain Heritage Resort", whyPick: "Lord Kitchener's former residence in cedar forest — private infinity pool, butler service, and breathtaking views", approxRate: "₹20,000–45,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Baljee's Restaurant", specialty: "Himachali Dham & Rajma", priceRange: "₹150–350" }, { name: "Indian Coffee House Mall Road", specialty: "Filter Coffee & Sandwiches", priceRange: "₹80–200" }],
+      Comfort: [{ name: "Cafe Sol Shimla", specialty: "Himachali Siddu & Dham Thali", priceRange: "₹400–700" }, { name: "Ashiana & Goofa Restaurant", specialty: "North Indian Thali", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Cecils Restaurant (Oberoi)", specialty: "Colonial Continental & Himachali", priceRange: "₹1,500–3,000" }, { name: "Eighteen71 Cookhouse & Bar", specialty: "Heritage Fine Dining", priceRange: "₹1,200–2,500" }],
+      Royal:   [{ name: "Wildflower Hall Dining Room", specialty: "Gourmet Himalayan & European Fine Dining", priceRange: "₹3,500–7,000" }, { name: "The Oberoi Cecil Main Restaurant", specialty: "Royal Heritage Banquet", priceRange: "₹3,000–6,000" }]
+    }
+  },
+  "leh-ladakh": {
+    hotels: {
+      Budget:  { name: "Grand Willow Inn Leh", type: "Budget Guesthouse", whyPick: "Clean and cozy budget guesthouse in central Leh with mountain views and warm local hospitality", approxRate: "₹600–1,500/night" },
+      Comfort: { name: "Nubra Ecolodge", type: "Traditional Ladakhi Mud House Stay", whyPick: "Authentic organic farm stay under Himalayan stars with Ladakhi home-cooked meals", approxRate: "₹3,000–6,000/night" },
+      Luxury:  { name: "The Grand Dragon Ladakh", type: "Luxury Mountain Hotel", whyPick: "Best luxury hotel in Leh — centrally located with panoramic Himalayan-view rooms and rooftop restaurant", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Chamba Camp Thiksey (Taj)", type: "5-Star Luxury Tented Camp", whyPick: "Exclusive private luxury tented camp with butler, chef, and curated Ladakh cultural experiences", approxRate: "₹25,000–55,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Tibetan Kitchen Leh", specialty: "Thukpa Noodle Soup & Tsampa", priceRange: "₹100–250" }, { name: "Lamayuru Restaurant", specialty: "Ladakhi Skyu & Butter Tea", priceRange: "₹120–300" }],
+      Comfort: [{ name: "Bon Appetit Leh", specialty: "Yak Cheese Pizza & Apple Tea", priceRange: "₹350–700" }, { name: "Open Hand Restaurant", specialty: "Continental Breakfast & Ladakhi Thali", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Alchi Kitchen", specialty: "Authentic Ladakhi Gourmet Cuisine", priceRange: "₹800–1,800" }, { name: "The Grand Dragon Rooftop", specialty: "Himalayan Fine Dining with Mountain Views", priceRange: "₹1,200–2,500" }],
+      Royal:   [{ name: "Chamba Camp Private Chef", specialty: "Bespoke Royal Ladakhi & Continental Menu", priceRange: "₹3,000–6,000" }, { name: "The Grand Dragon Signature Dinner", specialty: "Gourmet Ladakhi Heritage Tasting Menu", priceRange: "₹2,500–5,000" }]
+    }
+  },
+  kerala: {
+    hotels: {
+      Budget:  { name: "Green Palms Guesthouse Alleppey", type: "Budget Guesthouse", whyPick: "Affordable rooms by the backwaters with basic houseboat rides and local hospitality", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Emerald Isle Heritage Villa", type: "Heritage Village Stay", whyPick: "120-year-old rice barge converted villa on the backwaters with traditional Kerala architecture", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Marari Beach Resort (CGH)", type: "Luxury Eco Resort", whyPick: "Award-winning eco-luxury beach cottages with Ayurvedic treatments and organic farming", approxRate: "₹12,000–22,000/night" },
+      Royal:   { name: "Kumarakom Lake Resort", type: "5-Star Heritage Lake Resort", whyPick: "Spectacular restored heritage bungalows on Vembanad Lake with private infinity pools and butler service", approxRate: "₹25,000–60,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Chakara Restaurant Alleppey", specialty: "Kerala Fish Curry & Tapioca", priceRange: "₹100–250" }, { name: "Local Toddy Shop", specialty: "Karimeen Pollichathu & Appam", priceRange: "₹80–200" }],
+      Comfort: [{ name: "Thaff Restaurant", specialty: "Prawn Moilee & Rice Appam", priceRange: "₹400–800" }, { name: "Harbour Restaurant", specialty: "Kerala Sadya Feast", priceRange: "₹350–700" }],
+      Luxury:  [{ name: "Zest (Marari Resort)", specialty: "Gourmet Seafood & Ayurvedic Cuisine", priceRange: "₹1,500–3,000" }, { name: "The Rice Boat Restaurant Kochi", specialty: "Crab & Lobster Kerala Fine Dining", priceRange: "₹1,200–2,500" }],
+      Royal:   [{ name: "Kumarakom Lake Resort Restaurant", specialty: "Royal Travancore Heritage Banquet", priceRange: "₹3,500–7,000" }, { name: "Palate (Taj Malabar Kochi)", specialty: "Kerala Seafood Royal Gourmet", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  munnar: {
+    hotels: {
+      Budget:  { name: "Munnar FairMont Hotel", type: "Budget Hill Hotel", whyPick: "Clean rooms with valley views near town centre — great value in the hill station", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Windermere Estate Munnar", type: "Heritage Plantation Stay", whyPick: "British-era planter's bungalow inside a working tea estate with valley panoramas", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Fragrant Nature Munnar", type: "Luxury Mountain Resort", whyPick: "Spacious lake-view suites with infinity pool and private tea estate walks", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Cardamom County Resort", type: "5-Star Premium Forest Resort", whyPick: "Exclusive cottages deep inside a spice estate with private pool suites, trekking guides, and chef-curated menus", approxRate: "₹15,000–35,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Rapsy Restaurant Munnar", specialty: "Kerala Puttu & Kadala Curry", priceRange: "₹80–200" }, { name: "SN Restaurant", specialty: "Appam & Mutton Stew", priceRange: "₹100–250" }],
+      Comfort: [{ name: "Saravana Bhavan Munnar", specialty: "South Indian Thali & Filter Coffee", priceRange: "₹200–400" }, { name: "Silver Spoon Restaurant", specialty: "Kerala Fish Fry & Rice", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Windermere Restaurant", specialty: "Plantation Gourmet Meals", priceRange: "₹1,000–2,000" }, { name: "Fragrant Nature Restaurant", specialty: "Kerala Fusion Fine Dining", priceRange: "₹1,500–3,000" }],
+      Royal:   [{ name: "Cardamom County Chef's Table", specialty: "Bespoke Spice Estate Gourmet Dinner", priceRange: "₹3,000–6,000" }, { name: "Elysium Dining (Cardamom County)", specialty: "Royal Kerala Heritage Cuisine", priceRange: "₹2,500–5,000" }]
+    }
+  },
+  goa: {
+    hotels: {
+      Budget:  { name: "Backpacker Panda Hostel Goa", type: "Beach Hostel", whyPick: "Top-rated budget beach hostel in North Goa with pool, bar, and great party atmosphere", approxRate: "₹500–1,500/night" },
+      Comfort: { name: "Alila Diwa Goa", type: "4-Star Beach Resort", whyPick: "Comfortable resort with pools, lush gardens, and easy access to South Goa's quieter beaches", approxRate: "₹5,000–10,000/night" },
+      Luxury:  { name: "Taj Holiday Village Goa", type: "5-Star Luxury Beach Resort", whyPick: "Secluded Portuguese-style cottages in lush garden leading directly to Candolim Beach", approxRate: "₹12,000–25,000/night" },
+      Royal:   { name: "Taj Exotica Resort & Spa", type: "6-Star Ultra-Luxury Beach Resort", whyPick: "South Goa's most exclusive private beach resort with butler villas, private pools, and 50 acres of paradise", approxRate: "₹30,000–80,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Fisherman's Wharf (thali)", specialty: "Fish Thali & Goan Curry Rice", priceRange: "₹150–300" }, { name: "Anand Bar & Restaurant", specialty: "Prawn Rawa Fry & Bebinca", priceRange: "₹200–400" }],
+      Comfort: [{ name: "Gunpowder Goa", specialty: "Goan Recheado Fish & Crab Xec Xec", priceRange: "₹600–1,200" }, { name: "A Reverie Goa", specialty: "Indo-Portuguese Fusion", priceRange: "₹800–1,500" }],
+      Luxury:  [{ name: "Thalassa Greek Goa", specialty: "Greek Seafood & Sunset Dining", priceRange: "₹2,000–4,000" }, { name: "Martin's Corner Goa", specialty: "Gourmet Goan Seafood", priceRange: "₹1,500–3,000" }],
+      Royal:   [{ name: "Rooftop Bar & Dining (Taj Exotica)", specialty: "Private Chef Gourmet Seafood Dinner", priceRange: "₹4,000–8,000" }, { name: "Caravela Restaurant (Taj Exotica)", specialty: "Royal Goan & European Fine Dining", priceRange: "₹5,000–10,000" }]
+    }
+  },
+  hampi: {
+    hotels: {
+      Budget:  { name: "Shanthi Guest House Hampi", type: "Budget Guesthouse", whyPick: "Affordable boulderscape-view rooms in Virupapura Gaddi (hippie island) with peaceful river setting", approxRate: "₹500–1,200/night" },
+      Comfort: { name: "Hampi's Boulders", type: "Eco Boutique Resort", whyPick: "Unique resort built between ancient rocks with pool, local guided tours, and comfortable cottages", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Orange County Kabini", type: "Luxury Heritage Safari Lodge", whyPick: "Premium jungle lodge near Hampi area with wildlife viewing, spa, and heritage tours", approxRate: "₹10,000–18,000/night" },
+      Royal:   { name: "Evolve Back Hampi", type: "5-Star Luxury Heritage Resort", whyPick: "Ultra-luxury resort themed around Vijayanagara Empire with royal tented suites, private butler, and curated UNESCO ruins tours", approxRate: "₹20,000–50,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Mango Tree Restaurant", specialty: "Thali under Mango Trees", priceRange: "₹100–250" }, { name: "Laughing Buddha Cafe", specialty: "Banana Pancakes & Lassi", priceRange: "₹80–200" }],
+      Comfort: [{ name: "Tempt Restaurant Hampi", specialty: "South Indian Meals & Fresh Lime Soda", priceRange: "₹200–450" }, { name: "Ravi Rose Restaurant", specialty: "Obbattu & Local Karnataka Thali", priceRange: "₹250–500" }],
+      Luxury:  [{ name: "Hampi's Boulders Restaurant", specialty: "Gourmet Karnataka Cuisine", priceRange: "₹1,000–2,000" }, { name: "Udupi Sriram Bhavan", specialty: "Bisi Bele Bath & Filter Coffee", priceRange: "₹800–1,500" }],
+      Royal:   [{ name: "Evolve Back Royal Dining", specialty: "Vijayanagara Heritage Banquet Under Stars", priceRange: "₹3,000–6,000" }, { name: "Hampi Palace Restaurant", specialty: "Royal Karnataka & Mughal Gourmet", priceRange: "₹2,500–5,000" }]
+    }
+  },
+  mysore: {
+    hotels: {
+      Budget:  { name: "Hotel Dasaprakash", type: "Classic Budget Hotel", whyPick: "Clean rooms near bus stand, walking distance to Mysore Palace and markets", approxRate: "₹800–1,500/night" },
+      Comfort: { name: "The Windflower Spa & Resort", type: "Boutique Nature Resort", whyPick: "Peaceful resort 15 km from city in coffee plantation surroundings with pool and spa", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Radisson Blu Plaza Hotel Mysore", type: "5-Star Business Luxury Hotel", whyPick: "Premium luxury hotel near Mysore Palace with rooftop pool and fine dining", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Lalitha Mahal Palace Hotel", type: "Heritage Palace Hotel", whyPick: "Former Viceroy's guesthouse — a grand white marble palace with royal suites and private royal dining", approxRate: "₹15,000–40,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Hotel RRR", specialty: "Unlimited South Indian Meals", priceRange: "₹80–180" }, { name: "Mylari Dosa Hotel", specialty: "Famous Soft Mylari Dosa", priceRange: "₹60–150" }],
+      Comfort: [{ name: "Hotel Metropole Restaurant", specialty: "Mysore Pak & South Indian Thali", priceRange: "₹300–600" }, { name: "Vinayaka Mylari Restaurant", specialty: "Akki Rotti & Bisi Bele Bath", priceRange: "₹200–400" }],
+      Luxury:  [{ name: "Royal Orchid Brindavan", specialty: "South Indian & Continental Gourmet", priceRange: "₹1,500–3,000" }, { name: "Green Hotel Restaurant", specialty: "Authentic Coorg & Mysore Cuisine", priceRange: "₹800–1,800" }],
+      Royal:   [{ name: "Lalitha Mahal Royal Dining Room", specialty: "Heritage Wadiyar Royal Banquet", priceRange: "₹3,000–6,000" }, { name: "Palace View Fine Dining", specialty: "Royal Mysore Heritage Cuisine", priceRange: "₹2,500–5,000" }]
+    }
+  },
+  shillong: {
+    hotels: {
+      Budget:  { name: "Tripura Castle Guest House", type: "Budget Heritage Guesthouse", whyPick: "Affordable colonial-era guesthouse in the heart of Shillong with misty valley views", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Hotel Centre Point", type: "Comfortable City Hotel", whyPick: "Well-located hotel in Shillong with modern amenities, garden views, and easy access to attractions", approxRate: "₹3,000–6,000/night" },
+      Luxury:  { name: "Ri Kynjai Resort", type: "Luxury Lake Resort", whyPick: "Award-winning resort on Umiam Lake with traditional Khasi architecture, private decks, and lakeside dining", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Cherrapunjee Holiday Resort", type: "5-Star Cliff-Top Heritage Resort", whyPick: "Exclusive hilltop resort overlooking Bangladesh plains with private chef, guided Living Root Bridge treks, and misty canyon views", approxRate: "₹18,000–40,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Jadoh & Dohkhlieh Street Stalls", specialty: "Khasi Jadoh Rice & Dohkhlieh", priceRange: "₹60–150" }, { name: "Police Bazaar Food Court", specialty: "Smoked Pork & Bamboo Shoot", priceRange: "₹80–200" }],
+      Comfort: [{ name: "Trattoria Cafe Shillong", specialty: "Continental Burgers & Khasi Thali", priceRange: "₹300–600" }, { name: "Cloud 9 Restaurant", specialty: "North East Indian Cuisine & Jadoh", priceRange: "₹250–500" }],
+      Luxury:  [{ name: "Ri Kynjai Restaurant", specialty: "Gourmet Khasi Heritage Cuisine", priceRange: "₹1,000–2,500" }, { name: "Abba Restaurant", specialty: "Smoked Pork & Fermented Black Sesame", priceRange: "₹800–1,800" }],
+      Royal:   [{ name: "Cherrapunjee Resort Fine Dining", specialty: "Khasi Royal Banquet with Canyon Views", priceRange: "₹3,000–6,000" }, { name: "Ri Kynjai Lakeside Gourmet Dinner", specialty: "Private Chef North East Heritage Menu", priceRange: "₹2,500–5,000" }]
+    }
+  },
+  andaman: {
+    hotels: {
+      Budget:  { name: "Teal House Beach Resort", type: "Budget Beach Guesthouse", whyPick: "Affordable beachfront rooms in Havelock with snorkelling gear rental and local seafood", approxRate: "₹800–1,800/night" },
+      Comfort: { name: "Barefoot Scuba Havelock", type: "Dive Resort", whyPick: "Comfortable beach cottages with PADI dive centre, snorkelling, and island kayaking", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Taj Exotica Andaman", type: "5-Star Luxury Beach Resort", whyPick: "Stunning private beach resort on Havelock Island with overwater villas and world-class snorkelling access", approxRate: "₹15,000–30,000/night" },
+      Royal:   { name: "Barefoot at Havelock", type: "Ultra-Premium Eco-Luxury Resort", whyPick: "Exclusive private cottages on Radhanagar Beach with curated private island experiences, private chef, and coral reef diving", approxRate: "₹25,000–60,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Full Moon Cafe Havelock", specialty: "Grilled Fish Thali & Fresh Coconut", priceRange: "₹150–300" }, { name: "Local Market Seafood Stalls", specialty: "Crab Curry & Prawn Masala", priceRange: "₹100–250" }],
+      Comfort: [{ name: "Fat Martin's Cafe", specialty: "Fresh Catch of the Day & Seafood Pasta", priceRange: "₹500–1,000" }, { name: "Viper's Havelock", specialty: "Grilled Lobster & Island Cocktails", priceRange: "₹700–1,500" }],
+      Luxury:  [{ name: "Anju Coco Restaurant", specialty: "Andaman Lobster & Crab Fine Dining", priceRange: "₹2,000–4,000" }, { name: "Taj Exotica Beach Restaurant", specialty: "Seafood BBQ & Indian Ocean Gourmet", priceRange: "₹2,500–5,000" }],
+      Royal:   [{ name: "Taj Exotica Private Beach Dinner", specialty: "Bespoke Private Beachside Royal Banquet", priceRange: "₹5,000–10,000" }, { name: "Barefoot at Havelock Chef's Table", specialty: "Private Island Gourmet Seafood", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  amritsar: {
+    hotels: {
+      Budget:  { name: "Jugaadus Hostel Amritsar", type: "Budget Hostel near Golden Temple", whyPick: "Affordable backpacker hostel walking distance from Golden Temple with rooftop views", approxRate: "₹400–1,200/night" },
+      Comfort: { name: "Hotel Moonak", type: "Comfortable Heritage Hotel", whyPick: "Well-located hotel near Golden Temple with modern amenities and rooftop restaurant", approxRate: "₹2,500–5,000/night" },
+      Luxury:  { name: "Taj Swarna Amritsar", type: "5-Star Luxury Hotel", whyPick: "Amritsar's finest luxury hotel with Golden Temple views, indoor pool, and world-class dining", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Hyatt Regency Amritsar", type: "5-Star Premium Hotel", whyPick: "Ultra-luxury hotel near Heritage Street with premium Golden Temple view suites, rooftop pool, and private cultural experience packages", approxRate: "₹15,000–35,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Langar at Golden Temple", specialty: "Free Community Langar (dal & roti)", priceRange: "Free (donation)" }, { name: "Kanha Sweets", specialty: "Amritsari Kulcha & Pinni", priceRange: "₹60–180" }],
+      Comfort: [{ name: "Bharawan Da Dhaba", specialty: "Amritsari Kulcha & Lassi", priceRange: "₹200–400" }, { name: "Brothers Dhaba", specialty: "Dal Makhani & Butter Naan", priceRange: "₹250–500" }],
+      Luxury:  [{ name: "Crystal Restaurant", specialty: "Amritsari Machhi & Sarson da Saag", priceRange: "₹1,000–2,000" }, { name: "Naan Restaurant (Taj Swarna)", specialty: "North Indian Fine Dining", priceRange: "₹1,500–3,000" }],
+      Royal:   [{ name: "Amarsons Restaurant", specialty: "Heritage Punjabi Royal Cuisine", priceRange: "₹2,500–5,000" }, { name: "Hyatt Regency Restaurant", specialty: "Premium Punjabi & International Fine Dining", priceRange: "₹3,500–7,000" }]
+    }
+  },
+  madurai: {
+    hotels: {
+      Budget:  { name: "Hotel Prem Nivas", type: "Budget Hotel near Meenakshi Temple", whyPick: "Affordable rooms steps from the iconic Meenakshi Amman Temple with rooftop views", approxRate: "₹600–1,200/night" },
+      Comfort: { name: "Heritage Madurai Hotel", type: "Colonial Heritage Boutique Hotel", whyPick: "1920s British residence converted to boutique hotel with garden pool and temple views", approxRate: "₹3,500–7,000/night" },
+      Luxury:  { name: "Courtyard Marriott Madurai", type: "5-Star Business Luxury Hotel", whyPick: "Premium hotel with temple-view infinity pool, multi-cuisine restaurant, and spa", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "The Gateway Hotel Madurai (Taj)", type: "5-Star Heritage Palace Hotel", whyPick: "Grand heritage property with royal Tamil Nadu décor, private royal dining, and curated Madurai cultural experiences", approxRate: "₹15,000–35,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Amma Mess", specialty: "Banana Leaf Meals & Rasam", priceRange: "₹60–150" }, { name: "Murugan Idli Shop", specialty: "Madurai Famous Idli & Sambar", priceRange: "₹50–130" }],
+      Comfort: [{ name: "Surya Restaurant", specialty: "Madurai Kari Dosa & Filter Coffee", priceRange: "₹200–450" }, { name: "Aaraa Veedu Restaurant", specialty: "Traditional Tamil Nadu Sadhya", priceRange: "₹250–500" }],
+      Luxury:  [{ name: "Namma Veedu Restaurant", specialty: "Heritage Chettinad Mutton Curry", priceRange: "₹1,000–2,000" }, { name: "Surabi Restaurant", specialty: "Chettinad Fine Dining", priceRange: "₹800–1,800" }],
+      Royal:   [{ name: "Heritage Madurai Restaurant", specialty: "Royal Tamil Heritage Cuisine", priceRange: "₹2,500–5,000" }, { name: "Gateway Taj Fine Dining", specialty: "Royal Chettinad Gourmet Banquet", priceRange: "₹3,500–7,000" }]
+    }
+  },
+  puri: {
+    hotels: {
+      Budget:  { name: "Hotel Nilachal Ashok", type: "Budget Heritage Hotel", whyPick: "Government heritage property on Puri Beach — affordable sea-facing rooms near Jagannath Temple", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Mayfair Beach Resort Puri", type: "4-Star Beach Resort", whyPick: "Comfortable beachfront resort with pool, restaurant, and direct ocean access minutes from Puri's main attractions", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Hans Coco Palms Puri", type: "Luxury Palm Beach Resort", whyPick: "Sprawling palm-shaded resort with sea-view suites, water sports, and temple tour packages", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Mayfair Heritage Puri", type: "5-Star Heritage Beach Resort", whyPick: "Heritage royal cottages on Puri's golden beach with private butler, royal Odia cuisine, and temple ceremonial experiences", approxRate: "₹18,000–40,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Wild Grass Restaurant", specialty: "Odia Dalma & Pakhala Bhata", priceRange: "₹100–250" }, { name: "Chung Wah Restaurant Puri", specialty: "Rice Thali & Crab Curry", priceRange: "₹80–200" }],
+      Comfort: [{ name: "Peace Restaurant Puri", specialty: "Fresh Seafood & Coconut Prawn", priceRange: "₹350–700" }, { name: "Honey Bee Restaurant", specialty: "Odia Thali & Fish Kosha", priceRange: "₹250–500" }],
+      Luxury:  [{ name: "Mayfair Beach Restaurant", specialty: "Coastal Odia Gourmet Seafood", priceRange: "₹1,500–3,000" }, { name: "Hans Coco Restaurant", specialty: "Hilsa Fish Preparation & Prawn Malai", priceRange: "₹1,000–2,000" }],
+      Royal:   [{ name: "Mayfair Heritage Royal Dining", specialty: "Traditional Odia Royal Feast", priceRange: "₹3,000–6,000" }, { name: "Puri Beach Private Dinner", specialty: "Beachside Gourmet Seafood Banquet", priceRange: "₹4,000–8,000" }]
+    }
+  },
+  darjeeling: {
+    hotels: {
+      Budget:  { name: "Aliment Youth Hostel", type: "Budget Mountain Hostel", whyPick: "Affordable government hostel with Kanchenjunga views — best budget stay in Darjeeling", approxRate: "₹400–1,200/night" },
+      Comfort: { name: "Cedar Inn Darjeeling", type: "Comfortable Heritage Hotel", whyPick: "Charming colonial-era property near Mall with mountain views and warm fireplace rooms", approxRate: "₹3,000–6,000/night" },
+      Luxury:  { name: "Windamere Hotel Darjeeling", type: "Heritage Colonial Hotel", whyPick: "1900s colonial-era hotel on Observatory Hill with fireplace suites and Kanchenjunga views", approxRate: "₹7,000–14,000/night" },
+      Royal:   { name: "Glenburn Tea Estate", type: "5-Star Heritage Planter's Bungalow", whyPick: "Award-winning private tea estate bungalow with butler, private tea tours, river picnics, and Himalayan views — India's finest boutique experience", approxRate: "₹25,000–55,000/night (all inclusive)" }
+    },
+    dining: {
+      Budget:  [{ name: "Gatty's Cafe Darjeeling", specialty: "Tibetan Thukpa & Steam Momos", priceRange: "₹100–250" }, { name: "Glenary's Bakery", specialty: "Darjeeling Tea & Chocolate Cake", priceRange: "₹150–350" }],
+      Comfort: [{ name: "The Park Restaurant", specialty: "Darjeeling Chicken Sekuwa & Raksi", priceRange: "₹400–800" }, { name: "Keventer's Darjeeling", specialty: "Sizzlers & Darjeeling Tea", priceRange: "₹350–700" }],
+      Luxury:  [{ name: "Windamere Hotel Dining Room", specialty: "Colonial Heritage Dinner with Tea Pairing", priceRange: "₹1,500–3,000" }, { name: "Glenary's Restaurant", specialty: "Continental & Darjeeling Cuisine", priceRange: "₹1,000–2,500" }],
+      Royal:   [{ name: "Glenburn Tea Estate Meals", specialty: "Private Chef — Colonial Planter's Heritage Dinner", priceRange: "₹4,000–8,000 (included in stay)" }, { name: "Windamere Colonial Banquet", specialty: "Darjeeling Royal Heritage Feast", priceRange: "₹3,000–6,000" }]
+    }
+  },
+  coorg: {
+    hotels: {
+      Budget:  { name: "Coorg Homestay Network", type: "Budget Coffee Estate Homestay", whyPick: "Stay with a local Kodava family in their estate — authentic experience with home-cooked meals", approxRate: "₹800–1,800/night" },
+      Comfort: { name: "Honey Valley Estate Coorg", type: "Eco Plantation Stay", whyPick: "Trekking trails, organic farm meals, and misty valley views in a working coffee estate", approxRate: "₹3,500–7,000/night" },
+      Luxury:  { name: "Evolve Back Kuruba Safari Lodge", type: "Eco Luxury Lodge", whyPick: "Private cottage inside Nagarhole Buffer Zone with elephant visits, spa, and wildlife viewings", approxRate: "₹14,000–25,000/night" },
+      Royal:   { name: "Orange County Coorg", type: "5-Star Pool Villa Resort", whyPick: "Private pool villas inside a 300-acre working coffee estate with personal butler, Ayurvedic spa, and gourmet meals", approxRate: "₹25,000–55,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Coorg Cuisine Restaurant", specialty: "Pandi Curry & Kadumbuttu", priceRange: "₹200–400" }, { name: "Hotel Chitra", specialty: "Akki Rotti & Coorg Sambar", priceRange: "₹100–250" }],
+      Comfort: [{ name: "Raintree Cafe", specialty: "Coorg Honey Coffee Pancakes", priceRange: "₹350–700" }, { name: "Tiger Bar & Restaurant", specialty: "Koli Curry & Neer Dosa", priceRange: "₹400–800" }],
+      Luxury:  [{ name: "Kuruba Safari Lodge Restaurant", specialty: "Gourmet Kodava Cuisine", priceRange: "₹1,500–3,000" }, { name: "Athithya Kitchen", specialty: "Traditional Kodava Pork & Rice Wine", priceRange: "₹1,000–2,000" }],
+      Royal:   [{ name: "Orange County Villa Dining", specialty: "Private Chef Gourmet Estate Dinner", priceRange: "₹3,500–7,000" }, { name: "Citrus Restaurant (Orange County)", specialty: "Royal Kodava Heritage Banquet", priceRange: "₹3,000–6,000" }]
+    }
+  },
+  ooty: {
+    hotels: {
+      Budget:  { name: "YWCA Nilgiris Ooty", type: "Budget Heritage Guesthouse", whyPick: "Affordable colonial-era guesthouse with garden views near town centre and botanical gardens", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Sterling Ooty Fern Hill", type: "Heritage Plantation Resort", whyPick: "Restored 1830s Maharaja of Mysore summer palace cottages in private forests", approxRate: "₹4,000–8,000/night" },
+      Luxury:  { name: "Savoy Hotel Ooty (Taj)", type: "Colonial Heritage Hotel", whyPick: "1829 colonial property with private cottage suites, fireplace, and manicured garden estate", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "The Hermitage Tea County", type: "5-Star Premium Tea Estate Resort", whyPick: "Exclusive hilltop resort in private Nilgiri tea estate with plunge pools, butler service, and curated tea experiences", approxRate: "₹18,000–40,000/night" }
+    },
+    dining: {
+      Budget:  [{ name: "Hotel Sarvana Ooty", specialty: "Ooty Varkey & Nilgiri Biryani", priceRange: "₹100–250" }, { name: "Shinkows Restaurant", specialty: "Chinese Fried Rice & Noodles", priceRange: "₹150–350" }],
+      Comfort: [{ name: "Willy's Coffee Pub", specialty: "Nilgiri Tea & Honey Cake", priceRange: "₹300–600" }, { name: "Hyderabad Biryani House", specialty: "Nilgiri Mutton Biryani", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Garden View Restaurant (Savoy)", specialty: "Colonial Continental & South Indian", priceRange: "₹1,500–3,000" }, { name: "The King's Table Restaurant", specialty: "Nilgiri Heritage Gourmet Meals", priceRange: "₹1,200–2,500" }],
+      Royal:   [{ name: "Savoy Heritage Banquet (Taj)", specialty: "Royal Colonial Dinner with Nilgiri Views", priceRange: "₹3,500–7,000" }, { name: "Hermitage Private Dining", specialty: "Chef's Table Tea Estate Gourmet Dinner", priceRange: "₹4,000–8,000" }]
+    }
+  }
+};
+
+// Helper: get budget-appropriate hotel for a destination
+function getBudgetHotel(destKey, budgetTier) {
+  const key = destKey.toLowerCase().replace(/[^a-z0-9-]/g, "");
+  const matched = Object.keys(BUDGET_HOTELS).find(k => key.includes(k.replace(/-/g, "")));
+  if (!matched) {
+    // Generic fallback hotel rates per tier
+    const genericHotels = {
+      Budget:  { name: "Local Budget Guesthouse", type: "Budget Guesthouse", whyPick: "Clean and affordable accommodation near city centre", approxRate: "₹700–1,500/night" },
+      Comfort: { name: "Comfort Hotel", type: "3-Star Hotel", whyPick: "Good value mid-range hotel with modern amenities", approxRate: "₹3,000–5,000/night" },
+      Luxury:  { name: "Luxury City Hotel", type: "5-Star Hotel", whyPick: "Premium accommodation with full-service amenities and fine dining", approxRate: "₹8,000–15,000/night" },
+      Royal:   { name: "Heritage Palace Hotel", type: "5-Star Heritage Property", whyPick: "Opulent heritage stay with royal butler service and curated experiences", approxRate: "₹20,000–50,000/night" },
+    };
+    return genericHotels[budgetTier] || genericHotels.Comfort;
+  }
+  return BUDGET_HOTELS[matched].hotels[budgetTier] || BUDGET_HOTELS[matched].hotels.Comfort;
+}
+
+// Helper: get budget-appropriate dining for a destination
+function getBudgetDining(destKey, budgetTier) {
+  const key = destKey.toLowerCase().replace(/[^a-z0-9-]/g, "");
+  const matched = Object.keys(BUDGET_HOTELS).find(k => key.includes(k.replace(/-/g, "")));
+  if (!matched) {
+    const genericDining = {
+      Budget:  [{ name: "Local Dhaba", specialty: "Regional Thali", priceRange: "₹80–200" }],
+      Comfort: [{ name: "Local Restaurant", specialty: "Regional Cuisine", priceRange: "₹300–600" }],
+      Luxury:  [{ name: "Fine Dining Restaurant", specialty: "Regional Gourmet Cuisine", priceRange: "₹1,000–2,500" }],
+      Royal:   [{ name: "Heritage Restaurant", specialty: "Royal Gourmet Banquet", priceRange: "₹3,000–6,000" }],
+    };
+    return genericDining[budgetTier] || genericDining.Comfort;
+  }
+  return BUDGET_HOTELS[matched].dining[budgetTier] || BUDGET_HOTELS[matched].dining.Comfort;
+}
+
 // Normalize any raw itinerary structure to consistent format
 export function normalizeItinerary(rawItinerary, tripData) {
   const destName = tripData.destinationName || tripData.destination || rawItinerary?.destination || "India";
@@ -988,6 +1336,9 @@ export function generateGenericFallback(tripData) {
   const dbEntry = matchedKey ? DESTINATION_DATABASE[matchedKey] : null;
 
   if (dbEntry) {
+    const budgetTier = tripData.budget || "Comfort";
+    const hotel = getBudgetHotel(key, budgetTier);
+    const dining = getBudgetDining(key, budgetTier);
     const daysArr = [];
     for (let i = 0; i < days; i++) {
       // Rotate through available activity sets — each day gets a DIFFERENT set
@@ -998,8 +1349,8 @@ export function generateGenericFallback(tripData) {
         date: `Day ${i + 1}`,
         theme: t.theme,
         activities: t.activities,
-        stayRecommendation: t.stay,
-        diningSpots: t.dining
+        stayRecommendation: hotel,   // ✅ Budget-aware hotel
+        diningSpots: dining           // ✅ Budget-aware dining
       });
     }
 
@@ -1036,6 +1387,9 @@ export function generateGenericFallback(tripData) {
     ]
   ];
 
+  const budgetTier = tripData.budget || "Comfort";
+  const genericHotel = getBudgetHotel(key, budgetTier);
+  const genericDining = getBudgetDining(key, budgetTier);
   const genericDays = [];
   for (let i = 0; i < days; i++) {
     const actSet = genericActivitiesByDay[i % genericActivitiesByDay.length];
@@ -1043,7 +1397,9 @@ export function generateGenericFallback(tripData) {
       day: i + 1,
       date: `Day ${i + 1}`,
       theme: i === 0 ? `Arrival & Iconic Landmarks` : i === days - 1 ? "Culture & Departure" : "Exploration & Local Culture",
-      activities: actSet
+      activities: actSet,
+      stayRecommendation: genericHotel,  // ✅ Budget-aware
+      diningSpots: genericDining           // ✅ Budget-aware
     });
   }
 
@@ -1138,6 +1494,26 @@ STRICT CONSTRAINTS:
   "budgetSummary": { "accommodation": "₹X", "food": "₹X", "transport": "₹X", "activities": "₹X", "estimatedTotal": "₹X" }
 }`;
 
+  // Budget-specific constraints to inject into AI prompt
+  const budgetPriceGuide = {
+    Budget:  { hotel: "₹700–1,500/night",  dining: "₹60–250/meal",    activities: "₹100–500/activity" },
+    Comfort: { hotel: "₹3,000–6,000/night", dining: "₹300–800/meal",   activities: "₹500–1,500/activity" },
+    Luxury:  { hotel: "₹8,000–20,000/night",dining: "₹1,000–3,000/meal",activities: "₹1,500–5,000/activity" },
+    Royal:   { hotel: "₹20,000+/night",     dining: "₹3,000–8,000/meal",activities: "₹5,000–15,000/activity" },
+  };
+  const priceGuide = budgetPriceGuide[tripData.budget] || budgetPriceGuide.Comfort;
+  const budgetEnforcement = `
+CRITICAL BUDGET ENFORCEMENT for "${tripData.budget}" tier:
+- stayRecommendation.approxRate MUST be WITHIN: ${priceGuide.hotel}
+- diningSpots[].priceRange MUST be WITHIN: ${priceGuide.dining}
+- activities[].estimatedCost MUST be WITHIN: ${priceGuide.activities}
+- budgetSummary numbers MUST reflect the ${tripData.budget} tier exactly
+- For Budget tier: recommend dhabas, hostels, street food stalls, budget guesthouses
+- For Comfort tier: recommend mid-range hotels, good restaurants
+- For Luxury tier: recommend 5-star hotels, fine dining, premium experiences
+- For Royal tier: recommend palace hotels, royal/heritage properties, private chef dining
+DO NOT recommend luxury palace hotels for Budget tier. DO NOT recommend budget guesthouses for Royal tier.`;
+
   // Step 1: Gemini API
   if (GEMINI_API_KEY && GEMINI_API_KEY.startsWith("AIzaSy")) {
     try {
@@ -1150,7 +1526,7 @@ STRICT CONSTRAINTS:
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          contents: [{ parts: [{ text: prompt + budgetEnforcement }] }],
           generationConfig: { temperature: 0.7, maxOutputTokens: 8192, responseMimeType: "application/json" },
         }),
       });
@@ -1171,34 +1547,42 @@ STRICT CONSTRAINTS:
   }
 
   // Step 2: Pollinations AI
-  const pollinationsResult = await generateViaPollinationsAI(prompt, tripData);
+  const pollinationsResult = await generateViaPollinationsAI(prompt + budgetEnforcement, tripData);
   if (pollinationsResult) return pollinationsResult;
 
-  // Step 3: Smart Curated Engine
+  // Step 3: Smart Curated Engine (Budget-aware fallback)
   console.warn("[AIYatraEngine] Loading smart curated destination engine.");
   return { success: true, data: generateGenericFallback(tripData), model: "Smart Curated Engine", isDemoMode: true };
 }
 
 export function estimateBudget(days, travellers, tier) {
+  // Realistic per-person-per-day rates in INR (researched 2024-25 India travel data)
   const rates = {
-    Budget: { stay: 1200, food: 600, transport: 500, activities: 400 },
-    Comfort: { stay: 3500, food: 1200, transport: 1200, activities: 1000 },
-    Luxury: { stay: 8500, food: 2500, transport: 3000, activities: 2500 },
-    Royal: { stay: 18000, food: 5000, transport: 6000, activities: 5000 },
+    Budget:  { stay: 1000,  food: 400,  transport: 350,  activities: 250  }, // hostels, dhabas, shared transport
+    Comfort: { stay: 4000,  food: 1000, transport: 1000, activities: 800  }, // 3-4 star hotels, restaurants
+    Luxury:  { stay: 12000, food: 2500, transport: 2500, activities: 2000 }, // 5-star, fine dining, private cabs
+    Royal:   { stay: 30000, food: 6000, transport: 6000, activities: 5000 }, // palace hotels, butler, private tours
   };
   const r = rates[tier] || rates.Comfort;
+  // Stay is per room (not per person), food/activities per person
   const stay = r.stay * days;
   const food = r.food * days * travellers;
   const transport = r.transport * days;
   const activities = r.activities * travellers;
   const subtotal = stay + food + transport + activities;
-  const total = subtotal + Math.round(subtotal * 0.05);
+  // Add 8% for miscellaneous (tips, entry tickets, sim card etc.)
+  const total = subtotal + Math.round(subtotal * 0.08);
+
+  // Tier label for display
+  const tierLabels = {
+    Budget: "Budget Friendly", Comfort: "Comfortable", Luxury: "Premium Luxury", Royal: "Royal Heritage"
+  };
 
   return {
-    accommodation: `₹${stay.toLocaleString("en-IN")}`,
-    food: `₹${food.toLocaleString("en-IN")}`,
-    transport: `₹${transport.toLocaleString("en-IN")}`,
-    activities: `₹${activities.toLocaleString("en-IN")}`,
-    estimatedTotal: `₹${total.toLocaleString("en-IN")} for ${travellers} person(s)`
+    accommodation: `₹${stay.toLocaleString("en-IN")} (${r.stay.toLocaleString("en-IN")}/night × ${days} nights)`,
+    food: `₹${food.toLocaleString("en-IN")} (~₹${r.food}/person/day × ${travellers} person(s))`,
+    transport: `₹${transport.toLocaleString("en-IN")} (local travel for ${days} days)`,
+    activities: `₹${activities.toLocaleString("en-IN")} (entry + experiences for ${travellers} person(s))`,
+    estimatedTotal: `₹${total.toLocaleString("en-IN")} total for ${travellers} person(s) · ${tierLabels[tier] || tier} tier`
   };
 }
