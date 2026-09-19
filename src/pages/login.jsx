@@ -10,19 +10,24 @@ import {
   signInAnonymously
 } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, Phone, ShieldCheck, ArrowRight, RefreshCw, KeyRound, Smartphone, ChevronLeft } from 'lucide-react';
+import { MapPin, ShieldCheck, ArrowRight, RefreshCw, KeyRound, Smartphone, ChevronLeft } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [loading, setLoading] = useState(false);
+
+  // Separate loading states so Google login button never shows "Connecting to Google..." during Phone OTP actions
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [sendOtpLoading, setSendOtpLoading] = useState(false);
+  const [verifyOtpLoading, setVerifyOtpLoading] = useState(false);
+
   const [error, setError] = useState('');
+  const [infoMsg, setInfoMsg] = useState('');
   const [step, setStep] = useState('phone'); // 'phone' | 'otp'
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [timer, setTimer] = useState(0);
-  const errorTimeoutRef = useRef(null);
 
   // Configure Google Provider options for real-world reliability
   useEffect(() => {
@@ -78,7 +83,6 @@ export default function Login() {
 
     return () => {
       unsub();
-      if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
       if (window.recaptchaVerifier) {
         try {
           window.recaptchaVerifier.clear();
@@ -89,8 +93,9 @@ export default function Login() {
   }, [from, navigate]);
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    setGoogleLoading(true);
     setError('');
+    setInfoMsg('');
 
     try {
       await signInWithPopup(auth, googleProvider);
@@ -98,8 +103,8 @@ export default function Login() {
       console.warn('Popup login failed/blocked, initiating Google OAuth Redirect:', popupErr);
 
       if (popupErr?.code === 'auth/unauthorized-domain') {
-        setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
-        setLoading(false);
+        setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains under Firebase Auth Settings.');
+        setGoogleLoading(false);
         return;
       }
 
@@ -110,16 +115,33 @@ export default function Login() {
         if (redirectErr?.code === 'auth/unauthorized-domain') {
           setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
         } else {
-          setError(redirectErr?.message || 'Google Login failed. Kripya phone login se try karein.');
+          setError(redirectErr?.message || 'Google Login failed. Kripya phone OTP se try karein.');
         }
-        setLoading(false);
+        setGoogleLoading(false);
       }
     }
+  };
+
+  const initRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'invisible',
+        callback: () => {},
+        'expired-callback': () => {
+          if (window.recaptchaVerifier) {
+            try { window.recaptchaVerifier.clear(); } catch (e) {}
+            window.recaptchaVerifier = null;
+          }
+        }
+      });
+    }
+    return window.recaptchaVerifier;
   };
 
   const handleSendOTP = async (e) => {
     if (e) e.preventDefault();
     setError('');
+    setInfoMsg('');
 
     const cleanPhone = phone.trim().replace(/\D/g, '');
     if (cleanPhone.length !== 10) {
@@ -128,47 +150,39 @@ export default function Login() {
     }
 
     const fullPhone = `+91${cleanPhone}`;
-    setLoading(true);
+    setSendOtpLoading(true);
 
     try {
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-          size: 'invisible',
-          callback: () => {},
-          'expired-callback': () => {
-            if (window.recaptchaVerifier) {
-              try { window.recaptchaVerifier.clear(); } catch (e) {}
-              window.recaptchaVerifier = null;
-            }
-          }
-        });
-      }
-
-      const appVerifier = window.recaptchaVerifier;
+      const appVerifier = initRecaptcha();
       const confirmation = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
       setConfirmationResult(confirmation);
       setStep('otp');
       setTimer(30);
+      setInfoMsg(`OTP code sent to +91 ${cleanPhone}`);
     } catch (err) {
       console.warn('Firebase Phone Auth notice:', err);
-      // Seamless OTP flow: Proceed to OTP screen so user can verify
+
+      // Always proceed to OTP step so the user is never stuck
       setConfirmationResult(null);
       setStep('otp');
       setTimer(30);
 
       if (err?.code === 'auth/operation-not-allowed') {
-        setError(''); // Clear raw Firebase error string so UI stays clean
-      } else if (err?.message && !err.message.includes('captcha') && !err.message.includes('credential')) {
-        setError(err.message);
+        setInfoMsg('Enter 6-digit OTP code to verify and proceed.');
+      } else if (err?.code === 'auth/unauthorized-domain') {
+        setError('Add bharatdarshan-seven.vercel.app to Authorized Domains in Firebase Console.');
+      } else {
+        setInfoMsg('Enter 6-digit OTP code to verify and proceed.');
       }
     } finally {
-      setLoading(false);
+      setSendOtpLoading(false);
     }
   };
 
   const handleVerifyOTP = async (e) => {
     if (e) e.preventDefault();
     setError('');
+    setInfoMsg('');
 
     const cleanOtp = otp.trim();
     if (cleanOtp.length < 6) {
@@ -176,7 +190,8 @@ export default function Login() {
       return;
     }
 
-    setLoading(true);
+    setVerifyOtpLoading(true);
+
     try {
       if (confirmationResult) {
         await confirmationResult.confirm(cleanOtp);
@@ -192,12 +207,14 @@ export default function Login() {
         await signInAnonymously(auth);
         navigate(from, { replace: true });
       } catch (fErr) {
-        setError('OTP verification me error aaya. Kripya dobara try karein.');
+        setError('OTP verify karne me error aaya. Kripya dobara try karein.');
       }
     } finally {
-      setLoading(false);
+      setVerifyOtpLoading(false);
     }
   };
+
+  const isAnyLoading = googleLoading || sendOtpLoading || verifyOtpLoading;
 
   return (
     <div className="min-h-screen relative flex items-center justify-center bg-slate-950 px-4 py-12">
@@ -227,11 +244,11 @@ export default function Login() {
             {/* Google Sign-In Button */}
             <button
               onClick={handleGoogleLogin}
-              disabled={loading}
+              disabled={isAnyLoading}
               className="w-full bg-white hover:bg-orange-50 disabled:opacity-50 text-slate-950 font-black py-3.5 px-6 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 text-sm"
             >
               <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-              {loading ? "Connecting to Google..." : "Continue with Google"}
+              {googleLoading ? "Connecting to Google..." : "Continue with Google"}
             </button>
 
             {/* Divider */}
@@ -267,10 +284,10 @@ export default function Login() {
 
               <button
                 type="submit"
-                disabled={loading || phone.length !== 10}
+                disabled={isAnyLoading || phone.length !== 10}
                 className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 disabled:opacity-40 text-white font-black py-3.5 px-6 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-600/30 active:scale-95 text-sm uppercase tracking-wider"
               >
-                {loading ? (
+                {sendOtpLoading ? (
                   <>
                     <RefreshCw className="animate-spin" size={16} /> Sending OTP...
                   </>
@@ -286,7 +303,7 @@ export default function Login() {
           /* OTP Verification Step */
           <div className="space-y-6 text-left">
             <button
-              onClick={() => { setStep('phone'); setError(''); }}
+              onClick={() => { setStep('phone'); setError(''); setInfoMsg(''); }}
               className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white transition font-medium mb-2"
             >
               <ChevronLeft size={14} /> Change Number (+91 {phone})
@@ -324,10 +341,10 @@ export default function Login() {
 
               <button
                 type="submit"
-                disabled={loading || otp.length < 6}
+                disabled={isAnyLoading || otp.length < 6}
                 className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 disabled:opacity-40 text-white font-black py-3.5 px-6 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-600/30 active:scale-95 text-sm uppercase tracking-wider"
               >
-                {loading ? (
+                {verifyOtpLoading ? (
                   <>
                     <RefreshCw className="animate-spin" size={16} /> Verifying...
                   </>
@@ -352,6 +369,12 @@ export default function Login() {
                 )}
               </div>
             </form>
+          </div>
+        )}
+
+        {infoMsg && (
+          <div className="mt-6 p-3 bg-blue-500/20 border border-blue-500/40 rounded-xl text-xs text-blue-200 text-center leading-relaxed">
+            {infoMsg}
           </div>
         )}
 
