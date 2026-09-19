@@ -11,28 +11,248 @@ export function makeGoogleMapsUrl(locationName, destName) {
 }
 
 export const DESTINATION_LOGISTICS = {
-  jaipur: { nearest_railway_station: "Jaipur Junction Railway Station (JP)", distance_to_railway_km: "3 km", nearest_airport: "Jaipur International Airport (JAI)", distance_to_airport_km: "12 km" },
-  udaipur: { nearest_railway_station: "Udaipur City Railway Station (UDZ)", distance_to_railway_km: "2.5 km", nearest_airport: "Maharana Pratap Airport (UDR)", distance_to_airport_km: "22 km" },
-  jodhpur: { nearest_railway_station: "Jodhpur Junction Railway Station (JU)", distance_to_railway_km: "3 km", nearest_airport: "Jodhpur Airport (JDH)", distance_to_airport_km: "5 km" },
-  varanasi: { nearest_railway_station: "Varanasi Junction Railway Station (BSB)", distance_to_railway_km: "4 km", nearest_airport: "Lal Bahadur Shastri International Airport (VNS)", distance_to_airport_km: "24 km" },
-  agra: { nearest_railway_station: "Agra Cantt Railway Station (AGC)", distance_to_railway_km: "4 km", nearest_airport: "Agra Airport / Kheria Airport (AGR)", distance_to_airport_km: "8 km" },
-  rishikesh: { nearest_railway_station: "Yog Nagari Rishikesh Railway Station (YNRK)", distance_to_railway_km: "3 km", nearest_airport: "Jolly Grant Airport Dehradun (DED)", distance_to_airport_km: "21 km" },
-  manali: { nearest_railway_station: "Joginder Nagar Railway Station (JOGS)", distance_to_railway_km: "165 km", nearest_airport: "Bhuntar Kullu-Manali Airport (KUU)", distance_to_airport_km: "50 km" },
-  shimla: { nearest_railway_station: "Shimla Railway Station (SML)", distance_to_railway_km: "1.5 km", nearest_airport: "Jubbarhatti Airport Shimla (SLV)", distance_to_airport_km: "22 km" },
-  "leh-ladakh": { nearest_railway_station: "Jammu Tawi Railway Station (JAT)", distance_to_railway_km: "680 km", nearest_airport: "Kushok Bakula Rimpochee Airport Leh (IXL)", distance_to_airport_km: "4 km" },
-  kerala: { nearest_railway_station: "Alappuzha Railway Station (ALLP)", distance_to_railway_km: "4 km", nearest_airport: "Cochin International Airport (COK)", distance_to_airport_km: "83 km" },
-  munnar: { nearest_railway_station: "Aluva Railway Station (AWY)", distance_to_railway_km: "110 km", nearest_airport: "Cochin International Airport (COK)", distance_to_airport_km: "110 km" },
-  goa: { nearest_railway_station: "Madgaon Junction Railway Station (MAO)", distance_to_railway_km: "28 km", nearest_airport: "Dabolim Airport (GOI)", distance_to_airport_km: "26 km" },
-  hampi: { nearest_railway_station: "Hosapete Junction Railway Station (HPT)", distance_to_railway_km: "13 km", nearest_airport: "Jindal Vijayanagar Airport (VDY)", distance_to_airport_km: "35 km" },
-  mysore: { nearest_railway_station: "Mysuru Junction Railway Station (MYS)", distance_to_railway_km: "2 km", nearest_airport: "Mysore Airport (MYQ)", distance_to_airport_km: "12 km" },
-  shillong: { nearest_railway_station: "Guwahati Railway Station (GHY)", distance_to_railway_km: "98 km", nearest_airport: "Shillong Airport Umroi (SHL)", distance_to_airport_km: "30 km" },
-  andaman: { nearest_railway_station: "Port Blair Marine Jetty Hub", distance_to_railway_km: "2 km", nearest_airport: "Veer Savarkar International Airport Port Blair (IXZ)", distance_to_airport_km: "4 km" },
-  amritsar: { nearest_railway_station: "Amritsar Junction Railway Station (ASR)", distance_to_railway_km: "2 km", nearest_airport: "Sri Guru Ram Dass Jee International Airport (ATQ)", distance_to_airport_km: "11 km" },
-  madurai: { nearest_railway_station: "Madurai Junction Railway Station (MDU)", distance_to_railway_km: "2 km", nearest_airport: "Madurai Airport (IXM)", distance_to_airport_km: "12 km" },
-  puri: { nearest_railway_station: "Puri Railway Station (PURI)", distance_to_railway_km: "2 km", nearest_airport: "Biju Patnaik International Airport Bhubaneswar (BBI)", distance_to_airport_km: "60 km" },
-  darjeeling: { nearest_railway_station: "New Jalpaiguri Railway Station (NJP)", distance_to_railway_km: "70 km", nearest_airport: "Bagdogra International Airport (IXB)", distance_to_airport_km: "68 km" },
-  coorg: { nearest_railway_station: "Mysore Junction Railway Station (MYS)", distance_to_railway_km: "117 km", nearest_airport: "Kannur International Airport (CNN)", distance_to_airport_km: "90 km" },
-  ooty: { nearest_railway_station: "Udhagamandalam Railway Station (UAM)", distance_to_railway_km: "1 km", nearest_airport: "Coimbatore International Airport (CJB)", distance_to_airport_km: "88 km" }
+  jaipur: {
+    nearest_railway_station: "Jaipur Junction Railway Station (JP)",
+    distance_to_railway_km: "3 km",
+    railway_map_url: makeGoogleMapsUrl("Jaipur Junction Railway Station", "Jaipur"),
+    nearest_bus_stand: "Sindhi Camp Central Bus Stand Jaipur",
+    distance_to_bus_stand_km: "2 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Sindhi Camp Bus Stand", "Jaipur"),
+    nearest_airport: "Jaipur International Airport (JAI)",
+    distance_to_airport_km: "12 km",
+    airport_map_url: makeGoogleMapsUrl("Jaipur International Airport", "Jaipur")
+  },
+  udaipur: {
+    nearest_railway_station: "Udaipur City Railway Station (UDZ)",
+    distance_to_railway_km: "2.5 km",
+    railway_map_url: makeGoogleMapsUrl("Udaipur City Railway Station", "Udaipur"),
+    nearest_bus_stand: "Udaipur Central Bus Stand (Udiapol)",
+    distance_to_bus_stand_km: "2 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Udaipur Central Bus Stand Udiapol", "Udaipur"),
+    nearest_airport: "Maharana Pratap Airport (UDR)",
+    distance_to_airport_km: "22 km",
+    airport_map_url: makeGoogleMapsUrl("Maharana Pratap Airport", "Udaipur")
+  },
+  jodhpur: {
+    nearest_railway_station: "Jodhpur Junction Railway Station (JU)",
+    distance_to_railway_km: "3 km",
+    railway_map_url: makeGoogleMapsUrl("Jodhpur Junction Railway Station", "Jodhpur"),
+    nearest_bus_stand: "Paota Bus Stand Jodhpur",
+    distance_to_bus_stand_km: "2.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Paota Bus Stand", "Jodhpur"),
+    nearest_airport: "Jodhpur Airport (JDH)",
+    distance_to_airport_km: "5 km",
+    airport_map_url: makeGoogleMapsUrl("Jodhpur Airport", "Jodhpur")
+  },
+  varanasi: {
+    nearest_railway_station: "Varanasi Junction Railway Station (BSB)",
+    distance_to_railway_km: "4 km",
+    railway_map_url: makeGoogleMapsUrl("Varanasi Junction Railway Station", "Varanasi"),
+    nearest_bus_stand: "Chaudhary Charan Singh Bus Stand Varanasi",
+    distance_to_bus_stand_km: "3.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Varanasi Bus Stand Cantt", "Varanasi"),
+    nearest_airport: "Lal Bahadur Shastri International Airport (VNS)",
+    distance_to_airport_km: "24 km",
+    airport_map_url: makeGoogleMapsUrl("Lal Bahadur Shastri International Airport", "Varanasi")
+  },
+  agra: {
+    nearest_railway_station: "Agra Cantt Railway Station (AGC)",
+    distance_to_railway_km: "4 km",
+    railway_map_url: makeGoogleMapsUrl("Agra Cantt Railway Station", "Agra"),
+    nearest_bus_stand: "ISBT Agra Bus Terminal",
+    distance_to_bus_stand_km: "6 km",
+    bus_stand_map_url: makeGoogleMapsUrl("ISBT Agra Bus Terminal", "Agra"),
+    nearest_airport: "Agra Airport / Kheria Airport (AGR)",
+    distance_to_airport_km: "8 km",
+    airport_map_url: makeGoogleMapsUrl("Agra Airport Kheria", "Agra")
+  },
+  rishikesh: {
+    nearest_railway_station: "Yog Nagari Rishikesh Railway Station (YNRK)",
+    distance_to_railway_km: "3 km",
+    railway_map_url: makeGoogleMapsUrl("Yog Nagari Rishikesh Railway Station", "Rishikesh"),
+    nearest_bus_stand: "Rishikesh ISBT Bus Terminal",
+    distance_to_bus_stand_km: "1.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Rishikesh ISBT Bus Stand", "Rishikesh"),
+    nearest_airport: "Jolly Grant Airport Dehradun (DED)",
+    distance_to_airport_km: "21 km",
+    airport_map_url: makeGoogleMapsUrl("Jolly Grant Airport Dehradun", "Rishikesh")
+  },
+  manali: {
+    nearest_railway_station: "Joginder Nagar Railway Station (JOGS)",
+    distance_to_railway_km: "165 km",
+    railway_map_url: makeGoogleMapsUrl("Joginder Nagar Railway Station", "Himachal"),
+    nearest_bus_stand: "Manali HRTC & Private Bus Stand (Mall Road)",
+    distance_to_bus_stand_km: "1 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Manali Bus Stand", "Manali"),
+    nearest_airport: "Bhuntar Kullu-Manali Airport (KUU)",
+    distance_to_airport_km: "50 km",
+    airport_map_url: makeGoogleMapsUrl("Bhuntar Kullu Manali Airport", "Kullu Manali")
+  },
+  shimla: {
+    nearest_railway_station: "Shimla Railway Station (SML)",
+    distance_to_railway_km: "1.5 km",
+    railway_map_url: makeGoogleMapsUrl("Shimla Railway Station", "Shimla"),
+    nearest_bus_stand: "ISBT Tutikandi Bus Stand Shimla",
+    distance_to_bus_stand_km: "4 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Tutikandi ISBT Bus Stand", "Shimla"),
+    nearest_airport: "Jubbarhatti Airport Shimla (SLV)",
+    distance_to_airport_km: "22 km",
+    airport_map_url: makeGoogleMapsUrl("Jubbarhatti Airport", "Shimla")
+  },
+  "leh-ladakh": {
+    nearest_railway_station: "Jammu Tawi Railway Station (JAT)",
+    distance_to_railway_km: "680 km",
+    railway_map_url: makeGoogleMapsUrl("Jammu Tawi Railway Station", "Jammu"),
+    nearest_bus_stand: "JKSRTC Bus Stand Leh",
+    distance_to_bus_stand_km: "1.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("JKSRTC Bus Stand", "Leh Ladakh"),
+    nearest_airport: "Kushok Bakula Rimpochee Airport Leh (IXL)",
+    distance_to_airport_km: "4 km",
+    airport_map_url: makeGoogleMapsUrl("Kushok Bakula Rimpochee Airport", "Leh")
+  },
+  kerala: {
+    nearest_railway_station: "Alappuzha Railway Station (ALLP)",
+    distance_to_railway_km: "4 km",
+    railway_map_url: makeGoogleMapsUrl("Alappuzha Railway Station", "Kerala"),
+    nearest_bus_stand: "KSRTC Bus Station Alappuzha",
+    distance_to_bus_stand_km: "2 km",
+    bus_stand_map_url: makeGoogleMapsUrl("KSRTC Bus Stand Alappuzha", "Kerala"),
+    nearest_airport: "Cochin International Airport (COK)",
+    distance_to_airport_km: "83 km",
+    airport_map_url: makeGoogleMapsUrl("Cochin International Airport", "Kochi")
+  },
+  munnar: {
+    nearest_railway_station: "Aluva Railway Station (AWY)",
+    distance_to_railway_km: "110 km",
+    railway_map_url: makeGoogleMapsUrl("Aluva Railway Station", "Kerala"),
+    nearest_bus_stand: "KSRTC Bus Station Munnar",
+    distance_to_bus_stand_km: "1 km",
+    bus_stand_map_url: makeGoogleMapsUrl("KSRTC Bus Station", "Munnar"),
+    nearest_airport: "Cochin International Airport (COK)",
+    distance_to_airport_km: "110 km",
+    airport_map_url: makeGoogleMapsUrl("Cochin International Airport", "Kochi")
+  },
+  goa: {
+    nearest_railway_station: "Madgaon Junction Railway Station (MAO)",
+    distance_to_railway_km: "28 km",
+    railway_map_url: makeGoogleMapsUrl("Madgaon Junction Railway Station", "Goa"),
+    nearest_bus_stand: "Kadamba Bus Terminal Panaji",
+    distance_to_bus_stand_km: "2 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Kadamba Bus Terminal Panaji", "Goa"),
+    nearest_airport: "Dabolim Airport (GOI)",
+    distance_to_airport_km: "26 km",
+    airport_map_url: makeGoogleMapsUrl("Dabolim Airport", "Goa")
+  },
+  hampi: {
+    nearest_railway_station: "Hosapete Junction Railway Station (HPT)",
+    distance_to_railway_km: "13 km",
+    railway_map_url: makeGoogleMapsUrl("Hosapete Junction Railway Station", "Hampi"),
+    nearest_bus_stand: "Hampi KSRTC Bus Stand",
+    distance_to_bus_stand_km: "0.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Hampi Bus Stand", "Hampi"),
+    nearest_airport: "Jindal Vijayanagar Airport (VDY)",
+    distance_to_airport_km: "35 km",
+    airport_map_url: makeGoogleMapsUrl("Jindal Vijayanagar Airport", "Toranagallu Hampi")
+  },
+  mysore: {
+    nearest_railway_station: "Mysuru Junction Railway Station (MYS)",
+    distance_to_railway_km: "2 km",
+    railway_map_url: makeGoogleMapsUrl("Mysuru Junction Railway Station", "Mysore"),
+    nearest_bus_stand: "KSRTC Suburb Bus Stand Mysore",
+    distance_to_bus_stand_km: "1.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("KSRTC Central Bus Stand", "Mysore"),
+    nearest_airport: "Mysore Airport (MYQ)",
+    distance_to_airport_km: "12 km",
+    airport_map_url: makeGoogleMapsUrl("Mysore Airport", "Mysore")
+  },
+  shillong: {
+    nearest_railway_station: "Guwahati Railway Station (GHY)",
+    distance_to_railway_km: "98 km",
+    railway_map_url: makeGoogleMapsUrl("Guwahati Railway Station", "Guwahati"),
+    nearest_bus_stand: "MTC Bus Stand Police Bazar Shillong",
+    distance_to_bus_stand_km: "1 km",
+    bus_stand_map_url: makeGoogleMapsUrl("MTC Bus Stand Police Bazar", "Shillong"),
+    nearest_airport: "Shillong Airport Umroi (SHL)",
+    distance_to_airport_km: "30 km",
+    airport_map_url: makeGoogleMapsUrl("Shillong Airport Umroi", "Shillong")
+  },
+  andaman: {
+    nearest_railway_station: "Port Blair Marine Jetty Hub",
+    distance_to_railway_km: "2 km",
+    railway_map_url: makeGoogleMapsUrl("Phoenix Bay Jetty Port Blair", "Andaman"),
+    nearest_bus_stand: "STS Bus Terminus Aberdeen Bazar Port Blair",
+    distance_to_bus_stand_km: "1.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("STS Bus Terminus Aberdeen Bazar", "Port Blair"),
+    nearest_airport: "Veer Savarkar International Airport Port Blair (IXZ)",
+    distance_to_airport_km: "4 km",
+    airport_map_url: makeGoogleMapsUrl("Veer Savarkar International Airport", "Port Blair")
+  },
+  amritsar: {
+    nearest_railway_station: "Amritsar Junction Railway Station (ASR)",
+    distance_to_railway_km: "2 km",
+    railway_map_url: makeGoogleMapsUrl("Amritsar Junction Railway Station", "Amritsar"),
+    nearest_bus_stand: "Amritsar Inter State Bus Terminal (ISBT)",
+    distance_to_bus_stand_km: "2.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Amritsar ISBT Bus Stand", "Amritsar"),
+    nearest_airport: "Sri Guru Ram Dass Jee International Airport (ATQ)",
+    distance_to_airport_km: "11 km",
+    airport_map_url: makeGoogleMapsUrl("Sri Guru Ram Dass Jee International Airport", "Amritsar")
+  },
+  madurai: {
+    nearest_railway_station: "Madurai Junction Railway Station (MDU)",
+    distance_to_railway_km: "2 km",
+    railway_map_url: makeGoogleMapsUrl("Madurai Junction Railway Station", "Madurai"),
+    nearest_bus_stand: "Mattuthavani Bus Terminus Madurai",
+    distance_to_bus_stand_km: "6 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Mattuthavani Integrated Bus Terminus", "Madurai"),
+    nearest_airport: "Madurai Airport (IXM)",
+    distance_to_airport_km: "12 km",
+    airport_map_url: makeGoogleMapsUrl("Madurai Airport", "Madurai")
+  },
+  puri: {
+    nearest_railway_station: "Puri Railway Station (PURI)",
+    distance_to_railway_km: "2 km",
+    railway_map_url: makeGoogleMapsUrl("Puri Railway Station", "Puri"),
+    nearest_bus_stand: "Puri Gundicha Temple Bus Stand",
+    distance_to_bus_stand_km: "1.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Puri Central Bus Stand", "Puri"),
+    nearest_airport: "Biju Patnaik International Airport Bhubaneswar (BBI)",
+    distance_to_airport_km: "60 km",
+    airport_map_url: makeGoogleMapsUrl("Biju Patnaik International Airport", "Bhubaneswar")
+  },
+  darjeeling: {
+    nearest_railway_station: "New Jalpaiguri Railway Station (NJP)",
+    distance_to_railway_km: "70 km",
+    railway_map_url: makeGoogleMapsUrl("New Jalpaiguri Junction Railway Station", "Siliguri"),
+    nearest_bus_stand: "Darjeeling Bus Stand (Chowk Bazar)",
+    distance_to_bus_stand_km: "1 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Darjeeling Bus Stand Chowk Bazar", "Darjeeling"),
+    nearest_airport: "Bagdogra International Airport (IXB)",
+    distance_to_airport_km: "68 km",
+    airport_map_url: makeGoogleMapsUrl("Bagdogra Airport", "Siliguri Darjeeling")
+  },
+  coorg: {
+    nearest_railway_station: "Mysore Junction Railway Station (MYS)",
+    distance_to_railway_km: "117 km",
+    railway_map_url: makeGoogleMapsUrl("Mysore Junction Railway Station", "Mysore"),
+    nearest_bus_stand: "KSRTC Bus Station Madikeri Coorg",
+    distance_to_bus_stand_km: "1 km",
+    bus_stand_map_url: makeGoogleMapsUrl("KSRTC Bus Stand Madikeri", "Coorg"),
+    nearest_airport: "Kannur International Airport (CNN)",
+    distance_to_airport_km: "90 km",
+    airport_map_url: makeGoogleMapsUrl("Kannur International Airport", "Kerala")
+  },
+  ooty: {
+    nearest_railway_station: "Udhagamandalam Railway Station (UAM)",
+    distance_to_railway_km: "1 km",
+    railway_map_url: makeGoogleMapsUrl("Udhagamandalam Railway Station", "Ooty"),
+    nearest_bus_stand: "Ooty Central Bus Stand",
+    distance_to_bus_stand_km: "0.5 km",
+    bus_stand_map_url: makeGoogleMapsUrl("Ooty Central Bus Stand", "Ooty"),
+    nearest_airport: "Coimbatore International Airport (CJB)",
+    distance_to_airport_km: "88 km",
+    airport_map_url: makeGoogleMapsUrl("Coimbatore International Airport", "Coimbatore")
+  }
 };
 
 // Full Destination Database — Real places, 3 unique activity sets per destination
@@ -1246,18 +1466,37 @@ export function normalizeItinerary(rawItinerary, tripData) {
   const destName = tripData.destinationName || tripData.destination || rawItinerary?.destination || "India";
   const key = destName.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  let logistics = rawItinerary?.logistics;
+  let logistics = rawItinerary?.logistics ? { ...rawItinerary.logistics } : null;
   if (!logistics || !logistics.nearest_railway_station) {
     const matchedKey = Object.keys(DESTINATION_LOGISTICS).find(k => key.includes(k.replace(/[^a-z0-9]/g, "")));
     if (matchedKey) {
-      logistics = DESTINATION_LOGISTICS[matchedKey];
+      logistics = { ...DESTINATION_LOGISTICS[matchedKey] };
     } else {
       logistics = {
-        nearest_railway_station: `${destName} Central Railway Station`,
+        nearest_railway_station: `${destName} Railway Station`,
         distance_to_railway_km: "4 km",
+        nearest_bus_stand: `${destName} Central Bus Stand`,
+        distance_to_bus_stand_km: "2 km",
         nearest_airport: `${destName} Airport`,
         distance_to_airport_km: "18 km"
       };
+    }
+  }
+
+  // Ensure map URLs exist for logistics (train, bus, airport)
+  if (logistics) {
+    if (!logistics.railway_map_url && logistics.nearest_railway_station) {
+      logistics.railway_map_url = makeGoogleMapsUrl(logistics.nearest_railway_station, destName);
+    }
+    if (!logistics.nearest_bus_stand) {
+      logistics.nearest_bus_stand = `${destName} Central Bus Stand`;
+      logistics.distance_to_bus_stand_km = "2 km";
+    }
+    if (!logistics.bus_stand_map_url && logistics.nearest_bus_stand) {
+      logistics.bus_stand_map_url = makeGoogleMapsUrl(logistics.nearest_bus_stand, destName);
+    }
+    if (!logistics.airport_map_url && logistics.nearest_airport) {
+      logistics.airport_map_url = makeGoogleMapsUrl(logistics.nearest_airport, destName);
     }
   }
 
@@ -1297,6 +1536,19 @@ export function normalizeItinerary(rawItinerary, tripData) {
     const afternoonAct = activities.find(a => a.timeOfDay.toLowerCase() === "afternoon") || activities[1];
     const eveningAct = activities.find(a => a.timeOfDay.toLowerCase() === "evening") || activities[2];
 
+    const stay = d.stayRecommendation || d.stay || { name: `Heritage Stay ${destName}`, type: "Comfort Hotel", whyPick: "Centrally located with serene views", approxRate: "₹3,500/night" };
+    if (stay && !stay.googleMapsLink) {
+      stay.googleMapsLink = makeGoogleMapsUrl(stay.name, destName);
+    }
+
+    let dining = d.diningSpots || d.dining || [{ name: `${destName} Local Kitchen`, specialty: "Authentic Regional Cuisine", priceRange: "₹250-500" }];
+    if (Array.isArray(dining)) {
+      dining = dining.map(spot => ({
+        ...spot,
+        googleMapsLink: spot.googleMapsLink || makeGoogleMapsUrl(spot.name, destName)
+      }));
+    }
+
     return {
       day: dayNum,
       date: d.date || `Day ${dayNum}`,
@@ -1305,8 +1557,8 @@ export function normalizeItinerary(rawItinerary, tripData) {
       morning: morningAct ? { time: "08:30 AM", activity: morningAct.locationName, locationName: morningAct.locationName, googleMapsLink: morningAct.googleMapsLink, description: morningAct.description, estimatedCost: "₹200 - ₹500" } : undefined,
       afternoon: afternoonAct ? { time: "01:00 PM", activity: afternoonAct.locationName, locationName: afternoonAct.locationName, googleMapsLink: afternoonAct.googleMapsLink, description: afternoonAct.description, estimatedCost: "₹300 - ₹600" } : undefined,
       evening: eveningAct ? { time: "06:00 PM", activity: eveningAct.locationName, locationName: eveningAct.locationName, googleMapsLink: eveningAct.googleMapsLink, description: eveningAct.description, estimatedCost: "₹100 - ₹400" } : undefined,
-      stayRecommendation: d.stayRecommendation || d.stay || { name: `Heritage Stay ${destName}`, type: "Comfort Hotel", whyPick: "Centrally located with serene views", approxRate: "₹3,500/night" },
-      diningSpots: d.diningSpots || d.dining || [{ name: `${destName} Local Kitchen`, specialty: "Authentic Regional Cuisine", priceRange: "₹250-500" }]
+      stayRecommendation: stay,
+      diningSpots: dining
     };
   });
 

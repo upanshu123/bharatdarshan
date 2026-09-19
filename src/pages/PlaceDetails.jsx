@@ -121,23 +121,58 @@ export default function PlaceDetails() {
           {place.transport && (
              <div className="bg-white p-8 rounded shadow-sm">
                 <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <Navigation className="text-green-600" /> How to Reach
+                  <Navigation className="text-green-600" /> How to Reach (Google Locations)
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                   <div className="flex flex-col items-center text-center p-4 bg-slate-50 rounded-lg">
-                      <Plane className="text-slate-400 mb-2" size={24} />
-                      <span className="text-xs font-bold text-slate-500 uppercase">Nearest Airport</span>
-                      <p className="text-slate-800 font-medium mt-1">{place.transport.nearestAirport}</p>
+                   {/* Airport */}
+                   <div className="flex flex-col justify-between items-center text-center p-4 bg-slate-50 rounded-lg">
+                      <div className="flex flex-col items-center w-full">
+                        <Plane className="text-blue-500 mb-2" size={24} />
+                        <span className="text-xs font-bold text-slate-500 uppercase">Nearest Airport</span>
+                        <p className="text-slate-800 font-medium mt-1 mb-3">{place.transport.nearestAirport}</p>
+                      </div>
+                      <a 
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((place.transport.nearestAirport || 'Airport') + ' ' + place.name + ' ' + place.state)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition w-full justify-center shadow-sm"
+                      >
+                         📍 Airport Google Location ↗
+                      </a>
                    </div>
-                   <div className="flex flex-col items-center text-center p-4 bg-slate-50 rounded-lg">
-                      <Train className="text-slate-400 mb-2" size={24} />
-                      <span className="text-xs font-bold text-slate-500 uppercase">Nearest Railway</span>
-                      <p className="text-slate-800 font-medium mt-1">{place.transport.nearestRailway}</p>
+
+                   {/* Railway Station */}
+                   <div className="flex flex-col justify-between items-center text-center p-4 bg-slate-50 rounded-lg">
+                      <div className="flex flex-col items-center w-full">
+                        <Train className="text-orange-500 mb-2" size={24} />
+                        <span className="text-xs font-bold text-slate-500 uppercase">Nearest Railway</span>
+                        <p className="text-slate-800 font-medium mt-1 mb-3">{place.transport.nearestRailway}</p>
+                      </div>
+                      <a 
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((place.transport.nearestRailway || 'Railway Station') + ' ' + place.name + ' ' + place.state)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg transition w-full justify-center shadow-sm"
+                      >
+                         📍 Train Station Google Location ↗
+                      </a>
                    </div>
-                   <div className="flex flex-col items-center text-center p-4 bg-slate-50 rounded-lg">
-                      <Bus className="text-slate-400 mb-2" size={24} />
-                      <span className="text-xs font-bold text-slate-500 uppercase">Connectivity</span>
-                      <p className="text-slate-800 font-medium mt-1 text-xs">{place.transport.busConnectivity}</p>
+
+                   {/* Bus Stop / Stand */}
+                   <div className="flex flex-col justify-between items-center text-center p-4 bg-slate-50 rounded-lg">
+                      <div className="flex flex-col items-center w-full">
+                        <Bus className="text-emerald-500 mb-2" size={24} />
+                        <span className="text-xs font-bold text-slate-500 uppercase">Bus Stop & Connectivity</span>
+                        <p className="text-slate-800 font-medium mt-1 mb-3 text-xs">{place.transport.busConnectivity}</p>
+                      </div>
+                      <a 
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Central Bus Stand ' + place.name + ' ' + place.state)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition w-full justify-center shadow-sm"
+                      >
+                         📍 Bus Stand Google Location ↗
+                      </a>
                    </div>
                 </div>
              </div>
@@ -171,6 +206,65 @@ export default function PlaceDetails() {
 
         {/* SIDEBAR */}
         <div className="space-y-6">
+          {/* Quick Google Location Directory Card */}
+          <div className="bg-white p-6 rounded shadow-sm border border-slate-200">
+            <h3 className="font-bold text-slate-900 uppercase tracking-wider mb-4 border-b pb-2 flex items-center gap-2">
+              <MapPin size={16} className="text-orange-600" /> Google Location Directory
+            </h3>
+            <p className="text-xs text-slate-500 mb-4">Direct 1-click Google Maps search locations for {place.name}:</p>
+            <div className="grid grid-cols-1 gap-2.5">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Hotels near ' + place.name + ' ' + place.state)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 text-blue-900 rounded-lg text-xs font-bold border border-blue-200 transition"
+              >
+                <span className="flex items-center gap-2">🏨 Hotels & Stays</span>
+                <span>Open Map ↗</span>
+              </a>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Restaurants near ' + place.name + ' ' + place.state)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-lg text-xs font-bold border border-amber-200 transition"
+              >
+                <span className="flex items-center gap-2">🍽️ Restaurants & Dining</span>
+                <span>Open Map ↗</span>
+              </a>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((place.transport?.nearestRailway || 'Railway Station') + ' ' + place.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-orange-50 hover:bg-orange-100 text-orange-900 rounded-lg text-xs font-bold border border-orange-200 transition"
+              >
+                <span className="flex items-center gap-2">🚂 Train / Railway Station</span>
+                <span>Open Map ↗</span>
+              </a>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Bus Stand near ' + place.name + ' ' + place.state)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-lg text-xs font-bold border border-emerald-200 transition"
+              >
+                <span className="flex items-center gap-2">🚌 Bus Stop / Terminal</span>
+                <span>Open Map ↗</span>
+              </a>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((place.transport?.nearestAirport || 'Airport') + ' ' + place.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-sky-50 hover:bg-sky-100 text-sky-900 rounded-lg text-xs font-bold border border-sky-200 transition"
+              >
+                <span className="flex items-center gap-2">✈️ Nearest Airport</span>
+                <span>Open Map ↗</span>
+              </a>
+            </div>
+          </div>
+
           {place.essentials && (
           <div className="bg-white p-6 rounded shadow-sm border border-slate-200">
             <h3 className="font-bold text-slate-900 uppercase tracking-wider mb-4 border-b pb-2">Visitor Essentials</h3>
@@ -206,17 +300,27 @@ export default function PlaceDetails() {
           {place.foodGuide && place.foodGuide.length > 0 && (
           <div className="bg-white p-6 rounded shadow-sm border border-slate-200">
              <h3 className="font-bold text-slate-900 uppercase tracking-wider mb-4 border-b pb-2 flex items-center gap-2">
-               <Utensils size={16} /> Verified Eateries
+               <Utensils size={16} /> Verified Eateries & Dining
              </h3>
              <div className="space-y-4">
               {place.foodGuide.map((food, idx) => (
-                <div key={idx} className="bg-orange-50 p-3 rounded border border-orange-100">
-                  <div className="flex justify-between">
-                    <h4 className="font-bold text-slate-800">{food.name}</h4>
-                    <span className="text-xs bg-green-100 text-green-800 px-1 rounded font-bold">{food.rating} ★</span>
+                <div key={idx} className="bg-orange-50 p-3 rounded border border-orange-100 flex justify-between items-center">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-slate-800">{food.name}</h4>
+                      <span className="text-xs bg-green-100 text-green-800 px-1 rounded font-bold">{food.rating} ★</span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">{food.type}</p>
+                    <p className="text-xs font-medium text-orange-800 mt-1">Try: {food.specialty}</p>
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">{food.type}</p>
-                  <p className="text-xs font-medium text-orange-800 mt-1">Try: {food.specialty}</p>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(food.name + ' ' + place.name + ' ' + place.state)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs font-bold transition shrink-0 ml-2 shadow-sm"
+                  >
+                    📍 Location ↗
+                  </a>
                 </div>
               ))}
              </div>

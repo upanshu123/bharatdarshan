@@ -214,24 +214,67 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
       {logistics && (
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
           <h3 className="text-sm font-black uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
-            <Navigation className="text-orange-600" size={16} /> Arrival & Transit Logistics
+            <Navigation className="text-orange-600" size={16} /> Arrival & Transit Logistics (Google Locations)
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-3 p-4 bg-orange-50/60 rounded-xl border border-orange-100">
-              <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-xl shrink-0">🚂</div>
-              <div>
-                <span className="text-[10px] font-black uppercase text-orange-600 tracking-wider">Nearest Railway Station</span>
-                <p className="font-black text-slate-900 text-sm">{logistics.nearest_railway_station}</p>
-                <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_railway_km}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 1. Train / Railway Station */}
+            <div className="flex flex-col justify-between p-4 bg-orange-50/60 rounded-xl border border-orange-100">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-xl shrink-0">🚂</div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-orange-600 tracking-wider">Nearest Railway Station</span>
+                  <p className="font-black text-slate-900 text-sm leading-snug">{logistics.nearest_railway_station}</p>
+                  <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_railway_km || 'Nearby'}</p>
+                </div>
               </div>
+              <a
+                href={logistics.railway_map_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((logistics.nearest_railway_station || 'Railway Station') + ' ' + tripData.destinationName)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 w-full py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold transition shadow-sm"
+              >
+                📍 Train Station Google Location ↗
+              </a>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-blue-50/60 rounded-xl border border-blue-100">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl shrink-0">✈️</div>
-              <div>
-                <span className="text-[10px] font-black uppercase text-blue-600 tracking-wider">Nearest Airport</span>
-                <p className="font-black text-slate-900 text-sm">{logistics.nearest_airport}</p>
-                <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_airport_km}</p>
+
+            {/* 2. Bus Stop / Terminal */}
+            <div className="flex flex-col justify-between p-4 bg-emerald-50/60 rounded-xl border border-emerald-100">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-xl shrink-0">🚌</div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-emerald-600 tracking-wider">Nearest Bus Stand / Stop</span>
+                  <p className="font-black text-slate-900 text-sm leading-snug">{logistics.nearest_bus_stand || (tripData.destinationName + ' Central Bus Stand')}</p>
+                  <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_bus_stand_km || '2-4 km'}</p>
+                </div>
               </div>
+              <a
+                href={logistics.bus_stand_map_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((logistics.nearest_bus_stand || 'Bus Stand') + ' ' + tripData.destinationName)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm"
+              >
+                📍 Bus Stand Google Location ↗
+              </a>
+            </div>
+
+            {/* 3. Airport */}
+            <div className="flex flex-col justify-between p-4 bg-blue-50/60 rounded-xl border border-blue-100">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl shrink-0">✈️</div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-blue-600 tracking-wider">Nearest Airport</span>
+                  <p className="font-black text-slate-900 text-sm leading-snug">{logistics.nearest_airport}</p>
+                  <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_airport_km || 'Nearby'}</p>
+                </div>
+              </div>
+              <a
+                href={logistics.airport_map_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((logistics.nearest_airport || 'Airport') + ' ' + tripData.destinationName)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition shadow-sm"
+              >
+                📍 Airport Google Location ↗
+              </a>
             </div>
           </div>
         </div>
@@ -299,28 +342,49 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
                   })}
 
                   {day.stayRecommendation && (
-                    <div className="flex gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                      <Hotel size={20} className="text-blue-600 mt-0.5 shrink-0" />
-                      <div>
-                        <span className="text-xs font-black text-blue-500 uppercase">Stay Recommendation</span>
-                        <p className="font-black text-slate-900">{day.stayRecommendation.name}</p>
-                        <p className="text-xs text-slate-500">{day.stayRecommendation.type} - {day.stayRecommendation.approxRate}</p>
-                        <p className="text-xs text-blue-700 mt-1">{day.stayRecommendation.whyPick}</p>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                      <div className="flex items-start gap-3">
+                        <Hotel size={20} className="text-blue-600 mt-0.5 shrink-0" />
+                        <div>
+                          <span className="text-xs font-black text-blue-500 uppercase">Hotel / Stay Recommendation</span>
+                          <p className="font-black text-slate-900">{day.stayRecommendation.name}</p>
+                          <p className="text-xs text-slate-500">{day.stayRecommendation.type} - {day.stayRecommendation.approxRate}</p>
+                          <p className="text-xs text-blue-700 mt-1">{day.stayRecommendation.whyPick}</p>
+                        </div>
                       </div>
+                      <a
+                        href={day.stayRecommendation.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(day.stayRecommendation.name + ' ' + tripData.destinationName)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition shrink-0 self-end md:self-auto shadow-sm"
+                      >
+                        📍 Hotel Google Location ↗
+                      </a>
                     </div>
                   )}
 
                   {day.diningSpots && day.diningSpots.length > 0 && (
                     <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-3">
                         <Utensils size={14} className="text-amber-600" />
-                        <span className="text-xs font-black text-amber-700 uppercase">Dining Spots</span>
+                        <span className="text-xs font-black text-amber-700 uppercase">Dining Spots & Local Cuisine</span>
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {day.diningSpots.map((d, i) => (
-                          <span key={i} className="text-xs bg-white border border-amber-200 rounded-lg px-2.5 py-1 font-medium text-slate-700">
-                            {d.name} • {d.specialty} • {d.priceRange}
-                          </span>
+                          <div key={i} className="flex justify-between items-center p-2.5 bg-white border border-amber-200 rounded-lg">
+                            <div className="min-w-0 pr-2">
+                              <p className="text-xs font-black text-slate-800 truncate">{d.name}</p>
+                              <p className="text-[10px] text-slate-500 truncate">{d.specialty} • {d.priceRange}</p>
+                            </div>
+                            <a
+                              href={d.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.name + ' ' + tripData.destinationName)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-bold transition shrink-0 ml-1 shadow-sm"
+                            >
+                              📍 Dining Location ↗
+                            </a>
+                          </div>
                         ))}
                       </div>
                     </div>
