@@ -186,7 +186,7 @@ function PlannerForm({ onSubmit, loading }) {
 
 function ItineraryResult({ itinerary, tripData, onReset }) {
   if (!itinerary) return null;
-  const { tripTitle, tagline, highlights, days, mustTry, packingEssentials, localInsights, bestTimeToVisit, budgetSummary } = itinerary;
+  const { tripTitle, tagline, highlights, days, mustTry, packingEssentials, localInsights, bestTimeToVisit, budgetSummary, logistics } = itinerary;
 
   return (
     <div className="space-y-8 pb-20">
@@ -208,67 +208,124 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       </div>
 
+      {logistics && (
+        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+          <h3 className="text-sm font-black uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+            <Navigation className="text-orange-600" size={16} /> Arrival & Transit Logistics
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center gap-3 p-4 bg-orange-50/60 rounded-xl border border-orange-100">
+              <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-xl shrink-0">🚂</div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-orange-600 tracking-wider">Nearest Railway Station</span>
+                <p className="font-black text-slate-900 text-sm">{logistics.nearest_railway_station}</p>
+                <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_railway_km}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-4 bg-blue-50/60 rounded-xl border border-blue-100">
+              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl shrink-0">✈️</div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-blue-600 tracking-wider">Nearest Airport</span>
+                <p className="font-black text-slate-900 text-sm">{logistics.nearest_airport}</p>
+                <p className="text-xs text-slate-500 font-medium">Distance: {logistics.distance_to_airport_km}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div>
         <h3 className="text-xl font-serif font-black text-slate-900 mb-4 flex items-center gap-2">
           <Calendar className="text-orange-600" size={20} /> Day-by-Day Itinerary
         </h3>
         <div className="space-y-6">
-          {(days || []).map((day, idx) => (
-            <div key={idx} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="bg-gradient-to-r from-orange-600 to-orange-500 px-6 py-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-white font-black text-lg">Day {day.day}</span>
-                  <span className="text-orange-100 text-sm font-medium">{day.theme}</span>
+          {(days || []).map((day, idx) => {
+            const activitiesList = (day.activities && day.activities.length > 0)
+              ? day.activities
+              : ["morning", "afternoon", "evening"]
+                  .filter(p => day[p])
+                  .map(p => ({
+                    timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
+                    locationName: day[p].locationName || day[p].activity,
+                    googleMapsLink: day[p].googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((day[p].locationName || day[p].activity) + ' ' + tripData.destinationName)}`,
+                    description: day[p].description,
+                    tip: day[p].tip,
+                    estimatedCost: day[p].estimatedCost
+                  }));
+
+            return (
+              <div key={idx} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-600 to-orange-500 px-6 py-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-white font-black text-lg">Day {day.day}</span>
+                    <span className="text-orange-100 text-sm font-medium">{day.theme}</span>
+                  </div>
+                  {day.date && <p className="text-orange-200 text-xs mt-0.5">{day.date}</p>}
                 </div>
-                {day.date && <p className="text-orange-200 text-xs mt-0.5">{day.date}</p>}
-              </div>
 
-              <div className="p-6 space-y-4">
-                {["morning", "afternoon", "evening"].map(period => day[period] && (
-                  <div key={period} className="flex gap-4 p-4 bg-slate-50 rounded-xl">
-                    <div className="text-2xl">{period === "morning" ? "🌅" : period === "afternoon" ? "☀️" : "🌙"}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap justify-between gap-2 mb-1">
-                        <span className="text-xs font-black text-slate-500 uppercase">{day[period].time} - {period}</span>
-                        {day[period].estimatedCost && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">{day[period].estimatedCost}</span>}
+                <div className="p-6 space-y-4">
+                  {activitiesList.map((act, aIdx) => {
+                    const timeLower = (act.timeOfDay || "").toLowerCase();
+                    const icon = timeLower.includes("morning") ? "🌅" : timeLower.includes("afternoon") ? "☀️" : "🌙";
+                    const mapUrl = act.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((act.locationName || act.activity) + ' ' + tripData.destinationName)}`;
+
+                    return (
+                      <div key={aIdx} className="flex gap-4 p-4 bg-slate-50 rounded-xl">
+                        <div className="text-2xl">{icon}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
+                            <span className="text-xs font-black text-slate-500 uppercase">{act.timeOfDay || "Activity"}</span>
+                            {act.estimatedCost && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">{act.estimatedCost}</span>}
+                          </div>
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                            <h4 className="font-black text-slate-900 text-base">{act.locationName || act.activity}</h4>
+                            <a
+                              href={mapUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-bold transition shrink-0"
+                            >
+                              📍 Google Maps ↗
+                            </a>
+                          </div>
+                          <p className="text-slate-600 text-sm leading-relaxed">{act.description}</p>
+                          {act.tip && <p className="text-orange-700 text-xs mt-2 font-medium bg-orange-50 px-3 py-1.5 rounded-lg">Tip: {act.tip}</p>}
+                        </div>
                       </div>
-                      <h4 className="font-black text-slate-900 mb-1">{day[period].activity}</h4>
-                      <p className="text-slate-600 text-sm leading-relaxed">{day[period].description}</p>
-                      {day[period].tip && <p className="text-orange-700 text-xs mt-2 font-medium bg-orange-50 px-3 py-1.5 rounded-lg">Tip: {day[period].tip}</p>}
-                    </div>
-                  </div>
-                ))}
+                    );
+                  })}
 
-                {day.stayRecommendation && (
-                  <div className="flex gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <Hotel size={20} className="text-blue-600 mt-0.5 shrink-0" />
-                    <div>
-                      <span className="text-xs font-black text-blue-500 uppercase">Stay Recommendation</span>
-                      <p className="font-black text-slate-900">{day.stayRecommendation.name}</p>
-                      <p className="text-xs text-slate-500">{day.stayRecommendation.type} - {day.stayRecommendation.approxRate}</p>
-                      <p className="text-xs text-blue-700 mt-1">{day.stayRecommendation.whyPick}</p>
+                  {day.stayRecommendation && (
+                    <div className="flex gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                      <Hotel size={20} className="text-blue-600 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs font-black text-blue-500 uppercase">Stay Recommendation</span>
+                        <p className="font-black text-slate-900">{day.stayRecommendation.name}</p>
+                        <p className="text-xs text-slate-500">{day.stayRecommendation.type} - {day.stayRecommendation.approxRate}</p>
+                        <p className="text-xs text-blue-700 mt-1">{day.stayRecommendation.whyPick}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {day.diningSpots && day.diningSpots.length > 0 && (
-                  <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Utensils size={14} className="text-amber-600" />
-                      <span className="text-xs font-black text-amber-700 uppercase">Dining Spots</span>
+                  {day.diningSpots && day.diningSpots.length > 0 && (
+                    <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Utensils size={14} className="text-amber-600" />
+                        <span className="text-xs font-black text-amber-700 uppercase">Dining Spots</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {day.diningSpots.map((d, i) => (
+                          <span key={i} className="text-xs bg-white border border-amber-200 rounded-lg px-2.5 py-1 font-medium text-slate-700">
+                            {d.name} • {d.specialty} • {d.priceRange}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {day.diningSpots.map((d, i) => (
-                        <span key={i} className="text-xs bg-white border border-amber-200 rounded-lg px-2.5 py-1 font-medium text-slate-700">
-                          {d.name} • {d.specialty} • {d.priceRange}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
