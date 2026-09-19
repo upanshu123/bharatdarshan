@@ -177,7 +177,8 @@ function PlannerForm({ onSubmit, loading }) {
       </div>
 
       <button type="submit" disabled={loading} id="generate-itinerary-btn"
-        className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-slate-300 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-[0.98] shadow-lg shadow-orange-500/30 flex items-center justify-center gap-3">
+        className="yatra-glow-btn w-full disabled:bg-slate-300 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest active:scale-[0.98] flex items-center justify-center gap-3"
+        style={{background:'linear-gradient(135deg,#ea580c,#f97316,#fb923c)',boxShadow:'0 0 28px 4px rgba(251,146,60,0.4), 0 4px 20px rgba(234,88,12,0.45)'}}>
         <Sparkles size={16} /> Generate My AI Itinerary
       </button>
     </form>
@@ -190,12 +191,14 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
   return (
     <div className="space-y-8 pb-20">
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 md:p-12 text-white shadow-xl">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-600/20 border border-orange-600/40 mb-4">
-          <Sparkles size={12} className="text-orange-400" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-orange-400">Gemini 3.6 Flash AI Engine</span>
+      <div className="rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden" style={{background:'linear-gradient(135deg,#0f172a 0%,#1e1b4b 45%,#1a0800 100%)',boxShadow:'0 20px 60px rgba(0,0,0,0.4), 0 0 50px rgba(251,146,60,0.12)'}}>
+        <div style={{position:'absolute',top:'-50px',left:'-30px',width:'300px',height:'300px',borderRadius:'50%',background:'radial-gradient(circle,rgba(234,88,12,0.2) 0%,transparent 70%)',pointerEvents:'none'}} />
+        <div style={{position:'absolute',bottom:'-30px',right:'-20px',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%)',pointerEvents:'none'}} />
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{background:'rgba(251,146,60,0.15)',border:'1px solid rgba(251,146,60,0.4)',boxShadow:'0 0 14px 2px rgba(251,146,60,0.18)'}}>
+          <Sparkles size={12} style={{color:'#fb923c'}} />
+          <span className="text-[9px] font-black uppercase tracking-widest" style={{background:'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 2.5s linear infinite'}}>Gemini 3.6 Flash AI Engine</span>
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif font-black mb-2">{tripTitle}</h2>
+        <h2 className="text-3xl md:text-4xl font-serif font-black mb-2" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 50%,#fb923c 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{tripTitle}</h2>
         <p className="text-slate-400 font-medium mb-6">{tagline}</p>
         <div className="flex flex-wrap gap-2 mb-6">
           {(highlights || []).map((h, i) => <span key={i} className="px-3 py-1.5 bg-white/10 rounded-full text-xs font-bold border border-white/10">✓ {h}</span>)}
@@ -254,13 +257,13 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
                   }));
 
             return (
-              <div key={idx} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-orange-600 to-orange-500 px-6 py-4">
+              <div key={idx} className="bg-white rounded-2xl shadow-sm overflow-hidden" style={{border:'1.5px solid rgba(249,115,22,0.12)',boxShadow:'0 4px 24px rgba(249,115,22,0.08), 0 1px 4px rgba(0,0,0,0.04)'}}>
+                <div className="px-6 py-4" style={{background:`linear-gradient(135deg, ${['#ea580c','#d97706','#7c3aed','#0891b2','#16a34a','#dc2626','#db2777'][idx%7]} 0%, ${['#f97316','#f59e0b','#9333ea','#0ea5e9','#22c55e','#ef4444','#ec4899'][idx%7]} 100%)`, boxShadow:`0 2px 12px rgba(0,0,0,0.15)`}}>
                   <div className="flex justify-between items-center">
-                    <span className="text-white font-black text-lg">Day {day.day}</span>
-                    <span className="text-orange-100 text-sm font-medium">{day.theme}</span>
+                    <span className="text-white font-black text-lg" style={{textShadow:'0 1px 4px rgba(0,0,0,0.2)'}}>Day {day.day}</span>
+                    <span className="text-white/80 text-sm font-medium">{day.theme}</span>
                   </div>
-                  {day.date && <p className="text-orange-200 text-xs mt-0.5">{day.date}</p>}
+                  {day.date && <p className="text-white/70 text-xs mt-0.5">{day.date}</p>}
                 </div>
 
                 <div className="p-6 space-y-4">
@@ -454,7 +457,8 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
       <div className="text-center pt-4">
         <button onClick={onReset}
-          className="px-10 py-4 bg-slate-900 text-white rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition shadow-lg">
+          className="yatra-glow-btn px-10 py-4 text-white rounded-full font-black text-xs uppercase tracking-widest"
+          style={{background:'linear-gradient(135deg,#0f172a,#1e1b4b,#1a0800)',boxShadow:'0 0 24px 4px rgba(99,102,241,0.3), 0 4px 20px rgba(0,0,0,0.4)'}}>
           Plan Another Yatra
         </button>
       </div>
@@ -506,23 +510,41 @@ export default function PlanMyYatra() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
       {stage === "loading" && <LoadingOverlay destination={tripData?.destinationName} />}
+
+      <style>{`
+        @keyframes yatra-shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes yatra-float {
+          0%,100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+        }
+        .yatra-glow-btn:hover { box-shadow: 0 0 40px 8px rgba(251,146,60,0.55), 0 6px 28px rgba(234,88,12,0.5) !important; transform: scale(1.02); }
+        .yatra-glow-btn { transition: all 0.3s ease !important; }
+      `}</style>
       
       {/* Header section with proper top padding for fixed navbar */}
       {(stage === "form" || stage === "error") && (
-        <div className="bg-white border-b border-slate-100 pt-28 md:pt-32 pb-12">
-          <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="relative overflow-hidden border-b border-orange-100 pt-28 md:pt-32 pb-12" style={{background:'linear-gradient(135deg,#0f172a 0%,#1c1148 45%,#1a0800 100%)'}}>
+          {/* Ambient glow orbs */}
+          <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'500px',height:'300px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(234,88,12,0.18) 0%,transparent 70%)',pointerEvents:'none'}} />
+          <div style={{position:'absolute',bottom:'-40px',right:'5%',width:'220px',height:'220px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)',pointerEvents:'none'}} />
+          <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <button onClick={() => navigate("/")}
-              className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 mb-6 transition">
+              className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-orange-300 mb-6 transition">
               <ChevronLeft size={14} /> Back to Home
             </button>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 mb-6 border border-orange-200">
-              <Sparkles size={13} className="text-orange-600" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-orange-700">AI-Powered by Gemini 3.6 Flash</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 border" style={{background:'rgba(251,146,60,0.12)',borderColor:'rgba(251,146,60,0.35)',boxShadow:'0 0 16px 2px rgba(251,146,60,0.18)'}}>
+              <Sparkles size={13} style={{color:'#fb923c'}} />
+              <span className="text-[9px] font-black uppercase tracking-widest" style={{background:'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 2.5s linear infinite'}}>AI-Powered by Gemini 3.6 Flash</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif font-black text-slate-900 mb-4 italic">Build Your Perfect Yatra</h1>
-            <p className="text-slate-500 font-medium max-w-xl mx-auto text-sm leading-relaxed">
+            <h1 className="text-4xl md:text-5xl font-serif font-black mb-4 italic" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 40%,#fb923c 70%,#fff 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 3.5s linear infinite',filter:'drop-shadow(0 0 24px rgba(251,146,60,0.35))'}}>
+              Build Your Perfect Yatra
+            </h1>
+            <p className="text-slate-400 font-medium max-w-xl mx-auto text-sm leading-relaxed">
               Fill in your travel details and our AI crafts a complete, personalised day-by-day itinerary with curated stays, dining, and experiences.
             </p>
           </div>
@@ -532,7 +554,7 @@ export default function PlanMyYatra() {
       {/* Main Container with generous top-padding when in result mode so fixed navbar never overlaps top banner */}
       <div className={"max-w-4xl mx-auto px-6 " + (stage === "result" ? "pt-28 md:pt-36 pb-12" : "py-12")}>
         {(stage === "form" || stage === "loading") && (
-          <div className="bg-white rounded-[32px] shadow-sm border border-slate-100 p-8 md:p-12">
+          <div className="rounded-[32px] p-8 md:p-12" style={{background:'#fff',boxShadow:'0 4px 40px rgba(234,88,12,0.10), 0 1px 4px rgba(0,0,0,0.06)',border:'1.5px solid rgba(251,146,60,0.13)'}}>
             <PlannerForm onSubmit={handleSubmit} loading={stage === "loading"} />
           </div>
         )}
