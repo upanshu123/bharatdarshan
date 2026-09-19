@@ -516,16 +516,16 @@ export default function PlanMyYatra() {
                       Smart Curated Yatra Plan
                     </div>
                     <p className="font-black text-base md:text-lg text-white">
-                      AI Server is experiencing high demand
+                      Handcrafted Smart Yatra Plan
                     </p>
                     <p className="text-amber-100 text-xs md:text-sm mt-0.5 max-w-xl">
-                      We've automatically generated a complete, hand-crafted itinerary for <strong>{tripData?.destinationName || 'your trip'}</strong>.
+                      We've generated a complete, hand-crafted itinerary for <strong>{tripData?.destinationName || 'your trip'}</strong>.
                     </p>
                   </div>
                 </div>
                 <button onClick={handleRetry}
                   className="shrink-0 w-full md:w-auto px-6 py-3 bg-white text-orange-600 hover:bg-amber-50 rounded-xl text-xs font-black uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
-                  <RefreshCw size={14} /> Retry Live AI
+                  <RefreshCw size={14} /> Regenerate Plan
                 </button>
               </div>
             )}

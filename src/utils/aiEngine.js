@@ -225,13 +225,44 @@ function generateGenericFallback(tripData) {
   };
 }
 
-export async function generateAIItinerary(tripData) {
-  // If no API key configured or Gemini is unavailable, immediately return fast dynamic fallback
-  if (!GEMINI_API_KEY || GEMINI_API_KEY.length < 10) {
-    console.warn("[AIYatraEngine] No Gemini API key found, loading smart curated itinerary");
-    return { success: true, data: generateGenericFallback(tripData), model: "Smart Curated Engine", isDemoMode: true };
-  }
+// Helper to generate itinerary using Pollinations AI (Free Serverless AI Backup)
+async function generateViaPollinationsAI(prompt, tripData) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+    const response = await fetch("https://text.pollinations.ai/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({
+        messages: [
+          { role: "system", content: "You are an expert India travel concierge. Respond ONLY with raw valid JSON matching the exact schema requested, no markdown, no conversational text." },
+          { role: "user", content: prompt }
+        ],
+        jsonMode: true
+      }),
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) throw new Error(`Pollinations HTTP ${response.status}`);
+    const text = await response.text();
+    if (!text) throw new Error("Empty response from Pollinations");
+
+    const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
+    const itinerary = JSON.parse(cleanJson);
+
+    if (itinerary && itinerary.days && itinerary.days.length > 0) {
+      return { success: true, data: itinerary, model: "BharatDarshan AI (Pollinations)", isDemoMode: false };
+    }
+    throw new Error("Invalid itinerary JSON structure");
+  } catch (err) {
+    console.warn("[AIYatraEngine] Pollinations AI fallback failed:", err.message);
+    return null;
+  }
+}
+
+export async function generateAIItinerary(tripData) {
   const prompt = `You are an expert India travel concierge. Create a detailed ${tripData.days}-day travel itinerary for:
 Origin: ${tripData.origin}
 Destination: ${tripData.destinationName || tripData.destination}
@@ -264,42 +295,51 @@ Return ONLY a valid JSON object matching this schema:
   "budgetSummary": { "accommodation": "₹X", "food": "₹X", "transport": "₹X", "activities": "₹X", "estimatedTotal": "₹X" }
 }`;
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s fast timeout
+  // Step 1: Try Gemini API if valid key is available
+  if (GEMINI_API_KEY && GEMINI_API_KEY.startsWith("AIzaSy")) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 8192,
-          responseMimeType: "application/json",
-        },
-      }),
-    });
-    clearTimeout(timeoutId);
+      const response = await fetch(geminiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 8192,
+            responseMimeType: "application/json",
+          },
+        }),
+      });
+      clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      console.warn(`[AIYatraEngine] Gemini returned ${response.status}. Using smart destination fallback.`);
-      return { success: true, data: generateGenericFallback(tripData), model: "Smart Curated Engine", isDemoMode: true };
+      if (response.ok) {
+        const json = await response.json();
+        const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
+          const itinerary = JSON.parse(cleanJson);
+          return { success: true, data: itinerary, model: "Gemini 1.5 Flash", isDemoMode: false };
+        }
+      }
+    } catch (err) {
+      console.warn("[AIYatraEngine] Gemini API call failed, trying backup AI provider:", err.message);
     }
-
-    const json = await response.json();
-    const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) throw new Error("Empty candidate output");
-
-    const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
-    const itinerary = JSON.parse(cleanJson);
-
-    return { success: true, data: itinerary, model: GEMINI_MODEL, isDemoMode: false };
-  } catch (err) {
-    console.warn("[AIYatraEngine] API call or parse failed, falling back gracefully:", err.message);
-    return { success: true, data: generateGenericFallback(tripData), model: "Smart Curated Engine", isDemoMode: true };
   }
+
+  // Step 2: Try Pollinations AI (Zero API key required, 100% free serverless AI)
+  const pollinationsResult = await generateViaPollinationsAI(prompt, tripData);
+  if (pollinationsResult) {
+    return pollinationsResult;
+  }
+
+  // Step 3: Smart Curated Handcrafted Engine Fallback
+  console.warn("[AIYatraEngine] Loading smart curated destination engine.");
+  return { success: true, data: generateGenericFallback(tripData), model: "Smart Curated Engine", isDemoMode: true };
 }
 
 export function estimateBudget(days, travellers, tier) {
