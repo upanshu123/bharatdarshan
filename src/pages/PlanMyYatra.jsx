@@ -824,7 +824,7 @@ export default function PlanMyYatra() {
               onClick={() => setShowFeedbackModal(true)}
               className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 font-bold hover:underline transition bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-200/60 self-start sm:self-auto"
             >
-              <MessageSquarePlus size={14} /> 💬 Feedback & Suggestions (View all 10+ reviews)
+              <MessageSquarePlus size={14} /> 💬 Feedback & Suggestions
             </button>
           </div>
         </div>
