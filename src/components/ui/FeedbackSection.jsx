@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Star, MessageSquarePlus, Send, Eye, ShieldCheck, X, Trash2, CheckCircle2, Sparkles, Filter, User } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Star, MessageSquarePlus, Send, Eye, ShieldCheck, X, Trash2, CheckCircle2, Sparkles, Filter, User, Loader2 } from 'lucide-react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { saveFeedback, fetchAllFeedbacks, deleteFeedbackItem } from '../../utils/feedbackService';
 
@@ -18,8 +18,9 @@ export default function FeedbackSection() {
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Feedbacks drawer/modal state
+  // Feedbacks state
   const [feedbacks, setFeedbacks] = useState([]);
+  const [loadingFeedbacks, setLoadingFeedbacks] = useState(true);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('All');
 
@@ -37,15 +38,22 @@ export default function FeedbackSection() {
     return () => unsub();
   }, [auth]);
 
-  // Load feedbacks on mount and when modal opens
-  const loadFeedbacks = async () => {
-    const list = await fetchAllFeedbacks();
-    setFeedbacks(list);
-  };
+  // Load feedbacks from Firestore (single source of truth)
+  const loadFeedbacks = useCallback(async () => {
+    setLoadingFeedbacks(true);
+    try {
+      const list = await fetchAllFeedbacks();
+      setFeedbacks(list);
+    } catch (err) {
+      console.error('Error loading feedbacks:', err);
+    } finally {
+      setLoadingFeedbacks(false);
+    }
+  }, []);
 
   useEffect(() => {
     loadFeedbacks();
-  }, []);
+  }, [loadFeedbacks]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,45 +66,59 @@ export default function FeedbackSection() {
     setErrorMsg('');
 
     try {
-      await saveFeedback({
-        userName: name || currentUser?.displayName || 'Yatri Explorer',
-        userEmail: email || currentUser?.email || 'yatri@bharatdarshan.com',
+      const newFeedback = await saveFeedback({
+        userName: name.trim() || currentUser?.displayName || 'Yatri Explorer',
+        userEmail: email.trim() || currentUser?.email || '',
         photoURL: currentUser?.photoURL || '',
         rating,
         category,
-        message
+        message: message.trim(),
       });
 
-      setSubmitting(false);
+      // Optimistically add the new feedback to the top of the list
+      setFeedbacks((prev) => [newFeedback, ...prev]);
+
       setSubmitted(true);
       setMessage('');
-      await loadFeedbacks();
+      setRating(5);
+      setCategory('UI & Design');
+
+      // Refresh from Firestore in background to get server timestamp
+      loadFeedbacks();
 
       setTimeout(() => {
         setSubmitted(false);
       }, 5000);
     } catch (err) {
-      console.error(err);
+      console.error('Feedback save error:', err);
+      setErrorMsg('Feedback save karne me error aaya. Kripya internet connection check karein aur punah prayas karein.');
+    } finally {
+      // Always reset submitting — this is the fix for the stuck button
       setSubmitting(false);
-      setErrorMsg('Feedback save karne me error aaya. Kripya punah prayas karein.');
     }
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Kya aap is feedback ko delete karna chahte hain?')) {
-      await deleteFeedbackItem(id);
-      await loadFeedbacks();
+      try {
+        await deleteFeedbackItem(id);
+        setFeedbacks((prev) => prev.filter((fb) => fb.id !== id));
+      } catch (err) {
+        console.error('Delete error:', err);
+        alert('Delete karne me error aaya. Kripya punah prayas karein.');
+      }
     }
   };
 
-  const filteredFeedbacks = feedbacks.filter(fb => {
+  const filteredFeedbacks = feedbacks.filter((fb) => {
     if (selectedCategoryFilter === 'All') return true;
     return fb.category === selectedCategoryFilter;
   });
 
-  const avgRating = feedbacks.length > 0
-    ? (feedbacks.reduce((acc, curr) => acc + (Number(curr.rating) || 5), 0) / feedbacks.length).toFixed(1)
-    : '5.0';
+  const avgRating =
+    feedbacks.length > 0
+      ? (feedbacks.reduce((acc, curr) => acc + (Number(curr.rating) || 5), 0) / feedbacks.length).toFixed(1)
+      : null;
 
   return (
     <section className="relative py-20 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 text-white overflow-hidden">
@@ -122,14 +144,14 @@ export default function FeedbackSection() {
             Aapke suggestions aur feedback se hum is project ko aur behtar banate hain. Kripya apna anubhav aur sujhav yahan share karein!
           </p>
 
-          {/* Action Header Button: View Feedbacks for Project Owner */}
+          {/* View All Feedbacks Button */}
           <div className="mt-6">
             <button
               onClick={() => { setShowAdminModal(true); loadFeedbacks(); }}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 transition-all font-bold text-xs uppercase tracking-wider shadow-lg group"
             >
               <Eye size={16} className="text-orange-400 group-hover:scale-110 transition-transform" />
-              View All Submitted Feedbacks ({feedbacks.length})
+              View All Submitted Feedbacks ({loadingFeedbacks ? '...' : feedbacks.length})
             </button>
           </div>
         </div>
@@ -166,7 +188,7 @@ export default function FeedbackSection() {
                 </div>
                 <h4 className="text-2xl font-serif font-black text-white">Dhanyawad! Feedback Received</h4>
                 <p className="text-slate-300 text-sm max-w-md mx-auto">
-                  Aapka feedback safaltapurvak save ho gaya hai. Aap ise "View All Submitted Feedbacks" me dekh sakte hain.
+                  Aapka feedback safaltapurvak save ho gaya hai. Ab ye sabhi users ko dikhai dega.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
@@ -232,7 +254,7 @@ export default function FeedbackSection() {
                   </div>
                 </div>
 
-                {/* 3. Name & Email Inputs (if not pre-filled) */}
+                {/* 3. Name & Email Inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-black uppercase tracking-wider text-slate-300 mb-2">
@@ -275,17 +297,26 @@ export default function FeedbackSection() {
                 </div>
 
                 {errorMsg && (
-                  <p className="text-xs text-red-400 font-medium">{errorMsg}</p>
+                  <p className="text-xs text-red-400 font-medium bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">{errorMsg}</p>
                 )}
 
                 {/* 5. Submit Button */}
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-orange-600/30 transition-all flex items-center justify-center gap-2 transform active:scale-95 disabled:opacity-50"
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-orange-600/30 transition-all flex items-center justify-center gap-2 transform active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Send size={16} />
-                  {submitting ? 'Submitting Feedback...' : 'Submit Feedback & Suggestion'}
+                  {submitting ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Saving Feedback...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={16} />
+                      Submit Feedback & Suggestion
+                    </>
+                  )}
                 </button>
               </form>
             )}
@@ -296,12 +327,20 @@ export default function FeedbackSection() {
             
             {/* Rating Summary Card */}
             <div className="bg-gradient-to-br from-orange-950/40 to-slate-900 border border-orange-500/20 rounded-[32px] p-6 text-center shadow-xl">
-              <span className="text-5xl font-serif font-black text-amber-400 block mb-2">{avgRating}</span>
-              <div className="flex justify-center gap-1 text-amber-400 mb-2">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} size={20} fill="currentColor" />
-                ))}
-              </div>
+              {loadingFeedbacks ? (
+                <Loader2 size={32} className="animate-spin text-orange-400 mx-auto mb-2" />
+              ) : (
+                <>
+                  <span className="text-5xl font-serif font-black text-amber-400 block mb-2">
+                    {avgRating ?? '—'}
+                  </span>
+                  <div className="flex justify-center gap-1 text-amber-400 mb-2">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={20} fill="currentColor" />
+                    ))}
+                  </div>
+                </>
+              )}
               <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
                 Overall Yatri Approval ({feedbacks.length} Reviews)
               </p>
@@ -314,27 +353,43 @@ export default function FeedbackSection() {
                 <span className="text-xs text-orange-400 font-medium">Live Feed</span>
               </h4>
 
-              {feedbacks.slice(0, 3).map((fb) => (
-                <div key={fb.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md hover:bg-white/10 transition-colors">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black text-xs flex items-center justify-center shadow-sm">
-                        {fb.userName ? fb.userName.charAt(0).toUpperCase() : 'Y'}
-                      </div>
-                      <div>
-                        <h5 className="text-xs font-bold text-white leading-tight">{fb.userName}</h5>
-                        <span className="text-[10px] text-slate-400">{fb.category}</span>
-                      </div>
+              {loadingFeedbacks ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-4 animate-pulse">
+                      <div className="h-4 bg-slate-700 rounded w-1/2 mb-2"></div>
+                      <div className="h-3 bg-slate-800 rounded w-full mb-1"></div>
+                      <div className="h-3 bg-slate-800 rounded w-3/4"></div>
                     </div>
-                    <div className="flex text-amber-400">
-                      {[...Array(fb.rating || 5)].map((_, i) => (
-                        <Star key={i} size={12} fill="currentColor" />
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-relaxed italic">"{fb.message}"</p>
+                  ))}
                 </div>
-              ))}
+              ) : feedbacks.length === 0 ? (
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center text-slate-400">
+                  <p className="text-sm">Abhi tak koi feedback nahi mila. Pehle feedback dene wale banein! 🙏</p>
+                </div>
+              ) : (
+                feedbacks.slice(0, 3).map((fb) => (
+                  <div key={fb.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md hover:bg-white/10 transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black text-xs flex items-center justify-center shadow-sm">
+                          {fb.userName ? fb.userName.charAt(0).toUpperCase() : 'Y'}
+                        </div>
+                        <div>
+                          <h5 className="text-xs font-bold text-white leading-tight">{fb.userName}</h5>
+                          <span className="text-[10px] text-slate-400">{fb.category}</span>
+                        </div>
+                      </div>
+                      <div className="flex text-amber-400">
+                        {[...Array(Number(fb.rating) || 5)].map((_, i) => (
+                          <Star key={i} size={12} fill="currentColor" />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed italic">"{fb.message}"</p>
+                  </div>
+                ))
+              )}
             </div>
 
           </div>
@@ -343,7 +398,7 @@ export default function FeedbackSection() {
 
       </div>
 
-      {/* --- ALL FEEDBACKS MODAL FOR PROJECT OWNER --- */}
+      {/* --- ALL FEEDBACKS MODAL --- */}
       {showAdminModal && (
         <div className="fixed inset-0 z-[2000] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 rounded-[32px] max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl text-white overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -352,7 +407,7 @@ export default function FeedbackSection() {
             <div className="p-6 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-950">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-[10px] font-black uppercase tracking-widest mb-1 border border-orange-500/20">
-                  <ShieldCheck size={12} /> Owner Feedback Dashboard
+                  <ShieldCheck size={12} /> Feedback Dashboard
                 </div>
                 <h3 className="text-xl font-serif font-bold text-white">All Submitted Feedbacks & Suggestions</h3>
               </div>
@@ -385,7 +440,12 @@ export default function FeedbackSection() {
 
             {/* Modal Content / Feedbacks List */}
             <div className="p-6 overflow-y-auto space-y-4 flex-grow">
-              {filteredFeedbacks.length === 0 ? (
+              {loadingFeedbacks ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-4 text-slate-400">
+                  <Loader2 size={40} className="animate-spin text-orange-400" />
+                  <p className="text-sm">Feedbacks load ho rahe hain...</p>
+                </div>
+              ) : filteredFeedbacks.length === 0 ? (
                 <div className="text-center py-12 text-slate-500">
                   <p className="text-sm">Is category me abhi koi feedback nahi mila hai.</p>
                 </div>
@@ -407,7 +467,9 @@ export default function FeedbackSection() {
                               {fb.category}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-400">{fb.userEmail}</p>
+                          {fb.userEmail && (
+                            <p className="text-xs text-slate-400">{fb.userEmail}</p>
+                          )}
                         </div>
                       </div>
 
@@ -417,7 +479,7 @@ export default function FeedbackSection() {
                       </p>
 
                       <div className="text-[10px] text-slate-500 font-medium">
-                        Submitted on: {new Date(fb.createdAt).toLocaleString()}
+                        Submitted on: {fb.createdAt ? new Date(fb.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Just now'}
                       </div>
                     </div>
 
@@ -446,6 +508,8 @@ export default function FeedbackSection() {
             <div className="p-4 border-t border-slate-800 bg-slate-950 text-center shrink-0">
               <p className="text-xs text-slate-400">
                 Total Feedbacks: <span className="text-orange-400 font-bold">{feedbacks.length}</span>
+                {' · '}
+                <span className="text-slate-500">Sabhi feedbacks real-time Firestore se load hote hain</span>
               </p>
             </div>
 
