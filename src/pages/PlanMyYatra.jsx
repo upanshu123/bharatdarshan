@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Sparkles, MapPin, Calendar, Users, Wallet, Compass, ChevronLeft,
   AlertCircle, RefreshCw, CheckCircle, Clock, Utensils, Hotel,
-  Navigation, Star, Package, Info, Plane, Car, UserCircle, LogOut, Lock
+  Navigation, Star, Package, Info, Plane, Car, UserCircle, LogOut, Lock, MessageSquarePlus, X
 } from "lucide-react";
 import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebaseConfig";
@@ -539,6 +539,7 @@ export default function PlanMyYatra() {
   const [authLoading, setAuthLoading] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   const [stage, setStage] = useState("form");
   const [itinerary, setItinerary] = useState(null);
@@ -663,14 +664,14 @@ export default function PlanMyYatra() {
               Login Required to Plan Your Yatra
             </h1>
             <p className="text-slate-400 font-medium max-w-xl mx-auto text-sm leading-relaxed">
-              Personalized AI trip itinerary create karne ke liye Google se log in karein aur niche hamari community ke feedback & suggestions dekhein.
+              Personalized AI trip itinerary create karne ke liye Google se log in karein.
             </p>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Login Gate Card */}
-          <div className="rounded-[32px] p-8 md:p-12 text-center bg-white shadow-xl border border-orange-100 mb-16 relative overflow-hidden">
+          <div className="rounded-[32px] p-8 md:p-12 text-center bg-white shadow-xl border border-orange-100 mb-10 relative overflow-hidden">
             <div className="w-16 h-16 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mx-auto mb-6 shadow-inner">
               <Lock size={32} />
             </div>
@@ -706,20 +707,39 @@ export default function PlanMyYatra() {
             </button>
           </div>
 
-          {/* Feedback & Suggestions Banner & Section */}
-          <div className="mt-8">
-            <div className="bg-slate-900 rounded-3xl p-8 text-white mb-8 border border-slate-800 shadow-xl text-center relative overflow-hidden">
-              <div style={{position:'absolute',top:'-40px',right:'-40px',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(251,146,60,0.2) 0%,transparent 70%)',pointerEvents:'none'}} />
-              <h3 className="text-xl md:text-2xl font-serif font-black mb-2 text-orange-400">
-                💬 Yatri Feedback & Suggestions
-              </h3>
-              <p className="text-slate-300 text-sm max-w-xl mx-auto">
-                Abhi tak ke saare feedback & suggestions dekhein aur apna feedback share karein!
-              </p>
+          {/* Compact Support & Feedback Trigger Bar */}
+          <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">Helpline & Support</p>
+              <p className="text-sm font-black text-slate-900">📞 1800-103-3500 <span className="text-xs text-slate-500 font-medium">(24x7 Tourist Helpline)</span></p>
             </div>
-            <FeedbackSection />
+            <button
+              onClick={() => setShowFeedbackModal(true)}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold text-xs transition border border-orange-200"
+            >
+              <MessageSquarePlus size={16} /> View Yatri Feedbacks & Suggestions
+            </button>
           </div>
         </div>
+
+        {/* Feedback Modal */}
+        {showFeedbackModal && (
+          <div className="fixed inset-0 z-[3000] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-6 overflow-y-auto">
+            <div className="relative bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl border border-orange-100 my-auto">
+              <button
+                onClick={() => setShowFeedbackModal(false)}
+                className="absolute top-6 right-6 p-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition"
+              >
+                <X size={20} />
+              </button>
+              <div className="mb-6">
+                <h3 className="text-2xl font-serif font-black text-slate-900">💬 Yatri Feedback & Suggestions</h3>
+                <p className="text-xs text-slate-500 font-medium">Dekhein yatri community ke feedbacks aur apna suggestion share karein.</p>
+              </div>
+              <FeedbackSection />
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -768,27 +788,45 @@ export default function PlanMyYatra() {
 
       {/* Main Container */}
       <div className={"max-w-4xl mx-auto px-6 " + (stage === "result" ? "pt-28 md:pt-36 pb-12" : "py-12")}>
-        {/* Logged in User Bar */}
-        <div className="flex items-center justify-between bg-white border border-orange-100 rounded-2xl p-4 mb-8 shadow-sm">
-          <div className="flex items-center gap-3">
-            {currentUser.photoURL ? (
-              <img src={currentUser.photoURL} alt={currentUser.displayName || "User"} className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-400" />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black flex items-center justify-center">
-                {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'Y'}
+        {/* Logged in User Bar with Helpline & Support and Feedback Text Link */}
+        <div className="bg-white border border-orange-100 rounded-2xl p-5 mb-8 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div className="flex items-center gap-3">
+              {currentUser.photoURL ? (
+                <img src={currentUser.photoURL} alt={currentUser.displayName || "User"} className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-400" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black flex items-center justify-center">
+                  {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'Y'}
+                </div>
+              )}
+              <div>
+                <p className="text-xs font-black text-slate-900">{currentUser.displayName || "Yatri Explorer"}</p>
+                <p className="text-[11px] text-slate-500 font-medium">{currentUser.email}</p>
               </div>
-            )}
-            <div>
-              <p className="text-xs font-black text-slate-900">{currentUser.displayName || "Yatri Explorer"}</p>
-              <p className="text-[11px] text-slate-500 font-medium">{currentUser.email}</p>
             </div>
+
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition self-start md:self-auto"
+            >
+              <LogOut size={14} /> Log Out
+            </button>
           </div>
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
-          >
-            <LogOut size={14} /> Log Out
-          </button>
+
+          {/* Helpline & Support Bar with Feedback Text link right below it */}
+          <div className="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div>
+              <span className="font-black uppercase tracking-wider text-slate-400 text-[10px] block">Helpline & Support:</span>
+              <span className="font-bold text-slate-800">📞 1800-103-3500 (24x7 Official Tourist Helpline)</span>
+            </div>
+            
+            <button
+              onClick={() => setShowFeedbackModal(true)}
+              className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 font-bold hover:underline transition bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-200/60 self-start sm:self-auto"
+            >
+              <MessageSquarePlus size={14} /> 💬 Feedback & Suggestions (View all 10+ reviews)
+            </button>
+          </div>
         </div>
 
         {(stage === "form" || stage === "loading") && (
@@ -850,12 +888,27 @@ export default function PlanMyYatra() {
             <ItineraryResult itinerary={itinerary} tripData={tripData} onReset={handleReset} />
           </div>
         )}
-
-        {/* Embedded Feedback Section for logged-in users */}
-        <div className="mt-16 border-t border-orange-100 pt-12">
-          <FeedbackSection />
-        </div>
       </div>
+
+      {/* Feedback & Suggestions Modal Overlay */}
+      {showFeedbackModal && (
+        <div className="fixed inset-0 z-[3000] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in">
+          <div className="relative bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl border border-orange-100 my-auto">
+            <button
+              onClick={() => setShowFeedbackModal(false)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition"
+              title="Close modal"
+            >
+              <X size={20} />
+            </button>
+            <div className="mb-6 pr-8">
+              <h3 className="text-2xl font-serif font-black text-slate-900">💬 Yatri Feedback & Suggestions</h3>
+              <p className="text-xs text-slate-500 font-medium mt-1">Dekhein yatri community ke feedbacks aur apna suggestion share karein.</p>
+            </div>
+            <FeedbackSection />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
