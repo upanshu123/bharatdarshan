@@ -79,7 +79,7 @@ export const AFFILIATE_PARTNERS = {
       id: "cleartrip",
       name: "Cleartrip",
       shortName: "CLR",
-      affiliateUrl: "https://bitli.in/96hs1CY",
+      affiliateUrl: "https://bitli.in/Yqg423O",
       searchBase: "https://www.cleartrip.com/hotels/results/?q=",
       commission: "3–5%",
       color: "bg-sky-50 border-sky-200 text-sky-700 hover:border-sky-400",
