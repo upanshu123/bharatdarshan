@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Mountain, Palmtree, Castle, Sparkles, Zap, ChevronRight } from 'lucide-react';
 import useDebounce from '../hooks/useDebounce';
 import SearchOverlay from '../components/ui/SearchOverlay';
-import FeedbackSection from '../components/ui/FeedbackSection';
 import localHeroBg from '../assets/bharatdarshannimage.jpeg';
 
 export default function Home() {
@@ -193,9 +192,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
-      {/* Yatri Feedback & Suggestions Section */}
-      <FeedbackSection />
 
     </div>
   );

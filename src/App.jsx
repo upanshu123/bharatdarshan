@@ -44,62 +44,13 @@ const AppShell = () => {
           <Route path="/login" element={<><RouteNavbar /><Login /></>} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
 
-          {/* Protected Main Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <RouteNavbar />
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/top-destinations"
-            element={
-              <ProtectedRoute>
-                <RouteNavbar />
-                <TopDestinations />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/search"
-            element={
-              <ProtectedRoute>
-                <RouteNavbar />
-                <SearchResults />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/place/:id"
-            element={
-              <ProtectedRoute>
-                <PlaceDetails />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/plan"
-            element={
-              <ProtectedRoute>
-                <RouteNavbar />
-                <PlanMyYatra />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <ProtectedRoute>
-                <RouteNavbar />
-                <div className="px-4 md:px-10 py-24 text-center font-serif text-3xl text-slate-900">
-                  Official Tourism Support Channel
-                </div>
-              </ProtectedRoute>
-            }
-          />
+          {/* Main Routes */}
+          <Route path="/" element={<><RouteNavbar /><Home /></>} />
+          <Route path="/top-destinations" element={<><RouteNavbar /><TopDestinations /></>} />
+          <Route path="/search" element={<><RouteNavbar /><SearchResults /></>} />
+          <Route path="/place/:id" element={<PlaceDetails />} />
+          <Route path="/plan" element={<><RouteNavbar /><PlanMyYatra /></>} />
+          <Route path="/contact" element={<><RouteNavbar /><div className="px-4 md:px-10 py-24 text-center font-serif text-3xl text-slate-900">Official Tourism Support Channel</div></>} />
         </Routes>
       </main>
 

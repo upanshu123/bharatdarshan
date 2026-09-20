@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Sparkles, MapPin, Calendar, Users, Wallet, Compass, ChevronLeft,
   AlertCircle, RefreshCw, CheckCircle, Clock, Utensils, Hotel,
-  Navigation, Star, Package, Info, Plane, Car
+  Navigation, Star, Package, Info, Plane, Car, UserCircle, LogOut, Lock
 } from "lucide-react";
+import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
+import { auth, googleProvider } from "../config/firebaseConfig";
+import FeedbackSection from "../components/ui/FeedbackSection";
 import { generateAIItinerary } from "../utils/aiEngine";
 import {
   PLANNER_DESTINATIONS, TRIP_TYPES, BUDGET_TIERS, INTERESTS, AFFILIATE_PARTNERS
@@ -532,11 +535,62 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
 export default function PlanMyYatra() {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
   const [stage, setStage] = useState("form");
   const [itinerary, setItinerary] = useState(null);
   const [tripData, setTripData] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [isDemoMode, setIsDemoMode] = useState(false);
+
+  useEffect(() => {
+    try {
+      googleProvider.setCustomParameters({ prompt: 'select_account' });
+    } catch (e) {
+      console.warn('Google provider custom parameters setup:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setAuthLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    setLoginLoading(true);
+    setLoginError("");
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (popupErr) {
+      console.warn("Popup login failed/blocked, initiating Google OAuth Redirect:", popupErr);
+      if (popupErr?.code === 'auth/unauthorized-domain') {
+        setLoginError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
+        setLoginLoading(false);
+        return;
+      }
+      try {
+        await signInWithRedirect(auth, googleProvider);
+      } catch (redirectErr) {
+        console.error("Redirect sign-in error:", redirectErr);
+        setLoginError(redirectErr?.message || "Google Login failed. Please try again.");
+        setLoginLoading(false);
+      }
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Logout error:", e);
+    }
+  };
 
   const handleSubmit = async (formData) => {
     setTripData(formData);
@@ -572,6 +626,103 @@ export default function PlanMyYatra() {
     setStage("form"); setItinerary(null); setTripData(null); setErrorMsg("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+          <span className="text-sm font-medium">Checking authentication state...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
+        <style>{`
+          @keyframes yatra-shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+          }
+        `}</style>
+        {/* Header section */}
+        <div className="relative overflow-hidden border-b border-orange-100 pt-28 md:pt-32 pb-12" style={{background:'linear-gradient(135deg,#0f172a 0%,#1c1148 45%,#1a0800 100%)'}}>
+          <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'500px',height:'300px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(234,88,12,0.18) 0%,transparent 70%)',pointerEvents:'none'}} />
+          <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <button onClick={() => navigate("/")}
+              className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-orange-300 mb-6 transition">
+              <ChevronLeft size={14} /> Back to Home
+            </button>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 border" style={{background:'rgba(251,146,60,0.12)',borderColor:'rgba(251,146,60,0.35)',boxShadow:'0 0 16px 2px rgba(251,146,60,0.18)'}}>
+              <Sparkles size={13} style={{color:'#fb923c'}} />
+              <span className="text-[9px] font-black uppercase tracking-widest" style={{background:'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 2.5s linear infinite'}}>Plan My Yatra Access</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-serif font-black mb-4 italic" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 40%,#fb923c 70%,#fff 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 3.5s linear infinite',filter:'drop-shadow(0 0 24px rgba(251,146,60,0.35))'}}>
+              Login Required to Plan Your Yatra
+            </h1>
+            <p className="text-slate-400 font-medium max-w-xl mx-auto text-sm leading-relaxed">
+              Personalized AI trip itinerary create karne ke liye Google se log in karein aur niche hamari community ke feedback & suggestions dekhein.
+            </p>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          {/* Login Gate Card */}
+          <div className="rounded-[32px] p-8 md:p-12 text-center bg-white shadow-xl border border-orange-100 mb-16 relative overflow-hidden">
+            <div className="w-16 h-16 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <Lock size={32} />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-serif font-black text-slate-900 mb-3">
+              Unlock AI Itinerary Generator
+            </h2>
+            <p className="text-slate-600 max-w-lg mx-auto text-sm mb-8 font-medium">
+              Apni yatra plan karne aur customized Gemini AI itinerary generate karne ke liye 1-click Google Login karein.
+            </p>
+
+            {loginError && (
+              <div className="max-w-md mx-auto mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
+                {loginError}
+              </div>
+            )}
+
+            <button
+              onClick={handleGoogleLogin}
+              disabled={loginLoading}
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl active:scale-95 disabled:opacity-50"
+            >
+              {loginLoading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+              )}
+              <span>{loginLoading ? "Signing in with Google..." : "Continue with Google to Plan Yatra"}</span>
+            </button>
+          </div>
+
+          {/* Feedback & Suggestions Banner & Section */}
+          <div className="mt-8">
+            <div className="bg-slate-900 rounded-3xl p-8 text-white mb-8 border border-slate-800 shadow-xl text-center relative overflow-hidden">
+              <div style={{position:'absolute',top:'-40px',right:'-40px',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(251,146,60,0.2) 0%,transparent 70%)',pointerEvents:'none'}} />
+              <h3 className="text-xl md:text-2xl font-serif font-black mb-2 text-orange-400">
+                💬 Yatri Feedback & Suggestions
+              </h3>
+              <p className="text-slate-300 text-sm max-w-xl mx-auto">
+                Abhi tak ke saare feedback & suggestions dekhein aur apna feedback share karein!
+              </p>
+            </div>
+            <FeedbackSection />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
@@ -615,8 +766,31 @@ export default function PlanMyYatra() {
         </div>
       )}
 
-      {/* Main Container with generous top-padding when in result mode so fixed navbar never overlaps top banner */}
+      {/* Main Container */}
       <div className={"max-w-4xl mx-auto px-6 " + (stage === "result" ? "pt-28 md:pt-36 pb-12" : "py-12")}>
+        {/* Logged in User Bar */}
+        <div className="flex items-center justify-between bg-white border border-orange-100 rounded-2xl p-4 mb-8 shadow-sm">
+          <div className="flex items-center gap-3">
+            {currentUser.photoURL ? (
+              <img src={currentUser.photoURL} alt={currentUser.displayName || "User"} className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-400" />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black flex items-center justify-center">
+                {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'Y'}
+              </div>
+            )}
+            <div>
+              <p className="text-xs font-black text-slate-900">{currentUser.displayName || "Yatri Explorer"}</p>
+              <p className="text-[11px] text-slate-500 font-medium">{currentUser.email}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+          >
+            <LogOut size={14} /> Log Out
+          </button>
+        </div>
+
         {(stage === "form" || stage === "loading") && (
           <div className="rounded-[32px] p-8 md:p-12" style={{background:'#fff',boxShadow:'0 4px 40px rgba(234,88,12,0.10), 0 1px 4px rgba(0,0,0,0.06)',border:'1.5px solid rgba(251,146,60,0.13)'}}>
             <PlannerForm onSubmit={handleSubmit} loading={stage === "loading"} />
@@ -647,7 +821,7 @@ export default function PlanMyYatra() {
               </button>
             </div>
 
-            {/* Smart Curated Banner with high z-index and clear positioning */}
+            {/* Smart Curated Banner */}
             {isDemoMode && (
               <div className="relative z-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-5 md:p-6 mb-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
@@ -676,6 +850,11 @@ export default function PlanMyYatra() {
             <ItineraryResult itinerary={itinerary} tripData={tripData} onReset={handleReset} />
           </div>
         )}
+
+        {/* Embedded Feedback Section for logged-in users */}
+        <div className="mt-16 border-t border-orange-100 pt-12">
+          <FeedbackSection />
+        </div>
       </div>
     </div>
   );
