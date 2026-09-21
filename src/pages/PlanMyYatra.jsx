@@ -12,6 +12,9 @@ import { generateAIItinerary } from "../utils/aiEngine";
 import {
   PLANNER_DESTINATIONS, TRIP_TYPES, BUDGET_TIERS, INTERESTS, AFFILIATE_PARTNERS
 } from "../data/plannerData";
+import {
+  DEPARTURE_CITIES_BY_REGION, getDepartureCityById
+} from "../data/departureData";
 
 function LoadingOverlay({ destination }) {
   const tips = [
@@ -52,7 +55,7 @@ function LoadingOverlay({ destination }) {
 function PlannerForm({ onSubmit, loading }) {
   const today = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
-    origin: "", destination: "", destinationName: "",
+    originId: "", origin: "", destination: "", destinationName: "",
     startDate: "", endDate: "", travellers: 2,
     budget: "Comfort", tripType: "Heritage", interests: [],
   });
@@ -70,7 +73,7 @@ function PlannerForm({ onSubmit, loading }) {
 
   const validate = () => {
     const e = {};
-    if (!form.origin.trim()) e.origin = "Enter your departure city";
+    if (!form.originId) e.origin = "Select your departure city";
     if (!form.destination) e.destination = "Select a destination";
     if (!form.startDate) e.startDate = "Select start date";
     if (!form.endDate) e.endDate = "Select end date";
@@ -86,7 +89,14 @@ function PlannerForm({ onSubmit, loading }) {
     const end = new Date(form.endDate);
     const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
     const dest = PLANNER_DESTINATIONS.find(d => d.id === form.destination);
-    onSubmit({ ...form, days, destinationName: dest?.name || form.destination });
+    const depCity = getDepartureCityById(form.originId);
+    onSubmit({
+      ...form,
+      days,
+      destinationName: dest?.name || form.destination,
+      origin: depCity?.name || form.origin,
+      departureCity: depCity || null,
+    });
   };
 
   return (
@@ -94,10 +104,37 @@ function PlannerForm({ onSubmit, loading }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Departing From</label>
-          <input type="text" placeholder="e.g. Delhi, Mumbai, Bengaluru" value={form.origin}
-            onChange={e => set("origin", e.target.value)}
-            className={"w-full border rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition " + (errors.origin ? "border-red-400 bg-red-50" : "border-slate-200")} />
+          <select
+            id="origin-city-select"
+            value={form.originId}
+            onChange={e => {
+              const city = getDepartureCityById(e.target.value);
+              set("originId", e.target.value);
+              if (city) set("origin", city.name);
+            }}
+            className={"w-full border rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition bg-white " + (errors.origin ? "border-red-400 bg-red-50" : "border-slate-200")}
+          >
+            <option value="">Select your departure city...</option>
+            {Object.entries(DEPARTURE_CITIES_BY_REGION).map(([region, cities]) => (
+              <optgroup key={region} label={`── ${region} ──`}>
+                {cities.map(city => (
+                  <option key={city.id} value={city.id}>
+                    {city.name}, {city.state}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
           {errors.origin && <p className="text-red-500 text-xs mt-1">{errors.origin}</p>}
+          {form.originId && (() => {
+            const c = getDepartureCityById(form.originId);
+            return c ? (
+              <div className="mt-2 p-2.5 bg-orange-50 rounded-lg border border-orange-100 text-[11px] font-medium text-orange-800 space-y-0.5">
+                <div>🚂 <span className="font-bold">{c.trainStation.name}</span></div>
+                <div>🚌 <span className="font-bold">{c.busStand.name}</span></div>
+              </div>
+            ) : null;
+          })()}
         </div>
         <div>
           <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Destination</label>
@@ -191,6 +228,7 @@ function PlannerForm({ onSubmit, loading }) {
 function ItineraryResult({ itinerary, tripData, onReset }) {
   if (!itinerary) return null;
   const { tripTitle, tagline, highlights, days, mustTry, packingEssentials, localInsights, bestTimeToVisit, budgetSummary, logistics } = itinerary;
+  const departureCity = tripData?.departureCity || null;
 
   return (
     <div className="space-y-8 pb-20">
@@ -207,12 +245,64 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
           {(highlights || []).map((h, i) => <span key={i} className="px-3 py-1.5 bg-white/10 rounded-full text-xs font-bold border border-white/10">✓ {h}</span>)}
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-slate-400">
+          {tripData.origin && <span className="flex items-center gap-1"><Navigation size={14} />{tripData.origin}</span>}
           <span className="flex items-center gap-1"><MapPin size={14} />{tripData.destinationName}</span>
           <span className="flex items-center gap-1"><Clock size={14} />{tripData.days} Days</span>
           <span className="flex items-center gap-1"><Users size={14} />{tripData.travellers} Person(s)</span>
           <span className="flex items-center gap-1"><Wallet size={14} />{tripData.budget} Budget</span>
         </div>
       </div>
+
+      {/* ── Departing From Logistics ──────────────────────────────────────── */}
+      {departureCity && (
+        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+          <h3 className="text-sm font-black uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+            <Car className="text-violet-600" size={16} /> Departing From — {departureCity.name}, {departureCity.state}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Train from origin */}
+            <div className="flex flex-col justify-between p-4 bg-violet-50/70 rounded-xl border border-violet-100">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center text-xl shrink-0">🚂</div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-violet-600 tracking-wider">Board Train From</span>
+                  <p className="font-black text-slate-900 text-sm leading-snug">{departureCity.trainStation.name}</p>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Your nearest railway station</p>
+                </div>
+              </div>
+              <a
+                href={departureCity.trainStation.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 w-full py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-bold transition shadow-sm"
+              >
+                📍 View on Google Maps ↗
+              </a>
+            </div>
+
+            {/* Bus from origin */}
+            <div className="flex flex-col justify-between p-4 bg-teal-50/70 rounded-xl border border-teal-100">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-teal-100 flex items-center justify-center text-xl shrink-0">🚌</div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-teal-600 tracking-wider">Board Bus From</span>
+                  <p className="font-black text-slate-900 text-sm leading-snug">{departureCity.busStand.name}</p>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Your nearest bus terminus</p>
+                </div>
+              </div>
+              <a
+                href={departureCity.busStand.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition shadow-sm"
+              >
+                📍 View on Google Maps ↗
+              </a>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 font-medium mt-3 text-center">⬇️ Book your train / bus ticket from the above station and head to your destination below</p>
+        </div>
+      )}
 
       {logistics && (
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
