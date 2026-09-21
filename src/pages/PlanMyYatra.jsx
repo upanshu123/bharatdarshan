@@ -10,6 +10,7 @@ import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, signO
 import { auth, googleProvider } from "../config/firebaseConfig";
 import FeedbackSection from "../components/ui/FeedbackSection";
 import { generateAIItinerary } from "../utils/aiEngine";
+import { generateItineraryPDF } from "../utils/pdfGenerator";
 import {
   PLANNER_DESTINATIONS, TRIP_TYPES, BUDGET_TIERS, INTERESTS, AFFILIATE_PARTNERS
 } from "../data/plannerData";
@@ -231,25 +232,40 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   const { tripTitle, tagline, highlights, days, mustTry, packingEssentials, localInsights, bestTimeToVisit, budgetSummary, logistics } = itinerary;
   const departureCity = tripData?.departureCity || null;
   const [copied, setCopied] = useState(false);
+  const [pdfGenerating, setPdfGenerating] = useState(false);
 
   const handleDownloadPDF = () => {
-    window.print();
+    setPdfGenerating(true);
+    try {
+      const ok = generateItineraryPDF(itinerary, tripData);
+      if (!ok) {
+        // Fallback to browser print if jsPDF encounters an issue
+        window.print();
+      }
+    } catch (err) {
+      console.error("PDF download error, falling back to print:", err);
+      window.print();
+    } finally {
+      setTimeout(() => setPdfGenerating(false), 1200);
+    }
   };
 
   const handleShareWhatsApp = () => {
-    let text = `🇮🇳 *BharatDarshan Yatra Itinerary: ${tripTitle}*\n`;
-    if (tripData?.destinationName) text += `📍 Destination: ${tripData.destinationName}\n`;
-    if (tripData?.origin) text += `🏁 Departing From: ${tripData.origin}\n`;
-    if (tripData?.days) text += `🗓️ Duration: ${tripData.days} Days | ${tripData.travellers || 1} Person(s)\n`;
-    if (tripData?.budget) text += `💰 Budget Tier: ${tripData.budget}\n\n`;
+    const siteUrl = "https://bharatdarshan-seven.vercel.app";
+    let text = `🇮🇳 *BharatDarshan Yatra Itinerary: ${tripTitle}*\n\n`;
+    if (tripData?.destinationName) text += `📍 *Destination:* ${tripData.destinationName}\n`;
+    if (tripData?.origin) text += `🏁 *Departing From:* ${tripData.origin}\n`;
+    if (tripData?.days) text += `🗓️ *Duration:* ${tripData.days} Days | ${tripData.travellers || 1} Person(s)\n`;
+    if (tripData?.budget) text += `💰 *Budget:* ${tripData.budget}\n`;
+    if (budgetSummary?.estimatedTotal) text += `💵 *Est. Budget:* ${budgetSummary.estimatedTotal}\n\n`;
 
     if (highlights && highlights.length > 0) {
-      text += `✨ *Highlights:*\n` + highlights.map(h => `• ${h}`).join('\n') + `\n\n`;
+      text += `✨ *Highlights:*\n` + highlights.slice(0, 4).map(h => `• ${h}`).join('\n') + `\n\n`;
     }
 
     if (days && days.length > 0) {
-      text += `📅 *Day-by-Day Plan:*\n`;
-      days.forEach(d => {
+      text += `📅 *Day-by-Day Highlights:*\n`;
+      days.slice(0, 5).forEach(d => {
         text += `*Day ${d.day}: ${d.theme}*\n`;
         const acts = d.activities && d.activities.length > 0
           ? d.activities
@@ -257,16 +273,28 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
               locationName: d[p].locationName || d[p].activity
             }));
-        acts.forEach(a => {
+        acts.slice(0, 2).forEach(a => {
           text += `  • ${a.timeOfDay || 'Activity'}: ${a.locationName || a.activity}\n`;
         });
       });
+      if (days.length > 5) {
+        text += `  ...and more!\n`;
+      }
       text += `\n`;
     }
 
-    text += `Plan your Yatra with ❤️ on BharatDarshan (https://bharatdarshan.live)`;
+    text += `Plan & customize your Yatra on BharatDarshan:\n👉 ${siteUrl}/plan`;
     const encoded = encodeURIComponent(text);
-    window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+    const waUrl = `https://wa.me/?text=${encoded}`;
+
+    try {
+      const win = window.open(waUrl, '_blank', 'noopener,noreferrer');
+      if (!win || win.closed || typeof win.closed === 'undefined') {
+        window.location.href = waUrl;
+      }
+    } catch (e) {
+      window.location.href = waUrl;
+    }
   };
 
   const handleCopyItinerary = () => {
@@ -293,8 +321,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
       });
     }
     if (budgetSummary) {
-      text += `Budget Estimate: ${budgetSummary.estimatedTotal || ''}\n`;
+      text += `Budget Estimate: ${budgetSummary.estimatedTotal || ''}\n\n`;
     }
+    text += `Planned with ❤️ on BharatDarshan: https://bharatdarshan-seven.vercel.app/plan\n`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
@@ -302,15 +331,17 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   };
 
   const handleNativeShare = async () => {
+    const siteUrl = "https://bharatdarshan-seven.vercel.app/plan";
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
           title: `BharatDarshan Itinerary - ${tripTitle}`,
           text: `Check out my customized travel itinerary for ${tripData?.destinationName || 'India'} on BharatDarshan!`,
-          url: window.location.href,
+          url: siteUrl,
         });
       } catch (e) {
-        console.warn("Native share cancelled", e);
+        console.warn("Native share cancelled or failed, using WhatsApp", e);
+        handleShareWhatsApp();
       }
     } else {
       handleShareWhatsApp();
@@ -704,9 +735,18 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         <button
           type="button"
           onClick={handleDownloadPDF}
-          className="px-8 py-4 bg-orange-600 hover:bg-orange-500 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-orange-500/25 active:scale-95"
+          disabled={pdfGenerating}
+          className="px-8 py-4 bg-orange-600 hover:bg-orange-500 disabled:opacity-75 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-orange-500/25 active:scale-95 cursor-pointer"
         >
-          <Download size={16} /> Download Itinerary PDF
+          {pdfGenerating ? (
+            <>
+              <RefreshCw size={16} className="animate-spin" /> Generating PDF...
+            </>
+          ) : (
+            <>
+              <Download size={16} /> Download Itinerary PDF
+            </>
+          )}
         </button>
         <button
           type="button"

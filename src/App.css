@@ -21,6 +21,11 @@ body {
 
 /* ── Print / PDF Export Styling ────────────────────────────────────────────── */
 @media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   nav, footer, .no-print, button:not(.print-keep), a.no-print {
     display: none !important;
   }
@@ -38,6 +43,12 @@ body {
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
+  }
+
+  .print-container h2 {
+    -webkit-text-fill-color: #0f172a !important;
+    color: #0f172a !important;
+    background: none !important;
   }
 
   .print-page-break {
