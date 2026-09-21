@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   Sparkles, MapPin, Calendar, Users, Wallet, Compass, ChevronLeft,
   AlertCircle, RefreshCw, CheckCircle, Clock, Utensils, Hotel,
-  Navigation, Star, Package, Info, Plane, Car, UserCircle, LogOut, Lock, MessageSquarePlus, X
+  Navigation, Star, Package, Info, Plane, Car, UserCircle, LogOut, Lock, MessageSquarePlus, X,
+  Download, Share2, Copy, Check, Printer
 } from "lucide-react";
 import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebaseConfig";
@@ -229,9 +230,95 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   if (!itinerary) return null;
   const { tripTitle, tagline, highlights, days, mustTry, packingEssentials, localInsights, bestTimeToVisit, budgetSummary, logistics } = itinerary;
   const departureCity = tripData?.departureCity || null;
+  const [copied, setCopied] = useState(false);
+
+  const handleDownloadPDF = () => {
+    window.print();
+  };
+
+  const handleShareWhatsApp = () => {
+    let text = `🇮🇳 *BharatDarshan Yatra Itinerary: ${tripTitle}*\n`;
+    if (tripData?.destinationName) text += `📍 Destination: ${tripData.destinationName}\n`;
+    if (tripData?.origin) text += `🏁 Departing From: ${tripData.origin}\n`;
+    if (tripData?.days) text += `🗓️ Duration: ${tripData.days} Days | ${tripData.travellers || 1} Person(s)\n`;
+    if (tripData?.budget) text += `💰 Budget Tier: ${tripData.budget}\n\n`;
+
+    if (highlights && highlights.length > 0) {
+      text += `✨ *Highlights:*\n` + highlights.map(h => `• ${h}`).join('\n') + `\n\n`;
+    }
+
+    if (days && days.length > 0) {
+      text += `📅 *Day-by-Day Plan:*\n`;
+      days.forEach(d => {
+        text += `*Day ${d.day}: ${d.theme}*\n`;
+        const acts = d.activities && d.activities.length > 0
+          ? d.activities
+          : ["morning", "afternoon", "evening"].filter(p => d[p]).map(p => ({
+              timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
+              locationName: d[p].locationName || d[p].activity
+            }));
+        acts.forEach(a => {
+          text += `  • ${a.timeOfDay || 'Activity'}: ${a.locationName || a.activity}\n`;
+        });
+      });
+      text += `\n`;
+    }
+
+    text += `Plan your Yatra with ❤️ on BharatDarshan (https://bharatdarshan.live)`;
+    const encoded = encodeURIComponent(text);
+    window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+  };
+
+  const handleCopyItinerary = () => {
+    let text = `BharatDarshan Yatra Itinerary: ${tripTitle}\n`;
+    text += `${tagline || ''}\n\n`;
+    text += `Destination: ${tripData?.destinationName || ''}\n`;
+    if (tripData?.origin) text += `Origin: ${tripData.origin}\n`;
+    text += `Duration: ${tripData?.days || 1} Days | Travelers: ${tripData?.travellers || 1}\n\n`;
+
+    if (days && days.length > 0) {
+      days.forEach(d => {
+        text += `--- DAY ${d.day}: ${d.theme} ---\n`;
+        const acts = d.activities && d.activities.length > 0
+          ? d.activities
+          : ["morning", "afternoon", "evening"].filter(p => d[p]).map(p => ({
+              timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
+              locationName: d[p].locationName || d[p].activity,
+              description: d[p].description
+            }));
+        acts.forEach(a => {
+          text += `• ${a.timeOfDay || 'Activity'}: ${a.locationName || a.activity}\n  ${a.description || ''}\n`;
+        });
+        text += `\n`;
+      });
+    }
+    if (budgetSummary) {
+      text += `Budget Estimate: ${budgetSummary.estimatedTotal || ''}\n`;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+
+  const handleNativeShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: `BharatDarshan Itinerary - ${tripTitle}`,
+          text: `Check out my customized travel itinerary for ${tripData?.destinationName || 'India'} on BharatDarshan!`,
+          url: window.location.href,
+        });
+      } catch (e) {
+        console.warn("Native share cancelled", e);
+      }
+    } else {
+      handleShareWhatsApp();
+    }
+  };
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="space-y-8 pb-20 print-container">
       <div className="rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden" style={{background:'linear-gradient(135deg,#0f172a 0%,#1e1b4b 45%,#1a0800 100%)',boxShadow:'0 20px 60px rgba(0,0,0,0.4), 0 0 50px rgba(251,146,60,0.12)'}}>
         <div style={{position:'absolute',top:'-50px',left:'-30px',width:'300px',height:'300px',borderRadius:'50%',background:'radial-gradient(circle,rgba(234,88,12,0.2) 0%,transparent 70%)',pointerEvents:'none'}} />
         <div style={{position:'absolute',bottom:'-30px',right:'-20px',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%)',pointerEvents:'none'}} />
@@ -250,6 +337,43 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
           <span className="flex items-center gap-1"><Clock size={14} />{tripData.days} Days</span>
           <span className="flex items-center gap-1"><Users size={14} />{tripData.travellers} Person(s)</span>
           <span className="flex items-center gap-1"><Wallet size={14} />{tripData.budget} Budget</span>
+        </div>
+
+        {/* ── Action Bar: Download PDF, Share WhatsApp, Copy Itinerary ─────── */}
+        <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap gap-3 items-center justify-between no-print">
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={handleDownloadPDF}
+              className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition shadow-lg hover:shadow-orange-500/25 active:scale-95"
+            >
+              <Download size={15} /> Download / Save PDF
+            </button>
+            <button
+              type="button"
+              onClick={handleShareWhatsApp}
+              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition shadow-lg hover:shadow-emerald-500/25 active:scale-95"
+            >
+              <MessageSquarePlus size={15} /> Share on WhatsApp
+            </button>
+            <button
+              type="button"
+              onClick={handleCopyItinerary}
+              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition border border-white/20 active:scale-95"
+            >
+              {copied ? <Check size={15} className="text-emerald-400" /> : <Copy size={15} />}
+              {copied ? "Copied to Clipboard!" : "Copy Itinerary Text"}
+            </button>
+          </div>
+          {typeof navigator !== "undefined" && navigator.share && (
+            <button
+              type="button"
+              onClick={handleNativeShare}
+              className="px-4 py-2.5 rounded-xl bg-violet-600/60 hover:bg-violet-600 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition border border-violet-400/30 active:scale-95"
+            >
+              <Share2 size={15} /> Share Trip
+            </button>
+          )}
         </div>
       </div>
 
@@ -612,7 +736,21 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       </div>
 
-      <div className="text-center pt-4">
+      <div className="text-center pt-4 flex flex-wrap items-center justify-center gap-4 no-print">
+        <button
+          type="button"
+          onClick={handleDownloadPDF}
+          className="px-8 py-4 bg-orange-600 hover:bg-orange-500 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-orange-500/25 active:scale-95"
+        >
+          <Download size={16} /> Download Itinerary PDF
+        </button>
+        <button
+          type="button"
+          onClick={handleShareWhatsApp}
+          className="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-emerald-500/25 active:scale-95"
+        >
+          <MessageSquarePlus size={16} /> Share on WhatsApp
+        </button>
         <button onClick={onReset}
           className="yatra-glow-btn px-10 py-4 text-white rounded-full font-black text-xs uppercase tracking-widest"
           style={{background:'linear-gradient(135deg,#0f172a,#1e1b4b,#1a0800)',boxShadow:'0 0 24px 4px rgba(99,102,241,0.3), 0 4px 20px rgba(0,0,0,0.4)'}}>

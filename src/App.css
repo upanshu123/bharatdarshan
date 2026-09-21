@@ -18,3 +18,31 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* ── Print / PDF Export Styling ────────────────────────────────────────────── */
+@media print {
+  nav, footer, .no-print, button:not(.print-keep), a.no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .print-page-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
