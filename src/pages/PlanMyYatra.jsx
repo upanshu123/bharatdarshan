@@ -339,42 +339,6 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
           <span className="flex items-center gap-1"><Wallet size={14} />{tripData.budget} Budget</span>
         </div>
 
-        {/* ── Action Bar: Download PDF, Share WhatsApp, Copy Itinerary ─────── */}
-        <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap gap-3 items-center justify-between no-print">
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={handleDownloadPDF}
-              className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition shadow-lg hover:shadow-orange-500/25 active:scale-95"
-            >
-              <Download size={15} /> Download / Save PDF
-            </button>
-            <button
-              type="button"
-              onClick={handleShareWhatsApp}
-              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition shadow-lg hover:shadow-emerald-500/25 active:scale-95"
-            >
-              <MessageSquarePlus size={15} /> Share on WhatsApp
-            </button>
-            <button
-              type="button"
-              onClick={handleCopyItinerary}
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition border border-white/20 active:scale-95"
-            >
-              {copied ? <Check size={15} className="text-emerald-400" /> : <Copy size={15} />}
-              {copied ? "Copied to Clipboard!" : "Copy Itinerary Text"}
-            </button>
-          </div>
-          {typeof navigator !== "undefined" && navigator.share && (
-            <button
-              type="button"
-              onClick={handleNativeShare}
-              className="px-4 py-2.5 rounded-xl bg-violet-600/60 hover:bg-violet-600 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 transition border border-violet-400/30 active:scale-95"
-            >
-              <Share2 size={15} /> Share Trip
-            </button>
-          )}
-        </div>
       </div>
 
       {/* ── Departing From Logistics ──────────────────────────────────────── */}
@@ -750,6 +714,14 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
           className="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-emerald-500/25 active:scale-95"
         >
           <MessageSquarePlus size={16} /> Share on WhatsApp
+        </button>
+        <button
+          type="button"
+          onClick={handleCopyItinerary}
+          className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg active:scale-95"
+        >
+          {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+          {copied ? "Copied!" : "Copy Itinerary"}
         </button>
         <button onClick={onReset}
           className="yatra-glow-btn px-10 py-4 text-white rounded-full font-black text-xs uppercase tracking-widest"
