@@ -1,0 +1,17 @@
+{
+  "name": "BharatDarshan - Discover & Plan Your Dream India Trip",
+  "short_name": "BharatDarshan",
+  "description": "India's premier travel discovery and AI-powered Yatra planning platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea580c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
