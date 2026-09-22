@@ -387,13 +387,13 @@ export default function Navbar() {
             <p className="text-slate-500 text-sm mb-8 font-medium">We're here to help you plan your incredible journey across India.</p>
             
             <div className="space-y-4">
-              <a href="mailto:joinbharatdarshan@gmail.com" className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50 transition-all group">
+              <a href="mailto:joinbharatdarshanyatra@gmail.com" className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50 transition-all group">
                 <div className="w-10 h-10 bg-slate-50 text-slate-600 group-hover:bg-orange-100 group-hover:text-orange-600 rounded-full flex items-center justify-center shrink-0 transition-colors">
                   <Mail size={18} />
                 </div>
                 <div className="overflow-hidden">
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Email Support</p>
-                  <p className="text-sm font-bold text-slate-700 truncate">joinbharatdarshan@gmail.com</p>
+                  <p className="text-sm font-bold text-slate-700 truncate">joinbharatdarshanyatra@gmail.com</p>
                 </div>
               </a>
               

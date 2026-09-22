@@ -74,11 +74,11 @@
 //         <div>
 //           <h3 className="font-black text-xs text-orange-500 uppercase tracking-[0.2em] mb-8">Reach Out</h3>
 //           <div className="flex flex-col gap-6 text-slate-400 text-sm font-bold">
-//             <a href="mailto:joinbharatdarshan@gmail.com" className="flex items-center gap-4 hover:text-white transition group">
+//             <a href="mailto:joinbharatdarshanyatra@gmail.com" className="flex items-center gap-4 hover:text-white transition group">
 //               <div className="bg-white/5 p-3 rounded-xl group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 border border-white/10">
 //                 <Mail size={18} />
 //               </div>
-//               <span className="truncate">joinbharatdarshan@gmail.com</span>
+//               <span className="truncate">joinbharatdarshanyatra@gmail.com</span>
 //             </a>
 //             <a href="tel:+917357424552" className="flex items-center gap-4 hover:text-white transition group">
 //               <div className="bg-white/5 p-3 rounded-xl group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 border border-white/10">
@@ -190,11 +190,11 @@ export default function Footer() {
         <div>
           <h3 className="font-black text-xs text-orange-500 uppercase tracking-[0.2em] mb-8">Reach Out</h3>
           <div className="flex flex-col gap-6 text-slate-400 text-sm font-bold">
-            <a href="mailto:joinbharatdarshan@gmail.com" className="flex items-center gap-4 hover:text-white transition group">
+            <a href="mailto:joinbharatdarshanyatra@gmail.com" className="flex items-center gap-4 hover:text-white transition group">
               <div className="bg-white/5 p-3 rounded-xl group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 border border-white/10">
                 <Mail size={18} />
               </div>
-              <span className="truncate">joinbharatdarshan@gmail.com</span>
+              <span className="truncate">joinbharatdarshanyatra@gmail.com</span>
             </a>
             <a href="tel:+917357424552" className="flex items-center gap-4 hover:text-white transition group">
               <div className="bg-white/5 p-3 rounded-xl group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 border border-white/10">

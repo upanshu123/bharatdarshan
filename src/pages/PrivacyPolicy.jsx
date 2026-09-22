@@ -57,11 +57,11 @@ export default function PrivacyPolicy() {
 
           <p className="mb-3">International transfers: Our systems may transfer and store personal information in servers located in countries other than your home country. Where required, we implement safeguards to protect data when transferred across borders, including contractual protections with service providers.</p>
 
-          <p className="mb-3">Your rights and choices: Depending on your jurisdiction, you may have rights to access, correct, port, restrict or delete your personal data. You may opt out of receiving promotional communications. To exercise these rights or make a request, contact us at joinbharatdarshan@gmail.com. We will respond in accordance with applicable law and may need to verify your identity before fulfilling certain requests.</p>
+          <p className="mb-3">Your rights and choices: Depending on your jurisdiction, you may have rights to access, correct, port, restrict or delete your personal data. You may opt out of receiving promotional communications. To exercise these rights or make a request, contact us at joinbharatdarshanyatra@gmail.com. We will respond in accordance with applicable law and may need to verify your identity before fulfilling certain requests.</p>
 
           <p className="mb-3">Changes to this policy: We may update this policy from time to time. If we make material changes, we will post the updated policy and, where required by law or significant change, request re-acceptance from users. The current policy version is shown at the top of this page.</p>
 
-          <p className="mb-3">Contact: For questions, requests or privacy concerns contact: joinbharatdarshan@gmail.com. You may also write to our data protection officer at the address published on our website.</p>
+          <p className="mb-3">Contact: For questions, requests or privacy concerns contact: joinbharatdarshanyatra@gmail.com. You may also write to our data protection officer at the address published on our website.</p>
 
           <p className="mb-3">Acknowledgement: By clicking "I accept" you confirm that you have read and understood this Privacy Policy and consent to our processing of your personal data as described herein.</p>
         </section>
