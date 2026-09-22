@@ -6,34 +6,58 @@
 
   <!-- Homepage — highest priority -->
   <url>
-    <loc>https://bharatdarshan-seven.vercel.app/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <loc>https://bharatdarshanyatra.live/</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Top Destinations page -->
   <url>
-    <loc>https://bharatdarshan-seven.vercel.app/top-destinations</loc>
-    <lastmod>2026-09-19</lastmod>
+    <loc>https://bharatdarshanyatra.live/top-destinations</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Plan My Yatra — AI itinerary planner -->
   <url>
-    <loc>https://bharatdarshan-seven.vercel.app/plan</loc>
-    <lastmod>2026-09-19</lastmod>
+    <loc>https://bharatdarshanyatra.live/plan</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Privacy Policy -->
+  <!-- Search Results -->
   <url>
-    <loc>https://bharatdarshan-seven.vercel.app/privacy</loc>
-    <lastmod>2026-09-19</lastmod>
+    <loc>https://bharatdarshanyatra.live/search</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Contact page -->
+  <url>
+    <loc>https://bharatdarshanyatra.live/contact</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Login page -->
+  <url>
+    <loc>https://bharatdarshanyatra.live/login</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+  </url>
+
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://bharatdarshanyatra.live/privacy</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
 
 </urlset>

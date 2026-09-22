@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bharatdarshan-seven.vercel.app/sitemap.xml
+Sitemap: https://bharatdarshanyatra.live/sitemap.xml
