@@ -34,9 +34,10 @@ import { JAMMU_AND_KASHMIR_PLACES } from '../states/jammu_and_kashmir';
 import { LADAKH_PLACES } from '../states/ladakh';
 import { LAKSHADWEEP_PLACES } from '../states/lakshadweep';
 import { PUDUCHERRY_PLACES } from '../states/puducherry';
+import { topDestinations } from '../destinations';
 
 // Combine all arrays into one massive list
-export const ALL_PLACES = [
+const RAW_ALL_PLACES = [
   ...ANDHRA_PRADESH_PLACES,
   ...ARUNACHAL_PRADESH_PLACES,
   ...ASSAM_PLACES,
@@ -75,13 +76,28 @@ export const ALL_PLACES = [
   ...PUDUCHERRY_PLACES
 ];
 
+// Merge enriched topDestinations properties into ALL_PLACES by ID
+export const ALL_PLACES = RAW_ALL_PLACES.map(place => {
+  const enriched = topDestinations.find(td => td.id === place.id);
+  if (enriched) {
+    return { ...place, ...enriched };
+  }
+  return place;
+});
+
+// Append any topDestinations not present in RAW_ALL_PLACES
+topDestinations.forEach(td => {
+  if (!ALL_PLACES.some(p => p.id === td.id)) {
+    ALL_PLACES.push(td);
+  }
+});
+
 // --- CRITICAL EXPORTS FOR HOME.JSX & PLACEDETAILS.JSX ---
 
-// 1. Export 'PLACES' (Used by PlaceDetails to find by ID) [cite: 547, 554]
+// 1. Export 'PLACES' (Used by PlaceDetails to find by ID)
 export const PLACES = ALL_PLACES;
 
-// 2. Export 'TOP_DESTINATIONS' (Used by Home for initial view) [cite: 60, 109, 314]
-// We filter based on your data structure, usually by a 'popular' flag or a default set
+// 2. Export 'TOP_DESTINATIONS' (Used by Home for initial view)
 export const TOP_DESTINATIONS = ALL_PLACES.filter(p => p.isPopular).length > 0 
     ? ALL_PLACES.filter(p => p.isPopular) 
     : ALL_PLACES.slice(0, 8); 
