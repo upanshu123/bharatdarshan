@@ -90,7 +90,7 @@ export const AFFILIATE_PARTNERS = {
       id: "getyourguide",
       name: "GetYourGuide",
       shortName: "GYG",
-      affiliateUrl: "https://www.getyourguide.com/jaipur-l1149/jaipur-jaipur-amber-fort-full-or-half-day-guided-tour-t516630/?partner_id=L21UWLJ&utm_medium=online_publisher",
+      affiliateUrl: "https://gyg.me/izQrSbTv",
       searchBase: "https://www.getyourguide.com/s/?q=",
       commission: "8%",
       color: "bg-yellow-50 border-yellow-200 text-yellow-700 hover:border-yellow-400",
