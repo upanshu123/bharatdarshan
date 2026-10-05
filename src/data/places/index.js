@@ -95,7 +95,13 @@ export const ALL_PLACES = RAW_ALL_PLACES.map(place => {
 // Append any topDestinations not present in RAW_ALL_PLACES
 topDestinations.forEach(td => {
   const tdNameNorm = (td.name || td.title || '').toLowerCase().trim();
-  if (!ALL_PLACES.some(p => p.id === td.id || (p.name || p.title || '').toLowerCase().trim() === tdNameNorm)) {
+  const exists = ALL_PLACES.some(p => {
+    const pNameNorm = (p.name || p.title || '').toLowerCase().trim();
+    if (pNameNorm === tdNameNorm) return true;
+    if (pNameNorm && tdNameNorm && (pNameNorm.includes(tdNameNorm) || tdNameNorm.includes(pNameNorm))) return true;
+    return false;
+  });
+  if (!exists) {
     ALL_PLACES.push(td);
   }
 });

@@ -42,19 +42,19 @@ export default function Home() {
     const matchingStates = [...new Set(cleanStates)].filter(s => s.toLowerCase().includes(query));
 
     const matchingPlaces = dataset.filter(p => {
-      const nMatch = (p.name || "").toLowerCase().includes(query);
-      const lMatch = (p.location || p.cityState || "").toLowerCase().includes(query);
+      const nMatch = (p.name || p.title || "").toLowerCase().includes(query);
+      const lMatch = (p.location || p.cityState || p.city || "").toLowerCase().includes(query);
       const sMatch = (p.state || "").toLowerCase().includes(query);
       return nMatch || lMatch || sMatch;
     });
 
     return [
       ...matchingStates.slice(0, 3).map(s => ({ type: 'state', name: s })),
-      ...matchingPlaces.slice(0, 5).map(p => ({
+      ...matchingPlaces.slice(0, 8).map(p => ({
         type: 'place',
-        name: p.name,
+        name: p.name || p.title,
         id: p.id,
-        sub: p.cityState || p.location || p.state
+        sub: p.cityState || p.location || (p.city && p.state ? `${p.city}, ${p.state}` : p.state || p.city)
       }))
     ];
   }, [debouncedSearch]);

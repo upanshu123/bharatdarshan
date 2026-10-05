@@ -180,6 +180,74 @@ export const topDestinations = [
     "nearestRailway": "Jaipur Junction Railway Station (JP) - 9 km"
   },
   {
+    "id": 2216,
+    "title": "Birla Mandir & Laxmi Narayan Temple",
+    "name": "Birla Mandir & Laxmi Narayan Temple",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": "Jaipur, Rajasthan",
+    "category": "Spiritual & Temples",
+    "rating": 4.8,
+    "reviewsCount": "7.1k",
+    "tagline": "Pure white marble Hindu sanctuary at the foot of Moti Dungri hill.",
+    "shortDescription": "Built by the B.M. Birla Foundation in 1988, this modern marble architectural masterpiece is dedicated to Lord Vishnu and Goddess Lakshmi.",
+    "detailedDescription": "Constructed entirely of white marble below Moti Dungri Fort, Birla Mandir features intricate carvings depicting mythological scenes, Hindu deities, and philosophical quotes from ancient scriptures.",
+    "description": "Constructed entirely of white marble below Moti Dungri Fort, Birla Mandir is dedicated to Lord Vishnu and Goddess Lakshmi.",
+    "bestTime": "October to March",
+    "idealDuration": "1 Night / 2 Days",
+    "highlights": [
+      "White Marble Carvings",
+      "Moti Dungri Hill Backdrop",
+      "Stained Glass Mythological Art",
+      "Illuminated Evening View"
+    ],
+    "image": "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
+    "images": [
+      "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Culture & Art"
+    ],
+    "nearestAirport": "Jaipur International Airport (JAI) - 10 km",
+    "nearestRailway": "Jaipur Junction Railway Station (JP) - 5 km"
+  },
+  {
+    "id": 2217,
+    "title": "City Palace Jaipur & Jantar Mantar",
+    "name": "City Palace Jaipur & Jantar Mantar",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": "Jaipur, Rajasthan",
+    "category": "Heritage & Forts",
+    "rating": 4.9,
+    "reviewsCount": "12.8k",
+    "tagline": "Royal palace complex of Chandra Mahal, Mubarak Mahal, and UNESCO Astronomical Observatory.",
+    "shortDescription": "The royal heart of Jaipur featuring opulent courtyards, Peacock Gate, and the world's largest stone sundial.",
+    "detailedDescription": "Established in 1727 by Sawai Jai Singh II, City Palace encompasses grand courtyards, gardens, and royal museums alongside Jantar Mantar, a UNESCO World Heritage astronomical observatory containing 19 architectural instruments.",
+    "description": "Established in 1727 by Sawai Jai Singh II, City Palace encompasses grand courtyards, museums, and Jantar Mantar observatory.",
+    "bestTime": "October to March",
+    "idealDuration": "1 Night / 2 Days",
+    "highlights": [
+      "Pritam Niwas Chowk Peacock Gate",
+      "Chandra Mahal Royal Residence",
+      "Jantar Mantar Stone Sundial",
+      "Royal Armory & Textile Museum"
+    ],
+    "image": "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
+    "images": [
+      "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
+    ],
+    "nearestAirport": "Jaipur International Airport (JAI) - 12 km",
+    "nearestRailway": "Jaipur Junction Railway Station (JP) - 4 km"
+  },
+  {
     "id": 3001,
     "title": "Triveni Ghat & Ganga Aarti",
     "name": "Triveni Ghat & Ganga Aarti",
