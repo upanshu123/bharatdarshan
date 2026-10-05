@@ -190,6 +190,10 @@ export default function TopDestinations() {
                     alt={place.name} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
                   

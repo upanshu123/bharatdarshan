@@ -151,7 +151,15 @@ export default function SearchResults() {
             {displayResults.map((place) => (
               <Link to={`/place/${place.id}`} key={place.id} className="group flex flex-col h-full">
                 <div className="h-[500px] overflow-hidden rounded-[80px] relative shadow-2xl transition-all duration-700 group-hover:rounded-[40px]">
-                  <img src={place.image} className="w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt={place.name} />
+                  <img 
+                    src={place.image} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-1000" 
+                    alt={place.name} 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80';
+                    }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
                   
                   {/* Location Badge */}

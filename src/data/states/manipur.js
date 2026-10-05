@@ -129,7 +129,7 @@ export const MANIPUR_PLACES = [
     state: "Senapati, Manipur",
     category: "Nature",
     badge: "Valley of Flowers of NE",
-    image: "https://s7ap1.scene7.com/is/image/incredibleindia/dzukou-valley-kohima-nagaland-attr-hero-1?qlt=82&ts=1727012411648",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
     description: "Rolling hills and bamboo forests on the Manipur-Nagaland border, home to the endemic Dzukou Lily.",
     coordinates: { lat: 25.5714, lng: 94.0628 },
     essentials: {

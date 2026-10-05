@@ -86,22 +86,114 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden relative">
-      <section className="relative h-screen flex flex-col items-center justify-end pb-24 md:pb-32">
-        <div className="absolute inset-0 z-0">
-          <img src={localHeroBg} className="w-full h-full object-cover" alt="Hero Background" />
-          <div className="absolute inset-0 bg-black/40"></div>
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(251,146,60,0); }
+          50% { box-shadow: 0 0 20px 6px rgba(251,146,60,0.35); }
+        }
+        @keyframes flyPathAcross {
+          0% { transform: translate(-10vw, 18vh) scale(0.5); opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
+          100% { transform: translate(110vw, 8vh) scale(0.35); opacity: 0; }
+        }
+        @keyframes birdWingFlap {
+          0%, 100% { transform: scaleY(1); }
+          50% { transform: scaleY(0.4) translateY(1px); }
+        }
+        .vibe-card:hover .vibe-icon { transform: scale(1.18) rotate(-4deg); }
+        .vibe-icon { transition: transform 0.3s cubic-bezier(.34,1.56,.64,1); }
+      `}</style>
+
+      <section className="relative h-screen flex flex-col items-center justify-end pb-20 md:pb-28">
+        {/* Background Image & Vignette */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <img src={localHeroBg} className="w-full h-full object-cover scale-105" alt="Hero Background" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-slate-950/40"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.65)_100%)]"></div>
         </div>
 
-        {/* --- FIXED Z-INDEX --- Changed from z-10 to z-30 so search dropdown floats over content below */}
-        <div className="relative z-30 text-center px-6 w-full max-w-5xl">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md mb-6 border border-orange-400/40" style={{boxShadow: '0 0 18px 2px rgba(251,146,60,0.25)'}}>
-            <Zap size={14} className="text-orange-400 fill-orange-400" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em]" style={{background: 'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundSize:'200% auto', animation:'shimmer 2.5s linear infinite'}}>Official Guide</span>
+        {/* ANIMATED FLYING BIRDS SILHOUETTE LAYER */}
+        <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
+          <svg 
+            className="absolute w-8 h-5 text-slate-950/70 drop-shadow-md"
+            style={{
+              top: '12vh',
+              animation: 'flyPathAcross 18s linear infinite',
+              animationDelay: '0s'
+            }}
+            viewBox="0 0 50 30"
+            fill="currentColor"
+          >
+            <path 
+              d="M 0,15 Q 12,2 25,15 Q 38,2 50,15 Q 36,10 25,18 Q 14,10 0,15 Z" 
+              style={{ animation: 'birdWingFlap 0.8s ease-in-out infinite' }}
+            />
+          </svg>
+          <svg 
+            className="absolute w-6 h-4 text-slate-900/60 drop-shadow-md"
+            style={{
+              top: '16vh',
+              animation: 'flyPathAcross 22s linear infinite',
+              animationDelay: '4.5s'
+            }}
+            viewBox="0 0 50 30"
+            fill="currentColor"
+          >
+            <path 
+              d="M 0,15 Q 12,2 25,15 Q 38,2 50,15 Q 36,10 25,18 Q 14,10 0,15 Z" 
+              style={{ animation: 'birdWingFlap 0.7s ease-in-out infinite' }}
+            />
+          </svg>
+          <svg 
+            className="absolute w-7 h-4.5 text-slate-950/65 drop-shadow-md"
+            style={{
+              top: '20vh',
+              animation: 'flyPathAcross 19s linear infinite',
+              animationDelay: '9s'
+            }}
+            viewBox="0 0 50 30"
+            fill="currentColor"
+          >
+            <path 
+              d="M 0,15 Q 12,2 25,15 Q 38,2 50,15 Q 36,10 25,18 Q 14,10 0,15 Z" 
+              style={{ animation: 'birdWingFlap 0.9s ease-in-out infinite' }}
+            />
+          </svg>
+          <svg 
+            className="absolute w-5 h-3.5 text-slate-900/50 drop-shadow-md"
+            style={{
+              top: '10vh',
+              animation: 'flyPathAcross 24s linear infinite',
+              animationDelay: '14s'
+            }}
+            viewBox="0 0 50 30"
+            fill="currentColor"
+          >
+            <path 
+              d="M 0,15 Q 12,2 25,15 Q 38,2 50,15 Q 36,10 25,18 Q 14,10 0,15 Z" 
+              style={{ animation: 'birdWingFlap 0.65s ease-in-out infinite' }}
+            />
+          </svg>
+        </div>
+
+        {/* --- FOREGROUND HERO CONTENT --- */}
+        <div className="relative z-30 text-center px-6 w-full max-w-4xl">
+          {/* Scaled down Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md mb-4 border border-orange-400/40" style={{boxShadow: '0 0 14px 2px rgba(251,146,60,0.2)'}}>
+            <Zap size={12} className="text-orange-400 fill-orange-400" />
+            <span className="text-[9px] font-black uppercase tracking-[0.25em]" style={{background: 'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundSize:'200% auto', animation:'shimmer 2.5s linear infinite'}}>Official Guide</span>
           </div>
-          <h1 className="text-5xl md:text-[100px] font-serif font-black leading-none tracking-tighter mb-10 italic" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 40%,#fb923c 70%,#fff 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundSize:'200% auto', animation:'shimmer 3s linear infinite', filter:'drop-shadow(0 0 32px rgba(251,146,60,0.45))'}}>Soul of India</h1>
+
+          {/* Scaled down 'Soul of India' title */}
+          <h1 className="text-3xl md:text-5xl font-serif font-black leading-none tracking-tighter mb-6 italic" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 40%,#fb923c 70%,#fff 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundSize:'200% auto', animation:'shimmer 3s linear infinite', filter:'drop-shadow(0 0 24px rgba(251,146,60,0.4))'}}>Soul of India</h1>
 
           {!isSearchActive ? (
-            <button onClick={() => setIsSearchActive(true)} className="mx-auto flex items-center gap-4 text-white px-12 py-6 rounded-full font-black text-xs uppercase tracking-widest transition-all shadow-2xl" style={{background:'linear-gradient(135deg,#ea580c,#f97316,#fb923c)', boxShadow:'0 0 32px 6px rgba(251,146,60,0.45), 0 4px 24px rgba(234,88,12,0.5)', transition:'all 0.3s'}} onMouseOver={e=>{e.currentTarget.style.background='linear-gradient(135deg,#fff5eb,#fff,#fff5eb)';e.currentTarget.style.color='#1e293b';e.currentTarget.style.boxShadow='0 0 24px 4px rgba(251,146,60,0.3)';}} onMouseOut={e=>{e.currentTarget.style.background='linear-gradient(135deg,#ea580c,#f97316,#fb923c)';e.currentTarget.style.color='white';e.currentTarget.style.boxShadow='0 0 32px 6px rgba(251,146,60,0.45), 0 4px 24px rgba(234,88,12,0.5)';}}><Search size={24} /> Start Discovery</button>
+            <button onClick={() => setIsSearchActive(true)} className="mx-auto flex items-center gap-3 text-white px-8 py-4 rounded-full font-black text-xs uppercase tracking-widest transition-all shadow-2xl" style={{background:'linear-gradient(135deg,#ea580c,#f97316,#fb923c)', boxShadow:'0 0 24px 4px rgba(251,146,60,0.45), 0 4px 20px rgba(234,88,12,0.5)', transition:'all 0.3s'}} onMouseOver={e=>{e.currentTarget.style.background='linear-gradient(135deg,#fff5eb,#fff,#fff5eb)';e.currentTarget.style.color='#1e293b';e.currentTarget.style.boxShadow='0 0 24px 4px rgba(251,146,60,0.3)';}} onMouseOut={e=>{e.currentTarget.style.background='linear-gradient(135deg,#ea580c,#f97316,#fb923c)';e.currentTarget.style.color='white';e.currentTarget.style.boxShadow='0 0 24px 4px rgba(251,146,60,0.45), 0 4px 20px rgba(234,88,12,0.5)';}}><Search size={20} /> Start Discovery</button>
           ) : (
               <SearchOverlay
               destinationInput={destinationInput}

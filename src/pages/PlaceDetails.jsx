@@ -85,7 +85,15 @@ export default function PlaceDetails() {
 
       {/* 2. HERO SECTION (Adjusted margin to account for fixed header) */}
       <div className="relative h-[60vh] lg:h-[500px] mt-[72px]">
-        <img src={place.image} alt={place.name} className="w-full h-full object-cover" />
+        <img 
+          src={place.image} 
+          alt={place.name} 
+          className="w-full h-full object-cover" 
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80';
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-90"></div>
         <div className="absolute bottom-0 left-0 px-6 pt-12 pb-24 md:pb-24 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2 mb-3">

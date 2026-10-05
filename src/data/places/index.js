@@ -76,9 +76,16 @@ const RAW_ALL_PLACES = [
   ...PUDUCHERRY_PLACES
 ];
 
-// Merge enriched topDestinations properties into ALL_PLACES by ID
+// Merge enriched topDestinations properties into ALL_PLACES by ID & name matching
 export const ALL_PLACES = RAW_ALL_PLACES.map(place => {
-  const enriched = topDestinations.find(td => td.id === place.id);
+  const placeNameNorm = (place.name || place.title || '').toLowerCase().trim();
+  const enriched = topDestinations.find(td => {
+    const tdNameNorm = (td.name || td.title || '').toLowerCase().trim();
+    if (td.id === place.id && (tdNameNorm === placeNameNorm || tdNameNorm.includes(placeNameNorm) || placeNameNorm.includes(tdNameNorm))) {
+      return true;
+    }
+    return tdNameNorm === placeNameNorm;
+  });
   if (enriched) {
     return { ...place, ...enriched };
   }
@@ -87,7 +94,8 @@ export const ALL_PLACES = RAW_ALL_PLACES.map(place => {
 
 // Append any topDestinations not present in RAW_ALL_PLACES
 topDestinations.forEach(td => {
-  if (!ALL_PLACES.some(p => p.id === td.id)) {
+  const tdNameNorm = (td.name || td.title || '').toLowerCase().trim();
+  if (!ALL_PLACES.some(p => p.id === td.id || (p.name || p.title || '').toLowerCase().trim() === tdNameNorm)) {
     ALL_PLACES.push(td);
   }
 });
