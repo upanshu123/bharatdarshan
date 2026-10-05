@@ -152,7 +152,7 @@ function PlannerForm({ onSubmit, loading }) {
 
           {/* Departure Ticket Badge */}
           <div className="w-full md:flex-1">
-            <div className={"group relative rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.origin ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-400/50 focus-within:border-emerald-400")}>
+            <div className={"group relative rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.origin ? "border-2 border-red-500 bg-red-950/40 shadow-md shadow-red-500/20" : "border border-slate-700/70 bg-slate-950/75 text-slate-100 shadow-inner hover:border-emerald-500/60 focus-within:ring-2 focus-within:ring-emerald-400/50 focus-within:border-emerald-400")}>
               {/* Badge Header Bar */}
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2">
@@ -160,12 +160,12 @@ function PlannerForm({ onSubmit, loading }) {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.9)]"></span>
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Departing From</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-300">Departing From</span>
                 </div>
-                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200/60">Boarding</span>
+                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Boarding</span>
               </div>
 
-              {/* Native Select with ticket typography */}
+              {/* Native Select with ticket typography & high contrast */}
               <div className="relative">
                 <select
                   id="origin-city-select"
@@ -175,20 +175,20 @@ function PlannerForm({ onSubmit, loading }) {
                     set("originId", e.target.value);
                     if (city) set("origin", city.name);
                   }}
-                  className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
+                  className="w-full bg-transparent text-sm md:text-base font-black text-slate-100 focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
                 >
-                  <option value="" className="text-slate-500">Select departure city...</option>
+                  <option value="" className="bg-slate-900 text-slate-400">Select departure city...</option>
                   {Object.entries(DEPARTURE_CITIES_BY_REGION).map(([region, cities]) => (
-                    <optgroup key={region} label={`── ${region} ──`} className="text-slate-800 dark:text-slate-200 font-bold bg-white dark:bg-slate-900">
+                    <optgroup key={region} label={`── ${region} ──`} className="bg-slate-950 text-amber-400 font-bold">
                       {cities.map(city => (
-                        <option key={city.id} value={city.id} className="text-slate-800 dark:text-slate-200 font-medium">
+                        <option key={city.id} value={city.id} className="bg-slate-900 text-white font-medium">
                           {city.name}, {city.state}
                         </option>
                       ))}
                     </optgroup>
                   ))}
                 </select>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-emerald-500 transition-colors">
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-emerald-400 transition-colors">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
               </div>
@@ -197,14 +197,14 @@ function PlannerForm({ onSubmit, loading }) {
               {form.originId && (() => {
                 const c = getDepartureCityById(form.originId);
                 return c ? (
-                  <div className="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-white/5 flex flex-wrap gap-2 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40">🚂 {c.trainStation.name}</span>
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40">🚌 {c.busStand.name}</span>
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-800 flex flex-wrap gap-2 text-[11px] font-semibold text-slate-200">
+                    <span className="px-2 py-0.5 rounded-md bg-slate-800/90 border border-slate-700 text-emerald-300">🚂 {c.trainStation.name}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-slate-800/90 border border-slate-700 text-emerald-300">🚌 {c.busStand.name}</span>
                   </div>
                 ) : null;
               })()}
             </div>
-            {errors.origin && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.origin}</p>}
+            {errors.origin && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.origin}</p>}
           </div>
 
           {/* Animated Route Connector with Glowing Traveling SVG line */}
@@ -226,7 +226,7 @@ function PlannerForm({ onSubmit, loading }) {
                   </filter>
                 </defs>
                 {/* Background track line */}
-                <line x1="4" y1="12" x2="96" y2="12" stroke="rgba(226,232,240,0.8)" strokeWidth="2" strokeDasharray="3 3" />
+                <line x1="4" y1="12" x2="96" y2="12" stroke="#334155" strokeWidth="2" strokeDasharray="3 3" />
                 {/* Glowing traveling dash line */}
                 <line
                   x1="4" y1="12" x2="96" y2="12"
@@ -238,26 +238,26 @@ function PlannerForm({ onSubmit, loading }) {
                 />
               </svg>
               {/* Center floating waypoint capsule */}
-              <div className="absolute z-10 w-7 h-7 rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center shadow-[0_0_14px_rgba(249,115,22,0.55)] border-2 border-white">
+              <div className="absolute z-10 w-7 h-7 rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center shadow-[0_0_16px_rgba(249,115,22,0.65)] border-2 border-slate-900">
                 <Navigation size={12} className="rotate-45" />
               </div>
             </div>
-            <span className="text-[9px] font-black uppercase tracking-widest text-orange-500/80 mt-0.5">Route</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-amber-400/90 mt-0.5">Route</span>
           </div>
 
           {/* Mobile connector */}
           <div className="flex md:hidden items-center justify-center w-full py-1" aria-hidden="true">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200/80 text-[10px] font-black text-orange-600 shadow-sm">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-[10px] font-black text-amber-400 shadow-sm">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
               <span>Express Route</span>
               <span className="animate-pulse">➔</span>
-              <span className="flex h-1.5 w-1.5 rounded-full bg-orange-500"></span>
+              <span className="flex h-1.5 w-1.5 rounded-full bg-orange-400"></span>
             </div>
           </div>
 
           {/* Destination Ticket Badge */}
           <div className="w-full md:flex-1">
-            <div className={"group relative rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.destination ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-orange-300 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
+            <div className={"group relative rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.destination ? "border-2 border-red-500 bg-red-950/40 shadow-md shadow-red-500/20" : "border border-slate-700/70 bg-slate-950/75 text-slate-100 shadow-inner hover:border-orange-500/60 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
               {/* Badge Header Bar */}
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2">
@@ -265,39 +265,39 @@ function PlannerForm({ onSubmit, loading }) {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.9)]"></span>
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Destination</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-300">Destination</span>
                 </div>
-                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 border border-orange-200/60">Arrival</span>
+                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-orange-500/15 text-orange-300 border border-orange-500/30">Arrival</span>
               </div>
 
-              {/* Native Select with ticket typography */}
+              {/* Native Select with ticket typography & high contrast */}
               <div className="relative">
                 <select
                   value={form.destination}
                   onChange={e => set("destination", e.target.value)}
-                  className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
+                  className="w-full bg-transparent text-sm md:text-base font-black text-slate-100 focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
                 >
-                  <option value="" className="text-slate-500">Select a destination...</option>
+                  <option value="" className="bg-slate-900 text-slate-400">Select a destination...</option>
                   {PLANNER_DESTINATIONS.map(d => (
-                    <option key={d.id} value={d.id} className="text-slate-800 dark:text-slate-200 font-medium">
+                    <option key={d.id} value={d.id} className="bg-slate-900 text-white font-medium">
                       {d.name}, {d.state}
                     </option>
                   ))}
                 </select>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-orange-500 transition-colors">
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-orange-400 transition-colors">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
               </div>
 
               {/* Destination Highlight preview */}
               {form.destination && (
-                <div className="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-white/5 text-[11px] font-medium text-orange-800 dark:text-orange-300 flex items-start gap-1.5">
+                <div className="mt-2.5 pt-2.5 border-t border-slate-800 text-[11px] font-medium text-amber-300/90 flex items-start gap-1.5">
                   <span className="shrink-0">📍</span>
                   <span className="leading-snug">{PLANNER_DESTINATIONS.find(d => d.id === form.destination)?.description || ''}</span>
                 </div>
               )}
             </div>
-            {errors.destination && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.destination}</p>}
+            {errors.destination && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.destination}</p>}
           </div>
         </div>
       </div>
@@ -305,75 +305,75 @@ function PlannerForm({ onSubmit, loading }) {
       {/* ── Dates: Luxury Ticket Badges ───────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <div className={"group rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.startDate ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-orange-300 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
+          <div className={"group rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.startDate ? "border-2 border-red-500 bg-red-950/40 shadow-md shadow-red-500/20" : "border border-slate-700/70 bg-slate-950/75 text-slate-100 shadow-inner hover:border-orange-500/60 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <Calendar size={13} className="text-orange-500" /> Start Date
+              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-300 flex items-center gap-1.5">
+                <Calendar size={13} className="text-amber-400" /> Start Date
               </span>
-              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">Depart</span>
+              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 border border-slate-700">Depart</span>
             </div>
             <input
               type="date"
               min={today}
               value={form.startDate}
               onChange={e => set("startDate", e.target.value)}
-              className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1"
+              className="w-full bg-transparent text-sm md:text-base font-black text-slate-100 focus:outline-none cursor-pointer py-1 [color-scheme:dark]"
             />
           </div>
-          {errors.startDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.startDate}</p>}
+          {errors.startDate && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.startDate}</p>}
         </div>
 
         <div>
-          <div className={"group rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.endDate ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-orange-300 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
+          <div className={"group rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.endDate ? "border-2 border-red-500 bg-red-950/40 shadow-md shadow-red-500/20" : "border border-slate-700/70 bg-slate-950/75 text-slate-100 shadow-inner hover:border-orange-500/60 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <Calendar size={13} className="text-orange-500" /> End Date
+              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-300 flex items-center gap-1.5">
+                <Calendar size={13} className="text-amber-400" /> End Date
               </span>
-              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">Return</span>
+              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 border border-slate-700">Return</span>
             </div>
             <input
               type="date"
               min={form.startDate || today}
               value={form.endDate}
               onChange={e => set("endDate", e.target.value)}
-              className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1"
+              className="w-full bg-transparent text-sm md:text-base font-black text-slate-100 focus:outline-none cursor-pointer py-1 [color-scheme:dark]"
             />
           </div>
-          {errors.endDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.endDate}</p>}
+          {errors.endDate && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.endDate}</p>}
         </div>
       </div>
 
       {/* ── Travellers & Budget Tier ────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Travellers Counter */}
-        <div className="rounded-2xl p-4 border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+        <div className="rounded-2xl p-4 border border-slate-700/70 bg-slate-950/75 text-slate-100 shadow-inner hover:-translate-y-0.5 transition-all duration-200">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <Users size={13} className="text-indigo-500" /> Travellers
+            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-300 flex items-center gap-1.5">
+              <Users size={13} className="text-indigo-400" /> Travellers
             </span>
-            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border border-indigo-200/60">Party Size</span>
+            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">Party Size</span>
           </div>
           <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => set("travellers", Math.max(1, form.travellers - 1))}
-                className="w-11 h-11 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-white font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none"
+                className="w-11 h-11 rounded-xl border border-slate-700 bg-slate-800 text-slate-100 font-black hover:bg-orange-500 hover:border-orange-400 hover:text-white transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none"
               >
                 −
               </button>
-              <span className="text-3xl font-black text-slate-900 dark:text-white w-10 text-center select-none font-serif">
+              <span className="text-3xl font-black text-white w-10 text-center select-none font-serif">
                 {form.travellers}
               </span>
               <button
                 type="button"
                 onClick={() => set("travellers", Math.min(20, form.travellers + 1))}
-                className="w-11 h-11 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-white font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none"
+                className="w-11 h-11 rounded-xl border border-slate-700 bg-slate-800 text-slate-100 font-black hover:bg-orange-500 hover:border-orange-400 hover:text-white transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none"
               >
                 +
               </button>
             </div>
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               {form.travellers === 1 ? "Solo Yatri" : `${form.travellers} Yatris`}
             </span>
           </div>
@@ -381,8 +381,8 @@ function PlannerForm({ onSubmit, loading }) {
 
         {/* Budget Tier */}
         <div>
-          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-2">
-            <Wallet size={13} className="text-emerald-500" /> Budget Tier
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-300 mb-2">
+            <Wallet size={13} className="text-emerald-400" /> Budget Tier
           </label>
           <div className="grid grid-cols-2 gap-2">
             {BUDGET_TIERS.map(b => (
@@ -392,15 +392,15 @@ function PlannerForm({ onSubmit, loading }) {
                 onClick={() => set("budget", b.id)}
                 className={"relative px-3 py-2.5 rounded-xl text-left overflow-hidden transition-all duration-200 touch-manipulation select-none " + (
                   form.budget === b.id
-                    ? "bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25 ring-2 ring-orange-500/50 scale-[1.02]"
-                    : "bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 hover:scale-[1.02] active:scale-95 shadow-sm text-slate-700 dark:text-slate-300"
+                    ? "bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 text-white shadow-xl shadow-orange-500/30 ring-2 ring-orange-400 scale-[1.02]"
+                    : "bg-slate-950/70 border border-slate-700/60 text-slate-200 hover:border-orange-500/50 hover:bg-slate-900/80 shadow-inner active:scale-95"
                 )}
               >
                 {form.budget === b.id && (
-                  <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg,rgba(255,255,255,0.2) 0%,transparent 60%)' }} />
+                  <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg,rgba(255,255,255,0.25) 0%,transparent 60%)' }} />
                 )}
                 <span className="relative block font-black text-xs md:text-sm">{b.symbol} {b.label}</span>
-                <span className={"relative text-[10px] block mt-0.5 " + (form.budget === b.id ? "text-orange-100" : "text-slate-400 dark:text-slate-500")}>
+                <span className={"relative text-[10px] block mt-0.5 " + (form.budget === b.id ? "text-orange-100" : "text-slate-400")}>
                   {b.desc}
                 </span>
               </button>
@@ -411,7 +411,7 @@ function PlannerForm({ onSubmit, loading }) {
 
       {/* ── Trip Style ──────────────────────────────────────────────── */}
       <div>
-        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-3">
+        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-300 mb-3">
           <Sparkles size={13} className="text-orange-400" /> Trip Style
         </label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -422,21 +422,21 @@ function PlannerForm({ onSubmit, loading }) {
               onClick={() => set("tripType", t.id)}
               className={"relative p-3.5 rounded-2xl text-left transition-all duration-200 overflow-hidden touch-manipulation select-none " + (
                 form.tripType === t.id
-                  ? "bg-gradient-to-br from-orange-50 to-amber-50/90 dark:from-orange-950/40 dark:to-amber-950/30 border border-orange-500/80 shadow-lg shadow-orange-500/25 ring-2 ring-orange-500/50 scale-[1.02]"
-                  : "bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 hover:scale-[1.02] active:scale-95 shadow-sm"
+                  ? "bg-gradient-to-br from-slate-900 to-orange-950/80 border border-orange-500 shadow-xl shadow-orange-500/25 ring-2 ring-orange-500/60 scale-[1.02]"
+                  : "bg-slate-950/70 border border-slate-700/60 text-slate-200 hover:border-orange-500/50 hover:bg-slate-900/80 shadow-inner active:scale-95"
               )}
             >
-              <span className="text-2xl block mb-1.5 transition-transform duration-200" style={{ filter: form.tripType === t.id ? 'drop-shadow(0 0 6px rgba(234,88,12,0.5))' : 'none' }}>
+              <span className="text-2xl block mb-1.5 transition-transform duration-200" style={{ filter: form.tripType === t.id ? 'drop-shadow(0 0 8px rgba(249,115,22,0.6))' : 'none' }}>
                 {t.icon}
               </span>
-              <span className={"text-xs font-black block transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-700 dark:text-orange-300" : "text-slate-800 dark:text-slate-200")}>
+              <span className={"text-xs font-black block transition-colors duration-200 " + (form.tripType === t.id ? "text-amber-300" : "text-slate-200")}>
                 {t.label}
               </span>
-              <span className={"text-[10px] block mt-0.5 transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-500 dark:text-orange-400" : "text-slate-400 dark:text-slate-500")}>
+              <span className={"text-[10px] block mt-0.5 transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-200" : "text-slate-400")}>
                 {t.desc}
               </span>
               {form.tripType === t.id && (
-                <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center bg-orange-600 shadow-[0_0_8px_rgba(234,88,12,0.6)]">
+                <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center bg-orange-500 shadow-[0_0_8px_rgba(234,88,12,0.8)]">
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7"/></svg>
                 </div>
               )}
@@ -447,8 +447,8 @@ function PlannerForm({ onSubmit, loading }) {
 
       {/* ── Interests ──────────────────────────────────────────────── */}
       <div>
-        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-3">
-          <Star size={13} className="text-amber-500" /> Your Interests
+        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-300 mb-3">
+          <Star size={13} className="text-amber-400" /> Your Interests
           <span className="font-normal normal-case text-slate-400 ml-0.5">(optional)</span>
         </label>
         <div className="flex flex-wrap gap-2">
@@ -459,8 +459,8 @@ function PlannerForm({ onSubmit, loading }) {
               onClick={() => toggleInterest(item)}
               className={"px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 touch-manipulation select-none " + (
                 form.interests.includes(item)
-                  ? "bg-gradient-to-r from-slate-900 to-indigo-950 text-white shadow-lg shadow-indigo-500/25 ring-2 ring-indigo-500/50 scale-[1.03]"
-                  : "bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 hover:scale-[1.03] active:scale-95 shadow-sm text-slate-600 dark:text-slate-300"
+                  ? "bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-500/25 ring-2 ring-orange-400/80 scale-[1.03]"
+                  : "bg-slate-950/70 border border-slate-700/60 text-slate-300 hover:border-orange-500/50 hover:text-white shadow-inner active:scale-95"
               )}
             >
               {item}
@@ -1228,7 +1228,7 @@ export default function PlanMyYatra() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen overflow-x-hidden" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
+      <div className="min-h-screen w-full overflow-y-auto text-slate-100" style={{background:'linear-gradient(160deg,#040711 0%,#090d1a 35%,#120c18 70%,#040711 100%)'}}>
         <style>{`
           @keyframes yatra-shimmer {
             0% { background-position: -200% center; }
@@ -1236,7 +1236,7 @@ export default function PlanMyYatra() {
           }
         `}</style>
         {/* Header section */}
-        <div className="relative overflow-hidden border-b border-orange-100 pt-28 md:pt-32 pb-12" style={{background:'linear-gradient(135deg,#0f172a 0%,#1c1148 45%,#1a0800 100%)'}}>
+        <div className="relative overflow-hidden border-b border-white/5 pt-28 md:pt-32 pb-12" style={{background:'linear-gradient(135deg,#080c14 0%,#0f172a 28%,#1c1148 62%,#1a0800 100%)'}}>
           <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'500px',height:'300px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(234,88,12,0.18) 0%,transparent 70%)',pointerEvents:'none'}} />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <button onClick={() => navigate("/")}
@@ -1257,20 +1257,20 @@ export default function PlanMyYatra() {
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-12">
-          {/* Login Gate Card */}
-          <div className="rounded-[32px] p-8 md:p-12 text-center bg-white shadow-xl border border-orange-100 mb-10 relative overflow-hidden">
-            <div className="w-16 h-16 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mx-auto mb-6 shadow-inner">
+          {/* Login Gate Card - Cinematic Dark Glassmorphism */}
+          <div className="rounded-[32px] p-8 md:p-12 text-center bg-slate-900/85 backdrop-blur-xl border border-slate-700/60 text-slate-100 shadow-2xl mb-10 relative overflow-hidden">
+            <div className="w-16 h-16 rounded-2xl bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center justify-center mx-auto mb-6 shadow-inner">
               <Lock size={32} />
             </div>
-            <h2 className="text-2xl md:text-3xl font-serif font-black text-slate-900 mb-3">
+            <h2 className="text-2xl md:text-3xl font-serif font-black text-white mb-3">
               Unlock AI Itinerary Generator
             </h2>
-            <p className="text-slate-600 max-w-lg mx-auto text-sm mb-8 font-medium">
+            <p className="text-slate-300 max-w-lg mx-auto text-sm mb-8 font-medium">
               Apni yatra plan karne aur customized Gemini AI itinerary generate karne ke liye 1-click Google Login karein.
             </p>
 
             {loginError && (
-              <div className="max-w-md mx-auto mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
+              <div className="max-w-md mx-auto mb-6 p-4 rounded-xl bg-red-950/50 border border-red-500/40 text-red-300 text-xs font-medium">
                 {loginError}
               </div>
             )}
@@ -1278,10 +1278,10 @@ export default function PlanMyYatra() {
             <button
               onClick={handleGoogleLogin}
               disabled={loginLoading}
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl active:scale-95 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xs uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               {loginLoading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
               ) : (
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -1295,14 +1295,14 @@ export default function PlanMyYatra() {
           </div>
 
           {/* Compact Support & Feedback Trigger Bar */}
-          <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-slate-900/85 backdrop-blur-xl border border-slate-700/60 text-slate-100 rounded-2xl p-6 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">Helpline & Support</p>
-              <p className="text-sm font-black text-slate-900">📞 1800-103-3500 <span className="text-xs text-slate-500 font-medium">(24x7 Tourist Helpline)</span></p>
+              <p className="text-sm font-black text-white">📞 1800-103-3500 <span className="text-xs text-slate-400 font-medium">(24x7 Tourist Helpline)</span></p>
             </div>
             <button
               onClick={() => setShowFeedbackModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold text-xs transition border border-orange-200"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-orange-500/15 hover:bg-orange-500/25 text-orange-300 font-bold text-xs transition border border-orange-500/30 cursor-pointer"
             >
               <MessageSquarePlus size={16} /> View Yatri Feedbacks & Suggestions
             </button>
@@ -1332,7 +1332,7 @@ export default function PlanMyYatra() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
+    <div className="min-h-screen w-full overflow-y-auto text-slate-100" style={{background:'linear-gradient(160deg,#040711 0%,#090d1a 35%,#120c18 70%,#040711 100%)'}}>
       {stage === "loading" && <LoadingOverlay destination={tripData?.destinationName} />}
 
       <style>{`
@@ -1427,28 +1427,31 @@ export default function PlanMyYatra() {
 
       {/* Main Container */}
       <div className={"max-w-4xl mx-auto px-6 " + (stage === "result" ? "pt-28 md:pt-36 pb-12" : "py-12")}>
-        {/* Logged in User Bar with Helpline & Support and Feedback Text Link */}
-        <div className="bg-white border border-orange-100 rounded-2xl p-5 mb-8 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+        {/* Logged in User Bar with Helpline & Support and Feedback Text Link - Dark Glassmorphism */}
+        <div className="bg-slate-900/85 backdrop-blur-xl border border-slate-700/60 text-slate-100 shadow-2xl rounded-2xl p-5 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
             <div className="flex items-center gap-3">
               {currentUser.photoURL ? (
-                <img src={currentUser.photoURL} alt={currentUser.displayName || "User"} className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-400" />
+                <img src={currentUser.photoURL} alt={currentUser.displayName || "User"} className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-500 shadow-lg" />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white font-black flex items-center justify-center shadow-lg">
                   {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'Y'}
                 </div>
               )}
               <div>
-                <p className="text-xs font-black text-slate-900">{currentUser.displayName || "Yatri Explorer"}</p>
-                <p className="text-[11px] text-slate-500 font-medium">{currentUser.email}</p>
+                <p className="text-sm font-black text-slate-100 flex items-center gap-2">
+                  {currentUser.displayName || "Yatri Explorer"}
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30">Verified</span>
+                </p>
+                <p className="text-[11px] text-slate-400 font-medium">{currentUser.email}</p>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition self-start md:self-auto"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/60 font-bold text-xs transition-all duration-200 hover:text-white self-start md:self-auto shadow-sm active:scale-95 cursor-pointer"
             >
-              <LogOut size={14} /> Log Out
+              <LogOut size={14} className="text-orange-400" /> Log Out
             </button>
           </div>
 
@@ -1456,12 +1459,12 @@ export default function PlanMyYatra() {
           <div className="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
             <div>
               <span className="font-black uppercase tracking-wider text-slate-400 text-[10px] block">Helpline & Support:</span>
-              <span className="font-bold text-slate-800">📞 1800-103-3500 (24x7 Official Tourist Helpline)</span>
+              <span className="font-bold text-slate-200">📞 1800-103-3500 <span className="text-slate-400 font-normal">(24x7 Official Tourist Helpline)</span></span>
             </div>
             
             <button
               onClick={() => setShowFeedbackModal(true)}
-              className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 font-bold hover:underline transition bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-200/60 self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 text-orange-400 hover:text-orange-300 font-bold transition bg-orange-500/10 hover:bg-orange-500/20 px-3 py-1.5 rounded-lg border border-orange-500/30 self-start sm:self-auto shadow-sm cursor-pointer"
             >
               <MessageSquarePlus size={14} /> 💬 Feedback & Suggestions
             </button>
@@ -1475,8 +1478,8 @@ export default function PlanMyYatra() {
             <div className="absolute -bottom-14 -right-14 w-80 h-80 rounded-full bg-gradient-to-bl from-indigo-500/18 to-violet-500/12 blur-3xl pointer-events-none animate-pulse" style={{animationDuration:'8s', animationDelay:'2s'}} />
             <div className="absolute top-1/2 left-1/3 w-60 h-60 rounded-full bg-orange-400/10 blur-2xl pointer-events-none" />
 
-            {/* Sleek frosted glass container */}
-            <div className="relative z-10 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] rounded-3xl p-6 md:p-12 overflow-hidden">
+            {/* Sleek dark glassmorphism container */}
+            <div className="relative z-10 bg-slate-900/85 backdrop-blur-xl border border-slate-700/60 text-slate-100 shadow-2xl rounded-3xl p-6 md:p-12">
               <PlannerForm onSubmit={handleSubmit} loading={stage === "loading"} />
             </div>
           </div>
