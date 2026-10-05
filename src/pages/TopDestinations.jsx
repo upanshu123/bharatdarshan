@@ -57,7 +57,7 @@ export default function TopDestinations() {
   }, [selectedCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pt-24 md:pt-32 pb-20 px-4 sm:px-6 lg:px-8 selection:bg-orange-500 selection:text-white relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 pt-32 md:pt-40 pb-20 px-4 sm:px-6 lg:px-8 selection:bg-orange-500 selection:text-white relative overflow-hidden">
       
       {/* Background Decorative Ambient Lights */}
       <div className="absolute top-10 left-10 w-96 h-96 bg-orange-600/15 rounded-full blur-[120px] pointer-events-none"></div>
@@ -66,7 +66,7 @@ export default function TopDestinations() {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* --- HERO HEADER SECTION --- */}
-        <div className="text-center max-w-4xl mx-auto mb-12 md:mb-16">
+        <div className="text-center max-w-4xl mx-auto mb-12 md:mb-16 mt-6 md:mt-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-orange-400 mb-6 backdrop-blur-md shadow-xl">
             <Sparkles size={16} className="animate-pulse" />
             <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.25em]">

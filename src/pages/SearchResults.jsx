@@ -78,9 +78,9 @@ export default function SearchResults() {
 
   if (!hasFilters) {
     return (
-      <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-6 lg:px-20 relative">
+      <div className="min-h-screen bg-slate-50 pt-32 md:pt-40 pb-24 px-6 lg:px-20 relative">
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-slate-600 to-transparent pointer-events-none z-0"></div>
-        <div className="max-w-3xl mx-auto relative z-10 text-center">
+        <div className="max-w-3xl mx-auto relative z-10 text-center mt-6 md:mt-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 text-slate-700 text-xs font-black uppercase tracking-widest mb-6">
             <Search size={14} className="text-orange-600" />
             Start your search
@@ -106,14 +106,14 @@ export default function SearchResults() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-6 lg:px-20 relative">
+    <div className="min-h-screen bg-slate-50 pt-32 md:pt-40 pb-24 px-6 lg:px-20 relative">
       {/* Grey gradient banner */}
       <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-slate-600 to-transparent pointer-events-none z-0"></div>
 
       <div className="max-w-[1440px] mx-auto relative z-10">
         
         {/* Dynamic Header */}
-        <div className="mb-10 text-center">
+        <div className="mb-10 text-center mt-6 md:mt-8">
           <h1 className="text-4xl lg:text-5xl font-serif font-black text-white mb-4 drop-shadow-md">
             {query ? `Discovering ${query}` : "Explore India"}
           </h1>
