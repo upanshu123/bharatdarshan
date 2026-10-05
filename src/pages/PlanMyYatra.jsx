@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Sparkles, MapPin, Calendar, Users, Wallet, Compass, ChevronLeft,
+  Sparkles, MapPin, Calendar, Users, Wallet, ChevronLeft,
   AlertCircle, RefreshCw, CheckCircle, Clock, Utensils, Hotel,
-  Navigation, Star, Package, Info, Plane, Car, UserCircle, LogOut, Lock, MessageSquarePlus, X,
-  Download, Share2, Copy, Check, Printer
+  Navigation, Star, Package, Info, Plane, Car, LogOut, Lock, MessageSquarePlus, X,
+  Download, Copy, Check
 } from "lucide-react";
-import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebaseConfig";
 import FeedbackSection from "../components/ui/FeedbackSection";
 import { generateAIItinerary } from "../utils/aiEngine";
@@ -19,36 +19,78 @@ import {
 } from "../data/departureData";
 
 function LoadingOverlay({ destination }) {
-  const tips = [
-    "Crafting your perfect itinerary...",
-    "Finding hidden gems & local experiences...",
-    "Curating the finest stays for you...",
-    "Mapping out your day-by-day adventure...",
-    "Adding insider tips from local experts...",
+  const phases = [
+    { icon: "🛰️", text: "Connecting routes across India..." },
+    { icon: "🏰", text: "Curating heritage spots & scenic stops..." },
+    { icon: "💰", text: "Optimising daily budget & travel timings..." },
+    { icon: "🍽️", text: "Discovering local flavours & hidden gems..." },
+    { icon: "🏨", text: "Selecting the finest stays for your comfort..." },
+    { icon: "🗺️", text: "Assembling your personalised day-by-day plan..." },
   ];
-  const [tipIdx, setTipIdx] = React.useState(0);
+  const [phaseIdx, setPhaseIdx] = React.useState(0);
+  const [visible, setVisible] = React.useState(true);
   React.useEffect(() => {
-    const t = setInterval(() => setTipIdx(i => (i + 1) % tips.length), 2000);
+    const t = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => { setPhaseIdx(i => (i + 1) % phases.length); setVisible(true); }, 350);
+    }, 2600);
     return () => clearInterval(t);
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center">
-      <div className="text-center px-8 max-w-md">
-        <div className="relative w-24 h-24 mx-auto mb-8">
-          <div className="absolute inset-0 rounded-full border-4 border-orange-600/30 animate-ping" />
-          <div className="absolute inset-2 rounded-full border-4 border-t-orange-600 border-orange-600/20 animate-spin" />
-          <div className="absolute inset-0 flex items-center justify-center text-3xl">🗺️</div>
+    <div className="fixed inset-0 z-[2000] flex flex-col items-center justify-center overflow-hidden" style={{background:'linear-gradient(135deg,#050810 0%,#0a0f1e 42%,#100800 100%)'}}>
+      {/* Ambient depth orbs */}
+      <div style={{position:'absolute',top:'10%',left:'50%',transform:'translateX(-50%)',width:'720px',height:'480px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(234,88,12,0.12) 0%,transparent 65%)',pointerEvents:'none',animation:'yatra-orb-pulse 3.5s ease-in-out infinite'}}/>
+      <div style={{position:'absolute',bottom:'8%',right:'8%',width:'320px',height:'320px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.09) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-orb-pulse 5s ease-in-out infinite 1.4s'}}/>
+      <div style={{position:'absolute',top:'55%',left:'6%',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(251,146,60,0.07) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-float-slow 8s ease-in-out infinite'}}/>
+
+      <div className="text-center px-8 max-w-sm relative z-10">
+        {/* Radar Pulse Rings */}
+        <div className="relative w-32 h-32 mx-auto mb-8">
+          <div className="absolute inset-0 rounded-full" style={{border:'1px solid rgba(251,146,60,0.08)',animation:'yatra-radar 2.4s ease-out infinite'}}/>
+          <div className="absolute inset-0 rounded-full" style={{border:'1px solid rgba(251,146,60,0.06)',animation:'yatra-radar 2.4s ease-out infinite 0.8s'}}/>
+          <div className="absolute inset-0 rounded-full" style={{border:'1px solid rgba(251,146,60,0.04)',animation:'yatra-radar 2.4s ease-out infinite 1.6s'}}/>
+          <div className="absolute inset-0 rounded-full animate-spin" style={{border:'2px solid transparent',borderTopColor:'rgba(251,146,60,0.9)',animationDuration:'1.1s'}}/>
+          <div className="absolute inset-5 rounded-full" style={{border:'1.5px solid transparent',borderTopColor:'rgba(99,102,241,0.7)',animation:'yatra-spin-rev 1.8s linear infinite'}}/>
+          <div className="absolute inset-0 flex items-center justify-center text-3xl" style={{animation:'yatra-float 3s ease-in-out infinite'}}>
+            {phases[phaseIdx].icon}
+          </div>
         </div>
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-600/20 border border-orange-600/40 mb-4">
-          <Sparkles size={12} className="text-orange-400" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-orange-400">Gemini AI Engine Active</span>
+
+        {/* AI badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5" style={{background:'rgba(251,146,60,0.10)',border:'1px solid rgba(251,146,60,0.30)',boxShadow:'0 0 20px rgba(251,146,60,0.12)'}}>
+          <Sparkles size={11} className="text-orange-400" />
+          <span className="text-[9px] font-black uppercase tracking-widest" style={{background:'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 2s linear infinite'}}>Gemini AI Engine Active</span>
         </div>
-        <h2 className="text-2xl font-serif font-black text-white mb-2">
+
+        <h2 className="text-2xl font-serif font-black text-white mb-5" style={{textShadow:'0 0 36px rgba(251,146,60,0.22)'}}>
           Planning Your Yatra{destination ? " to " + destination : ""}
         </h2>
-        <p className="text-slate-400 text-sm font-medium">{tips[tipIdx]}</p>
-        <p className="text-slate-600 text-xs mt-6">Generating custom day-by-day itinerary...</p>
+
+        {/* Status ticker — vertical slide-fade */}
+        <div className="relative h-14 overflow-hidden mb-4" style={{maskImage:'linear-gradient(to bottom,transparent,black 25%,black 75%,transparent)'}}>
+          <p
+            className="absolute inset-x-0 text-sm font-semibold text-slate-300 leading-relaxed transition-all duration-350"
+            style={{
+              transform: visible ? 'translateY(0)' : 'translateY(-12px)',
+              opacity: visible ? 1 : 0,
+              transitionDuration: '350ms'
+            }}
+          >
+            {phases[phaseIdx].text}
+          </p>
+        </div>
+
+        {/* Progress dots */}
+        <div className="flex items-center justify-center gap-1.5">
+          {phases.map((_, i) => (
+            <div key={i} className="rounded-full transition-all duration-300" style={{
+              width: i === phaseIdx ? '20px' : '5px',
+              height: '5px',
+              background: i === phaseIdx ? 'rgba(251,146,60,0.9)' : 'rgba(255,255,255,0.15)'
+            }}/>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -103,125 +145,232 @@ function PlannerForm({ onSubmit, loading }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Departing From</label>
-          <select
-            id="origin-city-select"
-            value={form.originId}
-            onChange={e => {
-              const city = getDepartureCityById(e.target.value);
-              set("originId", e.target.value);
-              if (city) set("origin", city.name);
-            }}
-            className={"w-full border rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition bg-white " + (errors.origin ? "border-red-400 bg-red-50" : "border-slate-200")}
-          >
-            <option value="">Select your departure city...</option>
-            {Object.entries(DEPARTURE_CITIES_BY_REGION).map(([region, cities]) => (
-              <optgroup key={region} label={`── ${region} ──`}>
-                {cities.map(city => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}, {city.state}
-                  </option>
+
+      {/* ── Route Builder: Origin → Destination ─────────────────── */}
+      <div className="relative">
+        <div className="flex flex-col md:flex-row items-start md:items-end gap-5 md:gap-0">
+
+          {/* Origin */}
+          <div className="w-full md:flex-1">
+            <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
+              <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{background:'#34d399',boxShadow:'0 0 8px rgba(52,211,153,0.85)'}}/>
+              Departing From
+            </label>
+            <div className="relative">
+              <select
+                id="origin-city-select"
+                value={form.originId}
+                onChange={e => {
+                  const city = getDepartureCityById(e.target.value);
+                  set("originId", e.target.value);
+                  if (city) set("origin", city.name);
+                }}
+                className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 appearance-none " + (errors.origin ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
+                style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)', paddingRight:'2.5rem'}}
+              >
+                <option value="">Select your departure city...</option>
+                {Object.entries(DEPARTURE_CITIES_BY_REGION).map(([region, cities]) => (
+                  <optgroup key={region} label={`── ${region} ──`}>
+                    {cities.map(city => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}, {city.state}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
-              </optgroup>
-            ))}
-          </select>
-          {errors.origin && <p className="text-red-500 text-xs mt-1">{errors.origin}</p>}
-          {form.originId && (() => {
-            const c = getDepartureCityById(form.originId);
-            return c ? (
-              <div className="mt-2 p-2.5 bg-orange-50 rounded-lg border border-orange-100 text-[11px] font-medium text-orange-800 space-y-0.5">
-                <div>🚂 <span className="font-bold">{c.trainStation.name}</span></div>
-                <div>🚌 <span className="font-bold">{c.busStand.name}</span></div>
+              </select>
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
               </div>
-            ) : null;
-          })()}
-        </div>
-        <div>
-          <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Destination</label>
-          <select value={form.destination} onChange={e => set("destination", e.target.value)}
-            className={"w-full border rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition bg-white " + (errors.destination ? "border-red-400 bg-red-50" : "border-slate-200")}>
-            <option value="">Select a destination...</option>
-            {PLANNER_DESTINATIONS.map(d => <option key={d.id} value={d.id}>{d.name}, {d.state}</option>)}
-          </select>
-          {errors.destination && <p className="text-red-500 text-xs mt-1">{errors.destination}</p>}
+            </div>
+            {errors.origin && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.origin}</p>}
+            {form.originId && (() => {
+              const c = getDepartureCityById(form.originId);
+              return c ? (
+                <div className="mt-2 p-2.5 rounded-xl border text-[11px] font-medium text-orange-800 space-y-0.5 transition-all duration-300" style={{background:'rgba(255,237,213,0.8)',borderColor:'rgba(251,146,60,0.22)',boxShadow:'0 2px 8px rgba(251,146,60,0.08)'}}>
+                  <div>🚂 <span className="font-bold">{c.trainStation.name}</span></div>
+                  <div>🚌 <span className="font-bold">{c.busStand.name}</span></div>
+                </div>
+              ) : null;
+            })()}
+          </div>
+
+          {/* Animated Route Connector — desktop only, purely decorative */}
+          <div className="hidden md:flex flex-col items-center justify-center w-20 shrink-0 pb-[3px]" aria-hidden="true">
+            <div className="relative w-full flex items-center justify-center" style={{height:'52px'}}>
+              <div className="absolute w-full h-px" style={{background:'linear-gradient(90deg,rgba(251,146,60,0.06),rgba(251,146,60,0.45),rgba(251,146,60,0.06))'}} />
+              <div className="absolute w-full" style={{height:'2px',background:'linear-gradient(90deg,transparent 0%,rgba(251,146,60,0.95) 50%,transparent 100%)',backgroundSize:'80px 100%',backgroundRepeat:'no-repeat',animation:'yatra-route-dash 1.6s ease-in-out infinite'}} />
+              <div className="relative z-10 w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{background:'linear-gradient(135deg,#c2410c,#ea580c,#f97316)',boxShadow:'0 0 16px rgba(234,88,12,0.5), 0 2px 8px rgba(234,88,12,0.3)'}}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Destination */}
+          <div className="w-full md:flex-1">
+            <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
+              <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{background:'#f97316',boxShadow:'0 0 8px rgba(249,115,22,0.85)'}}/>
+              Destination
+            </label>
+            <div className="relative">
+              <select
+                value={form.destination}
+                onChange={e => set("destination", e.target.value)}
+                className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 appearance-none " + (errors.destination ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
+                style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)', paddingRight:'2.5rem'}}
+              >
+                <option value="">Select a destination...</option>
+                {PLANNER_DESTINATIONS.map(d => <option key={d.id} value={d.id}>{d.name}, {d.state}</option>)}
+              </select>
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+            {errors.destination && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.destination}</p>}
+            {form.destination && (
+              <div className="mt-2 p-2.5 rounded-xl border text-[11px] font-semibold text-orange-800 flex items-start gap-1.5 transition-all duration-300" style={{background:'rgba(255,237,213,0.8)',borderColor:'rgba(251,146,60,0.22)',boxShadow:'0 2px 8px rgba(251,146,60,0.08)'}}>
+                <span className="shrink-0">📍</span>
+                <span className="leading-snug">{PLANNER_DESTINATIONS.find(d => d.id === form.destination)?.description || ''}</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* ── Dates ──────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Start Date</label>
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
+            <span className="text-orange-400">📅</span> Start Date
+          </label>
           <input type="date" min={today} value={form.startDate} onChange={e => set("startDate", e.target.value)}
-            className={"w-full border rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition " + (errors.startDate ? "border-red-400 bg-red-50" : "border-slate-200")} />
-          {errors.startDate && <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>}
+            className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 " + (errors.startDate ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
+            style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}} />
+          {errors.startDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.startDate}</p>}
         </div>
         <div>
-          <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">End Date</label>
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
+            <span className="text-orange-400">📅</span> End Date
+          </label>
           <input type="date" min={form.startDate || today} value={form.endDate} onChange={e => set("endDate", e.target.value)}
-            className={"w-full border rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition " + (errors.endDate ? "border-red-400 bg-red-50" : "border-slate-200")} />
-          {errors.endDate && <p className="text-red-500 text-xs mt-1">{errors.endDate}</p>}
+            className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 " + (errors.endDate ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
+            style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}} />
+          {errors.endDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.endDate}</p>}
         </div>
       </div>
 
+      {/* ── Travellers & Budget Tier ────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Travellers</label>
-          <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
+            <span className="text-orange-400">👥</span> Travellers
+          </label>
+          <div className="flex items-center gap-4 p-3.5 rounded-2xl border border-slate-200 bg-white" style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
             <button type="button" onClick={() => set("travellers", Math.max(1, form.travellers - 1))}
-              className="w-10 h-10 rounded-full border border-slate-200 text-slate-700 font-black hover:bg-slate-100 transition flex items-center justify-center text-lg">-</button>
-            <span className="text-2xl font-black text-slate-900 w-8 text-center">{form.travellers}</span>
+              className="w-11 h-11 rounded-xl border border-slate-200 text-slate-700 font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none">−</button>
+            <span className="text-3xl font-black text-slate-900 w-10 text-center select-none">{form.travellers}</span>
             <button type="button" onClick={() => set("travellers", Math.min(20, form.travellers + 1))}
-              className="w-10 h-10 rounded-full border border-slate-200 text-slate-700 font-black hover:bg-slate-100 transition flex items-center justify-center text-lg">+</button>
+              className="w-11 h-11 rounded-xl border border-slate-200 text-slate-700 font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none">+</button>
             <span className="text-xs text-slate-400 font-medium">{form.travellers === 1 ? "person" : "people"}</span>
           </div>
         </div>
         <div>
-          <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Budget Tier</label>
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
+            <span className="text-orange-400">💰</span> Budget Tier
+          </label>
           <div className="grid grid-cols-2 gap-2">
             {BUDGET_TIERS.map(b => (
               <button key={b.id} type="button" onClick={() => set("budget", b.id)}
-                className={"px-3 py-2 rounded-lg border text-xs font-bold transition text-left " + (form.budget === b.id ? "bg-orange-600 border-orange-600 text-white" : "border-slate-200 text-slate-700 hover:border-orange-300")}>
-                <span className="block font-black">{b.symbol} {b.label}</span>
-                <span className="opacity-70 text-[10px]">{b.desc}</span>
+                className="relative px-3 py-2.5 rounded-xl text-xs font-bold text-left overflow-hidden active:scale-95 transition-all duration-200 touch-manipulation select-none"
+                style={form.budget === b.id ? {
+                  background:'linear-gradient(135deg,#c2410c,#ea580c,#f97316)',
+                  border:'1.5px solid transparent',
+                  color:'#fff',
+                  boxShadow:'0 0 18px rgba(234,88,12,0.4), 0 4px 14px rgba(180,70,0,0.22)',
+                  transform:'translateY(-1px) scale(1.01)'
+                } : {
+                  background:'#fff',
+                  border:'1.5px solid rgba(226,232,240,0.9)',
+                  color:'#475569',
+                  boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
+                }}>
+                {form.budget === b.id && (
+                  <span className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 60%)'}}/>
+                )}
+                <span className="relative block font-black text-sm">{b.symbol} {b.label}</span>
+                <span className="relative opacity-75 text-[10px]">{b.desc}</span>
               </button>
             ))}
           </div>
         </div>
       </div>
 
+      {/* ── Trip Style ──────────────────────────────────────────────── */}
       <div>
-        <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3">Trip Type</label>
+        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
+          <span className="text-orange-400">🧭</span> Trip Style
+        </label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {TRIP_TYPES.map(t => (
             <button key={t.id} type="button" onClick={() => set("tripType", t.id)}
-              className={"p-3 rounded-xl border text-left transition " + (form.tripType === t.id ? "bg-orange-50 border-orange-400 text-orange-700" : "border-slate-200 hover:border-slate-300 text-slate-700")}>
-              <span className="text-xl block mb-1">{t.icon}</span>
-              <span className="text-xs font-black block">{t.label}</span>
-              <span className="text-[10px] opacity-60">{t.desc}</span>
+              className="relative p-3.5 rounded-2xl text-left transition-all duration-200 overflow-hidden active:scale-95 touch-manipulation select-none"
+              style={form.tripType === t.id ? {
+                background:'linear-gradient(145deg,rgba(255,237,213,0.97),rgba(255,247,237,1))',
+                border:'1.5px solid #ea580c',
+                boxShadow:'0 0 0 1px rgba(234,88,12,0.10), 0 6px 20px rgba(234,88,12,0.14), inset 0 1px 0 rgba(255,255,255,0.9)',
+                transform:'translateY(-1px)'
+              } : {
+                background:'rgba(255,255,255,0.92)',
+                border:'1.5px solid rgba(226,232,240,0.8)',
+                boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
+              }}>
+              <span className="text-2xl block mb-1.5" style={{filter:form.tripType===t.id?'drop-shadow(0 0 6px rgba(234,88,12,0.5))':'none',transition:'filter 0.22s ease'}}>{t.icon}</span>
+              <span className={"text-xs font-black block transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-700" : "text-slate-800")}>{t.label}</span>
+              <span className={"text-[10px] block mt-0.5 transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-500" : "text-slate-400")}>{t.desc}</span>
+              {form.tripType === t.id && (
+                <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center" style={{background:'#ea580c',boxShadow:'0 0 8px rgba(234,88,12,0.55)'}}>
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                </div>
+              )}
             </button>
           ))}
         </div>
       </div>
 
+      {/* ── Interests ──────────────────────────────────────────────── */}
       <div>
-        <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-          Your Interests <span className="font-normal normal-case text-slate-400">(optional)</span>
+        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
+          <span className="text-orange-400">✨</span> Your Interests
+          <span className="font-normal normal-case text-slate-400 ml-0.5">(optional)</span>
         </label>
         <div className="flex flex-wrap gap-2">
           {INTERESTS.map(item => (
             <button key={item} type="button" onClick={() => toggleInterest(item)}
-              className={"px-3 py-1.5 rounded-full text-xs font-bold border transition " + (form.interests.includes(item) ? "bg-slate-900 text-white border-slate-900" : "border-slate-200 text-slate-600 hover:border-slate-400")}>
+              className="px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 active:scale-95 touch-manipulation select-none"
+              style={form.interests.includes(item) ? {
+                background:'linear-gradient(135deg,#0f172a,#1e1b4b)',
+                color:'#fff',
+                border:'1px solid rgba(99,102,241,0.55)',
+                boxShadow:'0 0 12px rgba(99,102,241,0.22), inset 0 1px 0 rgba(255,255,255,0.08)',
+                transform:'translateY(-1px)'
+              } : {
+                background:'#fff',
+                color:'#64748b',
+                border:'1px solid rgba(226,232,240,0.9)',
+                boxShadow:'0 1px 4px rgba(0,0,0,0.04)'
+              }}>
               {item}
             </button>
           ))}
         </div>
       </div>
 
+      {/* ── Generate CTA ─────────────────────────────────────────── */}
       <button type="submit" disabled={loading} id="generate-itinerary-btn"
-        className="yatra-glow-btn w-full disabled:bg-slate-300 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest active:scale-[0.98] flex items-center justify-center gap-3"
-        style={{background:'linear-gradient(135deg,#ea580c,#f97316,#fb923c)',boxShadow:'0 0 28px 4px rgba(251,146,60,0.4), 0 4px 20px rgba(234,88,12,0.45)'}}>
-        <Sparkles size={16} /> Generate My AI Itinerary
+        className="yatra-glow-btn relative w-full disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest active:scale-[0.97] flex items-center justify-center gap-3 overflow-hidden touch-manipulation select-none"
+        style={{background:'linear-gradient(135deg,#b45309 0%,#ea580c 35%,#f97316 68%,#fb923c 100%)',boxShadow:'0 0 32px 4px rgba(251,146,60,0.38), 0 6px 24px rgba(234,88,12,0.42)'}}>
+        <span className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.22) 50%,transparent 100%)',backgroundSize:'200% 100%',animation:'yatra-btn-shimmer 2.2s linear infinite'}}/>
+        <Sparkles size={16} className="relative z-10" />
       </button>
     </form>
   );
@@ -350,26 +499,34 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
   return (
     <div className="space-y-8 pb-20 print-container">
-      <div className="rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden" style={{background:'linear-gradient(135deg,#0f172a 0%,#1e1b4b 45%,#1a0800 100%)',boxShadow:'0 20px 60px rgba(0,0,0,0.4), 0 0 50px rgba(251,146,60,0.12)'}}>
-        <div style={{position:'absolute',top:'-50px',left:'-30px',width:'300px',height:'300px',borderRadius:'50%',background:'radial-gradient(circle,rgba(234,88,12,0.2) 0%,transparent 70%)',pointerEvents:'none'}} />
-        <div style={{position:'absolute',bottom:'-30px',right:'-20px',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%)',pointerEvents:'none'}} />
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{background:'rgba(251,146,60,0.15)',border:'1px solid rgba(251,146,60,0.4)',boxShadow:'0 0 14px 2px rgba(251,146,60,0.18)'}}>
+      {/* ── Trip Hero Banner ─── */}
+      <div className="rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden" style={{background:'linear-gradient(135deg,#080c14 0%,#0f172a 25%,#1e1b4b 55%,#1a0800 100%)',boxShadow:'0 24px 80px rgba(0,0,0,0.5), 0 0 60px rgba(251,146,60,0.1)'}}>
+        {/* Animated orbs */}
+        <div style={{position:'absolute',top:'-60px',left:'-40px',width:'360px',height:'360px',borderRadius:'50%',background:'radial-gradient(circle,rgba(234,88,12,0.18) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-orb-pulse 5s ease-in-out infinite'}} />
+        <div style={{position:'absolute',bottom:'-40px',right:'-25px',width:'240px',height:'240px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-orb-pulse 7s ease-in-out infinite 2s'}} />
+        <div style={{position:'absolute',top:'40%',right:'15%',width:'4px',height:'4px',borderRadius:'50%',background:'rgba(253,230,138,0.6)',boxShadow:'0 0 8px rgba(253,230,138,0.5)',pointerEvents:'none',animation:'yatra-particle 4s ease-in-out infinite'}} />
+        {/* AI badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{background:'rgba(251,146,60,0.12)',border:'1px solid rgba(251,146,60,0.35)',boxShadow:'0 0 18px 2px rgba(251,146,60,0.15)'}}>
           <Sparkles size={12} style={{color:'#fb923c'}} />
           <span className="text-[9px] font-black uppercase tracking-widest" style={{background:'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 2.5s linear infinite'}}>Gemini 3.6 Flash AI Engine</span>
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif font-black mb-2" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 50%,#fb923c 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{tripTitle}</h2>
-        <p className="text-slate-400 font-medium mb-6">{tagline}</p>
-        <div className="flex flex-wrap gap-2 mb-6">
-          {(highlights || []).map((h, i) => <span key={i} className="px-3 py-1.5 bg-white/10 rounded-full text-xs font-bold border border-white/10">✓ {h}</span>)}
+        <h2 className="text-3xl md:text-4xl font-serif font-black mb-2" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 45%,#fb923c 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',filter:'drop-shadow(0 0 20px rgba(251,146,60,0.2))'}}>{tripTitle}</h2>
+        <p className="text-slate-400 font-medium mb-5">{tagline}</p>
+        <div className="flex flex-wrap gap-2 mb-5">
+          {(highlights || []).map((h, i) => <span key={i} className="px-3 py-1.5 rounded-full text-xs font-bold" style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)'}}>✓ {h}</span>)}
         </div>
-        <div className="flex flex-wrap gap-4 text-sm text-slate-400">
-          {tripData.origin && <span className="flex items-center gap-1"><Navigation size={14} />{tripData.origin}</span>}
-          <span className="flex items-center gap-1"><MapPin size={14} />{tripData.destinationName}</span>
-          <span className="flex items-center gap-1"><Clock size={14} />{tripData.days} Days</span>
-          <span className="flex items-center gap-1"><Users size={14} />{tripData.travellers} Person(s)</span>
-          <span className="flex items-center gap-1"><Wallet size={14} />{tripData.budget} Budget</span>
+        {/* Glass cockpit summary strip */}
+        <div className="flex flex-wrap gap-3" style={{background:'rgba(0,0,0,0.25)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'14px',padding:'12px 16px',backdropFilter:'blur(8px)'}}>
+          {tripData.origin && <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-300"><Navigation size={13} className="text-orange-400" />{tripData.origin}</span>}
+          <span className="text-white/20 hidden md:block">│</span>
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-300"><MapPin size={13} className="text-orange-400" />{tripData.destinationName}</span>
+          <span className="text-white/20 hidden md:block">│</span>
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-300"><Clock size={13} className="text-amber-400" />{tripData.days} Days</span>
+          <span className="text-white/20 hidden md:block">│</span>
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-300"><Users size={13} className="text-indigo-400" />{tripData.travellers} Person(s)</span>
+          <span className="text-white/20 hidden md:block">│</span>
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-300"><Wallet size={13} className="text-emerald-400" />{tripData.budget} Budget</span>
         </div>
-
       </div>
 
       {/* ── Departing From Logistics ──────────────────────────────────────── */}
@@ -492,156 +649,203 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       )}
 
+      {/* ── Day-by-Day Timeline ── */}
       <div>
-        <h3 className="text-xl font-serif font-black text-slate-900 mb-4 flex items-center gap-2">
+        <h3 className="text-xl font-serif font-black text-slate-900 mb-6 flex items-center gap-2">
           <Calendar className="text-orange-600" size={20} /> Day-by-Day Itinerary
         </h3>
-        <div className="space-y-6">
-          {(days || []).map((day, idx) => {
-            const activitiesList = (day.activities && day.activities.length > 0)
-              ? day.activities
-              : ["morning", "afternoon", "evening"]
-                  .filter(p => day[p])
-                  .map(p => ({
-                    timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
-                    locationName: day[p].locationName || day[p].activity,
-                    googleMapsLink: day[p].googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((day[p].locationName || day[p].activity) + ' ' + tripData.destinationName)}`,
-                    description: day[p].description,
-                    tip: day[p].tip,
-                    estimatedCost: day[p].estimatedCost
-                  }));
+        <div className="relative">
+          {/* Vertical neon guide rail */}
+          <div className="hidden md:block absolute left-[19px] top-8 bottom-8 w-px" style={{background:'linear-gradient(to bottom,rgba(251,146,60,0.7),rgba(99,102,241,0.5),rgba(251,146,60,0.2))',boxShadow:'0 0 6px rgba(251,146,60,0.3)'}} />
 
-            return (
-              <div key={idx} className="bg-white rounded-2xl shadow-sm overflow-hidden" style={{border:'1.5px solid rgba(249,115,22,0.12)',boxShadow:'0 4px 24px rgba(249,115,22,0.08), 0 1px 4px rgba(0,0,0,0.04)'}}>
-                <div className="px-6 py-4" style={{background:`linear-gradient(135deg, ${['#ea580c','#d97706','#7c3aed','#0891b2','#16a34a','#dc2626','#db2777'][idx%7]} 0%, ${['#f97316','#f59e0b','#9333ea','#0ea5e9','#22c55e','#ef4444','#ec4899'][idx%7]} 100%)`, boxShadow:`0 2px 12px rgba(0,0,0,0.15)`}}>
-                  <div className="flex justify-between items-center">
-                    <span className="text-white font-black text-lg" style={{textShadow:'0 1px 4px rgba(0,0,0,0.2)'}}>Day {day.day}</span>
-                    <span className="text-white/80 text-sm font-medium">{day.theme}</span>
+          <div className="space-y-6">
+            {(days || []).map((day, idx) => {
+              const activitiesList = (day.activities && day.activities.length > 0)
+                ? day.activities
+                : ["morning", "afternoon", "evening"]
+                    .filter(p => day[p])
+                    .map(p => ({
+                      timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
+                      locationName: day[p].locationName || day[p].activity,
+                      googleMapsLink: day[p].googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((day[p].locationName || day[p].activity) + ' ' + tripData.destinationName)}`,
+                      description: day[p].description,
+                      tip: day[p].tip,
+                      estimatedCost: day[p].estimatedCost
+                    }));
+
+              const accentColors = [
+                {from:'#c2410c',to:'#ea580c',glow:'rgba(234,88,12,0.35)'},
+                {from:'#b45309',to:'#d97706',glow:'rgba(217,119,6,0.3)'},
+                {from:'#5b21b6',to:'#7c3aed',glow:'rgba(124,58,237,0.3)'},
+                {from:'#0e7490',to:'#0891b2',glow:'rgba(8,145,178,0.3)'},
+                {from:'#15803d',to:'#16a34a',glow:'rgba(22,163,74,0.3)'},
+                {from:'#b91c1c',to:'#dc2626',glow:'rgba(220,38,38,0.3)'},
+                {from:'#be185d',to:'#db2777',glow:'rgba(219,39,119,0.3)'},
+              ];
+              const ac = accentColors[idx % accentColors.length];
+              const timeIcons = {morning:'🌅',afternoon:'☀️',evening:'🌙'};
+
+              return (
+                <div
+                  key={day.day ?? idx}
+                  className="relative md:pl-10"
+                  style={{animation:`yatra-card-rise 0.5s ease-out both`,animationDelay:`${idx * 80}ms`}}
+                >
+                  {/* Timeline milestone node */}
+                  <div className="hidden md:flex absolute left-0 top-5 w-10 h-10 rounded-full items-center justify-center shrink-0 z-10" style={{background:`linear-gradient(135deg,${ac.from},${ac.to})`,boxShadow:`0 0 16px ${ac.glow}, 0 2px 8px rgba(0,0,0,0.2)`,border:'2.5px solid rgba(255,255,255,0.15)'}}>
+                    <span className="text-white font-black text-xs">{String(day.day).padStart(2,'0')}</span>
                   </div>
-                  {day.date && <p className="text-white/70 text-xs mt-0.5">{day.date}</p>}
-                </div>
 
-                <div className="p-6 space-y-4">
-                  {activitiesList.map((act, aIdx) => {
-                    const timeLower = (act.timeOfDay || "").toLowerCase();
-                    const icon = timeLower.includes("morning") ? "🌅" : timeLower.includes("afternoon") ? "☀️" : "🌙";
-                    const mapUrl = act.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((act.locationName || act.activity) + ' ' + tripData.destinationName)}`;
-
-                    return (
-                      <div key={aIdx} className="flex gap-4 p-4 bg-slate-50 rounded-xl">
-                        <div className="text-2xl">{icon}</div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
-                            <span className="text-xs font-black text-slate-500 uppercase">{act.timeOfDay || "Activity"}</span>
-                            {act.estimatedCost && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">{act.estimatedCost}</span>}
-                          </div>
-                          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                            <h4 className="font-black text-slate-900 text-base">{act.locationName || act.activity}</h4>
-                            <a
-                              href={mapUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-bold transition shrink-0"
-                            >
-                              📍 Google Maps ↗
-                            </a>
-                          </div>
-                          <p className="text-slate-600 text-sm leading-relaxed">{act.description}</p>
-                          {act.tip && <p className="text-orange-700 text-xs mt-2 font-medium bg-orange-50 px-3 py-1.5 rounded-lg">Tip: {act.tip}</p>}
+                  {/* Day card */}
+                  <div className="rounded-2xl overflow-hidden" style={{border:`1.5px solid ${ac.glow.replace('0.35','0.18').replace('0.3','0.15')}`,boxShadow:`0 4px 28px ${ac.glow.replace('0.35','0.07').replace('0.3','0.06')}, 0 1px 4px rgba(0,0,0,0.05)`}}>
+                    {/* Header */}
+                    <div className="px-5 py-4 flex items-center justify-between" style={{background:`linear-gradient(135deg,${ac.from} 0%,${ac.to} 100%)`,boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-black text-base" style={{textShadow:'0 1px 4px rgba(0,0,0,0.25)'}}>Day {day.day}</span>
+                          {day.date && <span className="text-white/60 text-xs font-medium">{day.date}</span>}
                         </div>
+                        <p className="text-white/85 text-sm font-semibold mt-0.5">{day.theme}</p>
                       </div>
-                    );
-                  })}
-
-                  {day.stayRecommendation && (
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                      <div className="flex items-start gap-3">
-                        <Hotel size={20} className="text-blue-600 mt-0.5 shrink-0" />
-                        <div>
-                          <span className="text-xs font-black text-blue-500 uppercase">Hotel / Stay Recommendation</span>
-                          <p className="font-black text-slate-900">{day.stayRecommendation.name}</p>
-                          <p className="text-xs text-slate-500">{day.stayRecommendation.type} - {day.stayRecommendation.approxRate}</p>
-                          <p className="text-xs text-blue-700 mt-1">{day.stayRecommendation.whyPick}</p>
-                        </div>
-                      </div>
-                      <a
-                        href={day.stayRecommendation.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(day.stayRecommendation.name + ' ' + tripData.destinationName)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition shrink-0 self-end md:self-auto shadow-sm"
-                      >
-                        📍 Hotel Google Location ↗
-                      </a>
+                      <span className="text-2xl" style={{filter:'drop-shadow(0 0 6px rgba(255,255,255,0.3))'}}>
+                        {activitiesList[0] ? (timeIcons[(activitiesList[0].timeOfDay||'').toLowerCase()] || '🗓️') : '🗓️'}
+                      </span>
                     </div>
-                  )}
 
-                  {day.diningSpots && day.diningSpots.length > 0 && (
-                    <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Utensils size={14} className="text-amber-600" />
-                        <span className="text-xs font-black text-amber-700 uppercase">Dining Spots & Local Cuisine</span>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {day.diningSpots.map((d, i) => (
-                          <div key={i} className="flex justify-between items-center p-2.5 bg-white border border-amber-200 rounded-lg">
-                            <div className="min-w-0 pr-2">
-                              <p className="text-xs font-black text-slate-800 truncate">{d.name}</p>
-                              <p className="text-[10px] text-slate-500 truncate">{d.specialty} • {d.priceRange}</p>
+                    {/* Body — bento activity slots */}
+                    <div className="p-5 space-y-3 bg-white">
+                      {activitiesList.map((act, aIdx) => {
+                        const timeLower = (act.timeOfDay || "").toLowerCase();
+                        const icon = timeLower.includes("morning") ? "🌅" : timeLower.includes("afternoon") ? "☀️" : "🌙";
+                        const mapUrl = act.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((act.locationName || act.activity) + ' ' + tripData.destinationName)}`;
+                        const tagBg = timeLower.includes('morning') ? 'rgba(251,146,60,0.10)' : timeLower.includes('afternoon') ? 'rgba(234,179,8,0.10)' : 'rgba(99,102,241,0.10)';
+                        const tagColor = timeLower.includes('morning') ? '#c2410c' : timeLower.includes('afternoon') ? '#92400e' : '#4338ca';
+
+                        return (
+                          <div key={`${act.timeOfDay || 'act'}-${act.locationName || act.activity || aIdx}`} className="flex gap-3 rounded-xl p-3.5 group transition-all duration-200" style={{background:'#f8fafc',border:'1px solid rgba(226,232,240,0.7)'}}>
+                            <div className="text-xl shrink-0 mt-0.5">{icon}</div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-2 mb-1">
+                                {/* Time-of-day micro-tag */}
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider" style={{background:tagBg,color:tagColor}}>{act.timeOfDay || 'Activity'}</span>
+                                {act.estimatedCost && <span className="px-2 py-0.5 rounded-full text-[10px] font-black text-emerald-700" style={{background:'rgba(16,185,129,0.10)',color:'#047857'}}>₹ {act.estimatedCost}</span>}
+                              </div>
+                              <div className="flex flex-wrap items-start justify-between gap-2">
+                                <h4 className="font-black text-slate-900 text-sm leading-snug flex-1">{act.locationName || act.activity}</h4>
+                                <a
+                                  href={mapUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition-all duration-200 hover:scale-105"
+                                  style={{background:'rgba(16,185,129,0.10)',color:'#047857',border:'1px solid rgba(16,185,129,0.2)'}}
+                                >
+                                  📍 Maps ↗
+                                </a>
+                              </div>
+                              {act.description && <p className="text-slate-500 text-xs leading-relaxed mt-1">{act.description}</p>}
+                              {act.tip && <p className="text-[11px] font-semibold mt-2 px-2.5 py-1.5 rounded-lg" style={{background:'rgba(251,146,60,0.08)',color:'#c2410c',borderLeft:'2px solid rgba(234,88,12,0.4)'}}>💡 {act.tip}</p>}
                             </div>
-                            <a
-                              href={d.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.name + ' ' + tripData.destinationName)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-bold transition shrink-0 ml-1 shadow-sm"
-                            >
-                              📍 Dining Location ↗
-                            </a>
                           </div>
-                        ))}
-                      </div>
+                        );
+                      })}
+
+                      {/* Stay recommendation */}
+                      {day.stayRecommendation && (
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 rounded-xl p-3.5" style={{background:'rgba(59,130,246,0.05)',border:'1px solid rgba(59,130,246,0.15)'}}>
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-base" style={{background:'rgba(59,130,246,0.12)'}}>🏨</div>
+                            <div>
+                              <span className="text-[10px] font-black uppercase tracking-wider" style={{color:'#1d4ed8'}}>Stay</span>
+                              <p className="font-black text-slate-900 text-sm">{day.stayRecommendation.name}</p>
+                              <p className="text-xs text-slate-500">{day.stayRecommendation.type} · {day.stayRecommendation.approxRate}</p>
+                              {day.stayRecommendation.whyPick && <p className="text-xs mt-0.5" style={{color:'#1d4ed8'}}>{day.stayRecommendation.whyPick}</p>}
+                            </div>
+                          </div>
+                          <a
+                            href={day.stayRecommendation.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(day.stayRecommendation.name + ' ' + tripData.destinationName)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 self-end md:self-auto hover:scale-105 active:scale-95"
+                            style={{background:'linear-gradient(135deg,#1d4ed8,#2563eb)',color:'#fff',boxShadow:'0 2px 10px rgba(37,99,235,0.3)'}}
+                          >
+                            📍 Hotel Location ↗
+                          </a>
+                        </div>
+                      )}
+
+                      {/* Dining spots */}
+                      {day.diningSpots && day.diningSpots.length > 0 && (
+                        <div className="rounded-xl p-3.5" style={{background:'rgba(245,158,11,0.05)',border:'1px solid rgba(245,158,11,0.15)'}}>
+                          <div className="flex items-center gap-2 mb-2.5">
+                            <Utensils size={13} style={{color:'#b45309'}} />
+                            <span className="text-[10px] font-black uppercase tracking-wider" style={{color:'#b45309'}}>Dining & Local Cuisine</span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {day.diningSpots.map((d, i) => (
+                              <div key={d.name || i} className="flex justify-between items-center p-2.5 rounded-lg" style={{background:'rgba(255,255,255,0.8)',border:'1px solid rgba(245,158,11,0.2)'}}>
+                                <div className="min-w-0 pr-2">
+                                  <p className="text-xs font-black text-slate-800 truncate">{d.name}</p>
+                                  <p className="text-[10px] text-slate-500 truncate">{d.specialty} · {d.priceRange}</p>
+                                </div>
+                                <a
+                                  href={d.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.name + ' ' + tripData.destinationName)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold transition-all duration-200 shrink-0 ml-1 hover:scale-105"
+                                  style={{background:'linear-gradient(135deg,#b45309,#d97706)',color:'#fff',boxShadow:'0 1px 6px rgba(180,83,9,0.3)'}}
+                                >
+                                  📍 ↗
+                                </a>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
+      {/* ── Glass Cockpit Budget Summary ── */}
       {budgetSummary && (
-        <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-2xl p-6 text-white shadow-lg">
-          <h3 className="font-black text-lg mb-4 flex items-center gap-2"><Wallet size={18} /> Budget Summary</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="rounded-2xl p-6 text-white relative overflow-hidden" style={{background:'linear-gradient(135deg,#052e16 0%,#14532d 50%,#052e16 100%)',boxShadow:'0 8px 40px rgba(0,0,0,0.35), 0 0 40px rgba(16,185,129,0.08)',border:'1px solid rgba(52,211,153,0.15)'}}>
+          <div style={{position:'absolute',top:'-30px',right:'-20px',width:'180px',height:'180px',borderRadius:'50%',background:'radial-gradient(circle,rgba(16,185,129,0.12) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-orb-pulse 4s ease-in-out infinite'}}/>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-black text-base flex items-center gap-2"><Wallet size={17} className="text-emerald-400" /> Budget Cockpit</h3>
+            <div className="px-3 py-1 rounded-full text-xs font-black" style={{background:'rgba(16,185,129,0.18)',border:'1px solid rgba(52,211,153,0.3)',color:'#6ee7b7'}}>Est. Total: {budgetSummary.estimatedTotal}</div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Accommodation", val: budgetSummary.accommodation, icon: "🏨" },
-              { label: "Food", val: budgetSummary.food, icon: "🍽️" },
-              { label: "Transport", val: budgetSummary.transport, icon: "🚗" },
-              { label: "Activities", val: budgetSummary.activities, icon: "🎯" },
+              { label: "Stay", val: budgetSummary.accommodation, icon: "🏨", color: 'rgba(96,165,250,0.12)', border: 'rgba(96,165,250,0.2)', tag: '#93c5fd' },
+              { label: "Food", val: budgetSummary.food, icon: "🍽️", color: 'rgba(251,146,60,0.12)', border: 'rgba(251,146,60,0.2)', tag: '#fdba74' },
+              { label: "Transport", val: budgetSummary.transport, icon: "🚗", color: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.2)', tag: '#c4b5fd' },
+              { label: "Activities", val: budgetSummary.activities, icon: "🎯", color: 'rgba(52,211,153,0.12)', border: 'rgba(52,211,153,0.2)', tag: '#6ee7b7' },
             ].map(item => (
-              <div key={item.label} className="bg-white/10 rounded-xl p-3 text-center">
-                <div className="text-lg mb-1">{item.icon}</div>
-                <p className="text-[10px] font-bold uppercase text-green-300">{item.label}</p>
-                <p className="text-xs font-black text-white mt-1">{item.val}</p>
+              <div key={item.label} className="rounded-xl p-3 text-center" style={{background:item.color,border:`1px solid ${item.border}`}}>
+                <div className="text-xl mb-1.5">{item.icon}</div>
+                <p className="text-[9px] font-black uppercase tracking-wider mb-1" style={{color:item.tag}}>{item.label}</p>
+                <p className="text-xs font-black text-white">{item.val}</p>
               </div>
             ))}
-          </div>
-          <div className="bg-white/10 rounded-xl p-4 text-center">
-            <p className="text-green-300 text-xs font-bold uppercase mb-1">Estimated Total</p>
-            <p className="text-2xl font-black">{budgetSummary.estimatedTotal}</p>
           </div>
         </div>
       )}
 
+      {/* ── Must-Try Experiences ── */}
       {mustTry && mustTry.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-          <h3 className="font-black text-slate-900 mb-4 flex items-center gap-2"><Star size={18} className="text-yellow-500" /> Must-Try Experiences</h3>
+        <div className="rounded-2xl p-6" style={{background:'#fffbeb',border:'1px solid rgba(245,158,11,0.2)',boxShadow:'0 4px 20px rgba(245,158,11,0.07)'}}>
+          <h3 className="font-black text-slate-900 mb-4 flex items-center gap-2"><Star size={17} className="text-amber-500" /> Must-Try Experiences</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {mustTry.map((m, i) => (
-              <div key={i} className="flex gap-3 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
-                <span className="text-yellow-500 font-black text-lg">★</span>
+              <div key={m.item || i} className="flex gap-3 p-3.5 rounded-xl" style={{background:'rgba(255,255,255,0.8)',border:'1px solid rgba(245,158,11,0.18)'}}>
+                <span className="text-amber-400 font-black text-lg shrink-0">★</span>
                 <div>
                   <p className="font-black text-slate-900 text-sm">{m.item}</p>
-                  <p className="text-slate-500 text-xs mt-0.5">{m.why}</p>
+                  <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">{m.why}</p>
                 </div>
               </div>
             ))}
@@ -649,124 +853,146 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* ── Packing & Insights ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {packingEssentials && packingEssentials.length > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-            <h3 className="font-black text-slate-900 mb-4 flex items-center gap-2"><Package size={16} className="text-slate-600" /> Packing Essentials</h3>
+          <div className="rounded-2xl p-5" style={{background:'#f8fafc',border:'1px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.04)'}}>
+            <h3 className="font-black text-slate-900 mb-4 flex items-center gap-2"><Package size={15} className="text-slate-500" /> Packing Essentials</h3>
             <ul className="space-y-2">
               {packingEssentials.map((item, i) => (
-                <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
-                  <CheckCircle size={14} className="text-green-500 shrink-0" /> {item}
+                <li key={typeof item === 'string' ? item : i} className="flex items-center gap-2 text-sm text-slate-600">
+                  <CheckCircle size={13} className="text-emerald-500 shrink-0" /> {item}
                 </li>
               ))}
             </ul>
           </div>
         )}
-
-        <div className="space-y-4">
+        <div className="space-y-3">
           {localInsights && (
-            <div className="bg-blue-50 rounded-2xl border border-blue-100 p-5">
-              <h3 className="font-black text-blue-900 mb-2 flex items-center gap-2"><Info size={16} /> Local Insights</h3>
+            <div className="rounded-2xl p-5" style={{background:'rgba(59,130,246,0.04)',border:'1px solid rgba(59,130,246,0.14)'}}>
+              <h3 className="font-black text-blue-900 mb-2 flex items-center gap-2"><Info size={14} className="text-blue-500" /> Local Insights</h3>
               <p className="text-blue-800 text-sm leading-relaxed">{localInsights}</p>
             </div>
           )}
           {bestTimeToVisit && (
-            <div className="bg-green-50 rounded-2xl border border-green-100 p-5">
-              <h3 className="font-black text-green-900 mb-2 flex items-center gap-2"><Calendar size={16} /> Best Time to Visit</h3>
-              <p className="text-green-800 text-sm leading-relaxed">{bestTimeToVisit}</p>
+            <div className="rounded-2xl p-5" style={{background:'rgba(16,185,129,0.04)',border:'1px solid rgba(16,185,129,0.14)'}}>
+              <h3 className="font-black text-emerald-900 mb-2 flex items-center gap-2"><Calendar size={14} className="text-emerald-500" /> Best Time to Visit</h3>
+              <p className="text-emerald-800 text-sm leading-relaxed">{bestTimeToVisit}</p>
             </div>
           )}
         </div>
       </div>
 
+      {/* ── Affiliate Booking CTAs ── */}
       <div>
         <h3 className="text-lg font-serif font-black text-slate-900 mb-4 flex items-center gap-2">
-          <Hotel size={20} className="text-orange-600" /> Book Your Trip
+          <Hotel size={19} className="text-orange-600" /> Book Your Trip
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {(AFFILIATE_PARTNERS.hotels || []).map(p => (
             <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-              className={"flex items-center gap-3 p-4 rounded-xl border-2 " + p.color + " transition hover:shadow-md active:scale-[0.98]"}>
-              <div className="text-2xl">🏨</div>
+              className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
+              style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.15)'}}>🏨</div>
               <div className="flex-1 min-w-0">
-                <p className="font-black text-sm">{p.name}</p>
-                <p className="text-xs opacity-70">Hotels - {p.commission} commission</p>
+                <p className="font-black text-slate-900 text-sm">{p.name}</p>
+                <p className="text-[11px] text-slate-400 font-medium">Hotels · {p.commission} commission</p>
               </div>
-              <span className="text-xs font-black uppercase opacity-60">Book</span>
+              <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(234,88,12,0.08)',border:'1px solid rgba(234,88,12,0.2)'}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </div>
             </a>
           ))}
           {(AFFILIATE_PARTNERS.flights || []).map(p => (
             <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-              className={"flex items-center gap-3 p-4 rounded-xl border-2 " + p.color + " transition hover:shadow-md active:scale-[0.98]"}>
-              <Plane size={22} />
+              className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
+              style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.15)'}}><Plane size={18} className="text-blue-600" /></div>
               <div className="flex-1 min-w-0">
-                <p className="font-black text-sm">{p.name}</p>
-                <p className="text-xs opacity-70">Flights - {p.commission} commission</p>
+                <p className="font-black text-slate-900 text-sm">{p.name}</p>
+                <p className="text-[11px] text-slate-400 font-medium">Flights · {p.commission} commission</p>
               </div>
-              <span className="text-xs font-black uppercase opacity-60">Book</span>
+              <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.2)'}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </div>
             </a>
           ))}
           {(AFFILIATE_PARTNERS.activities || []).map(p => (
             <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-              className={"flex items-center gap-3 p-4 rounded-xl border-2 " + p.color + " transition hover:shadow-md active:scale-[0.98]"}>
-              <Navigation size={22} />
+              className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
+              style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.15)'}}><Navigation size={18} className="text-violet-600" /></div>
               <div className="flex-1 min-w-0">
-                <p className="font-black text-sm">{p.name}</p>
-                <p className="text-xs opacity-70">Tours - {p.commission} commission</p>
+                <p className="font-black text-slate-900 text-sm">{p.name}</p>
+                <p className="text-[11px] text-slate-400 font-medium">Tours & Activities · {p.commission} commission</p>
               </div>
-              <span className="text-xs font-black uppercase opacity-60">Book</span>
+              <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.2)'}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </div>
             </a>
           ))}
           {(AFFILIATE_PARTNERS.transport || []).map(p => (
             <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-              className={"flex items-center gap-3 p-4 rounded-xl border-2 " + p.color + " transition hover:shadow-md active:scale-[0.98]"}>
-              <Car size={22} />
+              className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
+              style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(16,185,129,0.08)',border:'1px solid rgba(16,185,129,0.15)'}}><Car size={18} className="text-emerald-600" /></div>
               <div className="flex-1 min-w-0">
-                <p className="font-black text-sm">{p.name}</p>
-                <p className="text-xs opacity-70">Transport - {p.commission} commission</p>
+                <p className="font-black text-slate-900 text-sm">{p.name}</p>
+                <p className="text-[11px] text-slate-400 font-medium">Transport · {p.commission} commission</p>
               </div>
-              <span className="text-xs font-black uppercase opacity-60">Book</span>
+              <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(16,185,129,0.08)',border:'1px solid rgba(16,185,129,0.2)'}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </div>
             </a>
           ))}
         </div>
       </div>
 
-      <div className="text-center pt-4 flex flex-wrap items-center justify-center gap-4 no-print">
+      {/* ── Action Pill Buttons ── */}
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-2 no-print">
         <button
           type="button"
           onClick={handleDownloadPDF}
           disabled={pdfGenerating}
-          className="px-8 py-4 bg-orange-600 hover:bg-orange-500 disabled:opacity-75 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-orange-500/25 active:scale-95 cursor-pointer"
+          className="group relative inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-black text-xs uppercase tracking-widest transition-all duration-200 active:scale-95 overflow-hidden cursor-pointer"
+          style={{background:'linear-gradient(135deg,#c2410c,#ea580c,#f97316)',color:'#fff',boxShadow:'0 0 20px rgba(234,88,12,0.35), 0 4px 16px rgba(180,70,0,0.25)',opacity:pdfGenerating?0.75:1}}
         >
-          {pdfGenerating ? (
-            <>
-              <RefreshCw size={16} className="animate-spin" /> Generating PDF...
-            </>
-          ) : (
-            <>
-              <Download size={16} /> Download Itinerary PDF
-            </>
-          )}
+          <span className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)',backgroundSize:'200% 100%',animation:'yatra-btn-shimmer 2.5s linear infinite'}}/>
+          {pdfGenerating ? <RefreshCw size={14} className="animate-spin relative z-10" /> : <Download size={14} className="relative z-10" />}
+          <span className="relative z-10">{pdfGenerating ? 'Generating PDF...' : 'Download PDF'}</span>
         </button>
+
         <button
           type="button"
           onClick={handleShareWhatsApp}
-          className="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg hover:shadow-emerald-500/25 active:scale-95"
+          className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-black text-xs uppercase tracking-widest transition-all duration-200 active:scale-95"
+          style={{background:'linear-gradient(135deg,#065f46,#059669,#34d399)',color:'#fff',boxShadow:'0 0 20px rgba(5,150,105,0.35), 0 4px 16px rgba(4,120,87,0.25)'}}
         >
-          <MessageSquarePlus size={16} /> Share on WhatsApp
+          <MessageSquarePlus size={14} /> Share on WhatsApp
         </button>
+
         <button
           type="button"
           onClick={handleCopyItinerary}
-          className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 transition shadow-lg active:scale-95"
+          className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-black text-xs uppercase tracking-widest transition-all duration-200 active:scale-95"
+          style={copied ? {
+            background:'linear-gradient(135deg,#065f46,#059669)',color:'#fff',boxShadow:'0 0 16px rgba(5,150,105,0.3)'
+          } : {
+            background:'rgba(15,23,42,0.92)',color:'#fff',boxShadow:'0 4px 16px rgba(0,0,0,0.25)'
+          }}
         >
-          {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-          {copied ? "Copied!" : "Copy Itinerary"}
+          {copied ? <Check size={14} className="text-emerald-300" /> : <Copy size={14} />}
+          {copied ? 'Copied!' : 'Copy Itinerary'}
         </button>
-        <button onClick={onReset}
-          className="yatra-glow-btn px-10 py-4 text-white rounded-full font-black text-xs uppercase tracking-widest"
-          style={{background:'linear-gradient(135deg,#0f172a,#1e1b4b,#1a0800)',boxShadow:'0 0 24px 4px rgba(99,102,241,0.3), 0 4px 20px rgba(0,0,0,0.4)'}}>
-          Plan Another Yatra
+
+        <button
+          onClick={onReset}
+          className="yatra-glow-btn relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-black text-xs uppercase tracking-widest overflow-hidden"
+          style={{background:'linear-gradient(135deg,#0f172a,#1e1b4b,#1a0800)',color:'#fff',boxShadow:'0 0 24px 4px rgba(99,102,241,0.3), 0 4px 20px rgba(0,0,0,0.4)'}}
+        >
+          <span className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)',backgroundSize:'200% 100%',animation:'yatra-btn-shimmer 3s linear infinite'}}/>
+          <Sparkles size={13} className="relative z-10 text-indigo-400" />
+          <span className="relative z-10">Plan Another Yatra</span>
         </button>
       </div>
     </div>
@@ -881,7 +1107,7 @@ export default function PlanMyYatra() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
+      <div className="min-h-screen overflow-x-hidden" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
         <style>{`
           @keyframes yatra-shimmer {
             0% { background-position: -200% center; }
@@ -985,7 +1211,7 @@ export default function PlanMyYatra() {
   }
 
   return (
-    <div className="min-h-screen" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
+    <div className="min-h-screen overflow-x-hidden" style={{background:'linear-gradient(160deg,#f8fafc 0%,#fff7ed 50%,#f8fafc 100%)'}}>
       {stage === "loading" && <LoadingOverlay destination={tripData?.destinationName} />}
 
       <style>{`
@@ -997,29 +1223,73 @@ export default function PlanMyYatra() {
           0%,100% { transform: translateY(0px); }
           50% { transform: translateY(-6px); }
         }
-        .yatra-glow-btn:hover { box-shadow: 0 0 40px 8px rgba(251,146,60,0.55), 0 6px 28px rgba(234,88,12,0.5) !important; transform: scale(1.02); }
-        .yatra-glow-btn { transition: all 0.3s ease !important; }
+        @keyframes yatra-float-slow {
+          0%,100% { transform: translateY(0px) scale(1); opacity: 0.7; }
+          50% { transform: translateY(-12px) scale(1.04); opacity: 1; }
+        }
+        @keyframes yatra-orb-pulse {
+          0%,100% { opacity: 0.18; transform: scale(1); }
+          50% { opacity: 0.30; transform: scale(1.06); }
+        }
+        @keyframes yatra-particle {
+          0%  { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.55; }
+          33% { transform: translateY(-9px) translateX(5px) scale(1.15); opacity: 0.85; }
+          66% { transform: translateY(-5px) translateX(-4px) scale(0.9); opacity: 0.45; }
+          100%{ transform: translateY(0px) translateX(0px) scale(1); opacity: 0.55; }
+        }
+        @keyframes yatra-route-dash {
+          0%   { background-position: -80px center; }
+          100% { background-position: 110px center; }
+        }
+        @keyframes yatra-btn-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes yatra-spin-rev {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(-360deg); }
+        }
+        @keyframes yatra-radar {
+          0% { transform: scale(0.85); opacity: 0.85; }
+          50% { opacity: 0.45; }
+          100% { transform: scale(1.65); opacity: 0; }
+        }
+        @keyframes yatra-card-rise {
+          0% { opacity: 0; transform: translateY(22px) scale(0.985); }
+          100% { opacity: 1; transform: translateY(0px) scale(1); }
+        }
+        .yatra-glow-btn:hover { box-shadow: 0 0 44px 8px rgba(251,146,60,0.58), 0 6px 28px rgba(234,88,12,0.52) !important; transform: scale(1.02); }
+        .yatra-glow-btn { transition: all 0.28s ease !important; }
       `}</style>
       
       {/* Header section with proper top padding for fixed navbar */}
       {(stage === "form" || stage === "error") && (
-        <div className="relative overflow-hidden border-b border-orange-100 pt-28 md:pt-32 pb-12" style={{background:'linear-gradient(135deg,#0f172a 0%,#1c1148 45%,#1a0800 100%)'}}>
-          {/* Ambient glow orbs */}
-          <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'500px',height:'300px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(234,88,12,0.18) 0%,transparent 70%)',pointerEvents:'none'}} />
-          <div style={{position:'absolute',bottom:'-40px',right:'5%',width:'220px',height:'220px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)',pointerEvents:'none'}} />
+        <div className="relative overflow-hidden border-b border-white/5 pt-28 md:pt-32 pb-14" style={{background:'linear-gradient(135deg,#080c14 0%,#0f172a 28%,#1c1148 62%,#1a0800 100%)'}}>
+          {/* Primary glow orb */}
+          <div style={{position:'absolute',top:'-80px',left:'50%',transform:'translateX(-50%)',width:'640px',height:'400px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(234,88,12,0.16) 0%,transparent 68%)',pointerEvents:'none',animation:'yatra-orb-pulse 5s ease-in-out infinite'}} />
+          {/* Secondary indigo orb */}
+          <div style={{position:'absolute',bottom:'-55px',right:'4%',width:'280px',height:'280px',borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.13) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-orb-pulse 7s ease-in-out infinite 1.8s'}} />
+          {/* Left drift orb */}
+          <div style={{position:'absolute',top:'35%',left:'-70px',width:'200px',height:'200px',borderRadius:'50%',background:'radial-gradient(circle,rgba(251,146,60,0.08) 0%,transparent 70%)',pointerEvents:'none',animation:'yatra-float-slow 9s ease-in-out infinite'}} />
+          {/* Floating accent particles */}
+          <div style={{position:'absolute',top:'22%',left:'14%',width:'4px',height:'4px',borderRadius:'50%',background:'rgba(251,146,60,0.65)',boxShadow:'0 0 8px rgba(251,146,60,0.55)',pointerEvents:'none',animation:'yatra-particle 4.2s ease-in-out infinite'}} />
+          <div style={{position:'absolute',top:'55%',left:'82%',width:'3px',height:'3px',borderRadius:'50%',background:'rgba(99,102,241,0.75)',boxShadow:'0 0 7px rgba(99,102,241,0.55)',pointerEvents:'none',animation:'yatra-particle 5.8s ease-in-out infinite 0.9s'}} />
+          <div style={{position:'absolute',top:'72%',left:'24%',width:'3px',height:'3px',borderRadius:'50%',background:'rgba(251,146,60,0.5)',boxShadow:'0 0 6px rgba(251,146,60,0.4)',pointerEvents:'none',animation:'yatra-particle 6.4s ease-in-out infinite 2.1s'}} />
+          <div style={{position:'absolute',top:'18%',left:'72%',width:'5px',height:'5px',borderRadius:'50%',background:'rgba(253,230,138,0.4)',boxShadow:'0 0 10px rgba(253,230,138,0.3)',pointerEvents:'none',animation:'yatra-float 5.5s ease-in-out infinite 1.3s'}} />
+          <div style={{position:'absolute',top:'45%',left:'60%',width:'3px',height:'3px',borderRadius:'50%',background:'rgba(251,146,60,0.4)',boxShadow:'0 0 6px rgba(251,146,60,0.3)',pointerEvents:'none',animation:'yatra-particle 7s ease-in-out infinite 3s'}} />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <button onClick={() => navigate("/")}
-              className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-orange-300 mb-6 transition">
-              <ChevronLeft size={14} /> Back to Home
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-orange-300 mb-6 transition-colors duration-200 group">
+              <ChevronLeft size={14} className="group-hover:-translate-x-0.5 transition-transform duration-200" /> Back to Home
             </button>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 border" style={{background:'rgba(251,146,60,0.12)',borderColor:'rgba(251,146,60,0.35)',boxShadow:'0 0 16px 2px rgba(251,146,60,0.18)'}}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 border" style={{background:'rgba(251,146,60,0.10)',borderColor:'rgba(251,146,60,0.30)',boxShadow:'0 0 22px 2px rgba(251,146,60,0.14), inset 0 1px 0 rgba(255,255,255,0.05)'}}>
               <Sparkles size={13} style={{color:'#fb923c'}} />
               <span className="text-[9px] font-black uppercase tracking-widest" style={{background:'linear-gradient(90deg,#fb923c,#fde68a,#fb923c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 2.5s linear infinite'}}>AI-Powered by Gemini 3.6 Flash</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif font-black mb-4 italic" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 40%,#fb923c 70%,#fff 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 3.5s linear infinite',filter:'drop-shadow(0 0 24px rgba(251,146,60,0.35))'}}>
+            <h1 className="text-4xl md:text-5xl font-serif font-black mb-4 italic" style={{background:'linear-gradient(135deg,#fff 0%,#fde68a 40%,#fb923c 70%,#fff 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200% auto',animation:'yatra-shimmer 3.5s linear infinite',filter:'drop-shadow(0 0 28px rgba(251,146,60,0.4))'}}>
               Build Your Perfect Yatra
             </h1>
-            <p className="text-slate-400 font-medium max-w-xl mx-auto text-sm leading-relaxed">
+            <p className="text-slate-400 font-medium max-w-xl mx-auto text-sm leading-relaxed mt-1">
               Fill in your travel details and our AI crafts a complete, personalised day-by-day itinerary with curated stays, dining, and experiences.
             </p>
           </div>
@@ -1070,7 +1340,7 @@ export default function PlanMyYatra() {
         </div>
 
         {(stage === "form" || stage === "loading") && (
-          <div className="rounded-[32px] p-8 md:p-12" style={{background:'#fff',boxShadow:'0 4px 40px rgba(234,88,12,0.10), 0 1px 4px rgba(0,0,0,0.06)',border:'1.5px solid rgba(251,146,60,0.13)'}}>
+          <div className="rounded-[32px] p-8 md:p-12" style={{background:'rgba(255,255,255,0.97)',boxShadow:'0 8px 52px rgba(234,88,12,0.08), 0 2px 14px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)',border:'1.5px solid rgba(251,146,60,0.11)',backdropFilter:'blur(8px)'}}>
             <PlannerForm onSubmit={handleSubmit} loading={stage === "loading"} />
           </div>
         )}
