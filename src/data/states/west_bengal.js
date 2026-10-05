@@ -10,6 +10,7 @@ export const WEST_BENGAL_PLACES = [
   // --- HERITAGE & ICONS ---
   {
     id: 2901,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "Victoria Memorial",
     slug: "victoria-memorial-kolkata",
     cityState: "Kolkata, West Bengal",
@@ -36,6 +37,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2902,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "Howrah Bridge (Rabindra Setu)",
     slug: "howrah-bridge",
     cityState: "Kolkata, West Bengal",
@@ -61,6 +63,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2903,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Hazarduari Palace",
     slug: "hazarduari-palace-murshidabad",
     cityState: "Murshidabad, West Bengal",
@@ -88,6 +91,7 @@ export const WEST_BENGAL_PLACES = [
   // --- HILL STATIONS & NATURE ---
   {
     id: 2904,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Tiger Hill",
     slug: "tiger-hill-darjeeling",
     cityState: "Darjeeling, West Bengal",
@@ -113,6 +117,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2905,
+    vibes: ["Hill Stations & Nature","Heritage & Forts"],
     name: "Batasia Loop & War Memorial",
     slug: "batasia-loop-darjeeling",
     cityState: "Darjeeling, West Bengal",
@@ -138,6 +143,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2906,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Mirik (Sumendu Lake)",
     slug: "mirik-lake-darjeeling",
     cityState: "Mirik, West Bengal",
@@ -165,6 +171,7 @@ export const WEST_BENGAL_PLACES = [
   // --- WILDLIFE ---
   {
     id: 2907,
+    vibes: ["Wildlife & Safari"],
     name: "Sundarbans National Park",
     slug: "sundarbans-national-park",
     cityState: "South 24 Parganas, West Bengal",
@@ -190,6 +197,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2908,
+    vibes: ["Wildlife & Safari"],
     name: "Jaldapara National Park",
     slug: "jaldapara-wildlife",
     cityState: "Alipurduar, West Bengal",
@@ -217,6 +225,7 @@ export const WEST_BENGAL_PLACES = [
   // --- SPIRITUAL ---
   {
     id: 2909,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Culture & Art"],
     name: "Dakshineswar Kali Temple",
     slug: "dakshineswar-kali-temple",
     cityState: "Kolkata, West Bengal",
@@ -242,6 +251,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2910,
+    vibes: ["Spiritual & Temples","Culture & Art","Heritage & Forts"],
     name: "Belur Math",
     slug: "belur-math-kolkata",
     cityState: "Howrah, West Bengal",
@@ -267,6 +277,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2911,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Mayapur ISKCON",
     slug: "mayapur-iskcon-temple",
     cityState: "Mayapur, West Bengal",
@@ -294,6 +305,7 @@ export const WEST_BENGAL_PLACES = [
   // --- CULTURE & UNESCO ---
   {
     id: 2912,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "Santiniketan",
     slug: "santiniketan-birbhum",
     cityState: "Bolpur, West Bengal",
@@ -319,6 +331,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2913,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Bishnupur Temples",
     slug: "bishnupur-terracotta",
     cityState: "Bankura, West Bengal",
@@ -346,6 +359,7 @@ export const WEST_BENGAL_PLACES = [
   // --- COASTAL GEMS ---
   {
     id: 2914,
+    vibes: ["Beaches & Coastal"],
     name: "New Digha Beach",
     slug: "new-digha-beach",
     cityState: "Digha, West Bengal",
@@ -371,6 +385,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2915,
+    vibes: ["Beaches & Coastal","Adventure & Treks"],
     name: "Mandarmani Beach",
     slug: "mandarmani-beach-east-midnapore",
     cityState: "Mandarmani, West Bengal",
@@ -396,6 +411,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2916,
+    vibes: ["Spiritual & Temples","Beaches & Coastal"],
     name: "Gangasagar (Sagar Island)",
     slug: "gangasagar-pilgrimage",
     cityState: "Sagar Island, West Bengal",
@@ -423,6 +439,7 @@ export const WEST_BENGAL_PLACES = [
   // --- OFFBEAT & HIDDEN GEMS ---
   {
     id: 2917,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Cooch Behar Palace (Rajbari)",
     slug: "cooch-behar-palace",
     cityState: "Cooch Behar, West Bengal",
@@ -448,6 +465,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2918,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Sandakphu Peak",
     slug: "sandakphu-trek",
     cityState: "Darjeeling Border, West Bengal",
@@ -473,6 +491,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2919,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Ayodhya Hills",
     slug: "ayodhya-hills-purulia",
     cityState: "Purulia, West Bengal",
@@ -498,6 +517,7 @@ export const WEST_BENGAL_PLACES = [
   },
   {
     id: 2920,
+    vibes: ["Wildlife & Safari"],
     name: "Gorumara National Park",
     slug: "gorumara-safari",
     cityState: "Lataguri, West Bengal",

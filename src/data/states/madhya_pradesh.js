@@ -10,6 +10,7 @@ export const MADHYA_PRADESH_PLACES = [
   // --- WILDLIFE ---
   {
     id: 1401,
+    vibes: ["Wildlife & Safari","Hill Stations & Nature"],
     name: "Kanha National Park",
     slug: "kanha-national-park",
     state: "Mandla, Madhya Pradesh",
@@ -33,6 +34,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1402,
+    vibes: ["Wildlife & Safari","Hill Stations & Nature"],
     name: "Bandhavgarh National Park",
     slug: "bandhavgarh-national-park",
     state: "Umaria, Madhya Pradesh",
@@ -56,6 +58,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1403,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Khajuraho Group of Monuments",
     slug: "khajuraho-temples",
     state: "Chhatarpur, Madhya Pradesh",
@@ -79,6 +82,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1404,
+    vibes: ["Heritage & Forts","Spiritual & Temples","Culture & Art"],
     name: "Sanchi Stupa",
     slug: "sanchi-stupa",
     state: "Raisen, Madhya Pradesh",
@@ -102,6 +106,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1405,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Gwalior Fort",
     slug: "gwalior-fort",
     state: "Gwalior, Madhya Pradesh",
@@ -125,6 +130,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1406,
+    vibes: ["Spiritual & Temples"],
     name: "Mahakaleshwar Temple",
     slug: "mahakaleshwar-ujjain",
     state: "Ujjain, Madhya Pradesh",
@@ -148,6 +154,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1407,
+    vibes: ["Spiritual & Temples"],
     name: "Omkareshwar Temple",
     slug: "omkareshwar",
     state: "Khandwa, Madhya Pradesh",
@@ -171,6 +178,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1408,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Bhedaghat",
     slug: "bhedaghat-marble-rocks",
     state: "Jabalpur, Madhya Pradesh",
@@ -194,6 +202,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1409,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Pachmarhi",
     slug: "pachmarhi",
     state: "Narmadapuram, Madhya Pradesh",
@@ -217,6 +226,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1410,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Orchha Fort Complex",
     slug: "orchha",
     state: "Niwari, Madhya Pradesh",
@@ -240,6 +250,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1411,
+    vibes: ["Wildlife & Safari","Hill Stations & Nature"],
     name: "Pench National Park",
     slug: "pench-national-park",
     state: "Seoni, Madhya Pradesh",
@@ -263,6 +274,7 @@ export const MADHYA_PRADESH_PLACES = [
   },
   {
     id: 1412,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Bhimbetka Rock Shelters",
     slug: "bhimbetka-caves",
     state: "Raisen, Madhya Pradesh",

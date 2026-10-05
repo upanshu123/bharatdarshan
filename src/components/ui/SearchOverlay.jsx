@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { MapPin, Map, Sparkles, ChevronRight, ArrowRight, X } from 'lucide-react';
+import { EXPERIENCE_DROPDOWN_OPTIONS } from '../../data/categories';
 
 export default function SearchOverlay({ 
   destinationInput, 
@@ -87,11 +88,14 @@ export default function SearchOverlay({
               <select 
                 ref={vibeRef}
                 className="bg-transparent text-white group-focus-within:text-slate-900 font-bold text-lg outline-none w-full appearance-none cursor-pointer"
-                value={selectedCategory}
+                value={selectedCategory || "Any Vibe"}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
-                <option value="" className="text-slate-900">Any Vibe</option>
-                {allCategories.map(cat => <option key={cat} value={cat} className="text-slate-900">{cat}</option>)}
+                {EXPERIENCE_DROPDOWN_OPTIONS.map(opt => (
+                  <option key={opt} value={opt} className="text-slate-900">
+                    {opt}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

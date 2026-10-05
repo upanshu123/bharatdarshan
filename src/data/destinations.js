@@ -29,6 +29,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -57,6 +61,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Beaches & Coastal",
+      "Adventure & Treks",
+      "Culture & Art"
     ]
   },
   {
@@ -85,6 +94,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -93,7 +106,7 @@ export const topDestinations = [
     "name": "Alleppey Backwaters",
     "state": "Kerala",
     "location": "Alleppey, Kerala",
-    "category": "Backwaters & Nature",
+    "category": "Hill Stations & Nature",
     "rating": 4.9,
     "reviewsCount": "7.2k",
     "tagline": "Serene emerald water-trails winding through whispering palms and lotus lagoons.",
@@ -113,6 +126,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Culture & Art",
+      "Beaches & Coastal"
     ]
   },
   {
@@ -141,6 +159,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571536802807-30451e3955d8?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584208124888-5f83609cc8f2?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Culture & Art",
+      "Heritage & Forts"
     ]
   },
   {
@@ -149,7 +172,7 @@ export const topDestinations = [
     "name": "Pangong Tso Lake",
     "state": "Ladakh",
     "location": "Leh, Ladakh",
-    "category": "Lakes & Mountains",
+    "category": "Hill Stations & Nature",
     "rating": 4.9,
     "reviewsCount": "6.9k",
     "tagline": "High-altitude turquoise waters shifting under rugged Himalayan snow peaks.",
@@ -169,6 +192,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1568755005853-89e94f703aaa?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571986020823-8d8a94d97b98?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -197,6 +224,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1588096344356-9b168670b1ec?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Culture & Art",
+      "Heritage & Forts"
     ]
   },
   {
@@ -205,7 +237,7 @@ export const topDestinations = [
     "name": "Munnar Tea Gardens",
     "state": "Kerala",
     "location": "Munnar, Kerala",
-    "category": "Backwaters & Nature",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "5.4k",
     "tagline": "Rolling misty emerald carpets draped across the crests of the Western Ghats.",
@@ -225,6 +257,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -253,6 +289,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -281,6 +321,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1580121441575-41bcb5c6b47c?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Spiritual & Temples",
+      "Culture & Art"
     ]
   },
   {
@@ -309,6 +354,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1585506942812-e72b29cef752?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -337,6 +386,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -365,6 +419,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1584208124888-5f83609cc8f2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Adventure & Treks",
+      "Spiritual & Temples",
+      "Hill Stations & Nature"
     ]
   },
   {
@@ -373,7 +432,7 @@ export const topDestinations = [
     "name": "Rohtang Pass",
     "state": "Himachal Pradesh",
     "location": "Manali, Himachal Pradesh",
-    "category": "Lakes & Mountains",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "9.1k",
     "tagline": "High Himalayan mountain gateway of snow glaciers and raw Pir Panjal grandeur.",
@@ -393,6 +452,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571986020823-8d8a94d97b98?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -401,7 +464,7 @@ export const topDestinations = [
     "name": "Valley of Flowers",
     "state": "Uttarakhand",
     "location": "Chamoli, Uttarakhand",
-    "category": "Lakes & Mountains",
+    "category": "Hill Stations & Nature",
     "rating": 4.9,
     "reviewsCount": "5.2k",
     "tagline": "Vibrant alpine meadows bursting into a kaleidoscope of rare Himalayan blossoms.",
@@ -421,6 +484,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks",
+      "Wildlife & Safari"
     ]
   },
   {
@@ -449,6 +517,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Beaches & Coastal",
+      "Culture & Art"
     ]
   },
   {
@@ -477,6 +549,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Beaches & Coastal",
+      "Adventure & Treks",
+      "Culture & Art"
     ]
   },
   {
@@ -485,7 +562,7 @@ export const topDestinations = [
     "name": "Nubra Valley",
     "state": "Ladakh",
     "location": "Leh, Ladakh",
-    "category": "Lakes & Mountains",
+    "category": "Hill Stations & Nature",
     "rating": 4.9,
     "reviewsCount": "5.8k",
     "tagline": "High-altitude desert dunes, double-humped camels, and mountain monasteries.",
@@ -505,6 +582,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1568755005853-89e94f703aaa?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571986020823-8d8a94d97b98?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks",
+      "Culture & Art"
     ]
   },
   {
@@ -533,6 +615,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1580121441575-41bcb5c6b47c?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -561,6 +647,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1573651622-3cfdfd8e3e3a?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Spiritual & Temples",
+      "Culture & Art"
     ]
   },
   {
@@ -569,7 +660,7 @@ export const topDestinations = [
     "name": "Rann of Kutch",
     "state": "Gujarat",
     "location": "Kutch, Gujarat",
-    "category": "Backwaters & Nature",
+    "category": "Culture & Art",
     "rating": 4.8,
     "reviewsCount": "7.7k",
     "tagline": "Endless crystalline white salt desert glowing under radiant full moon skies.",
@@ -589,6 +680,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1598132492101-28ac0e1fee87?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571986020823-8d8a94d97b98?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Culture & Art",
+      "Adventure & Treks"
     ]
   },
   {
@@ -597,7 +692,7 @@ export const topDestinations = [
     "name": "Spiti Valley",
     "state": "Himachal Pradesh",
     "location": "Lahaul-Spiti, Himachal Pradesh",
-    "category": "Lakes & Mountains",
+    "category": "Hill Stations & Nature",
     "rating": 4.9,
     "reviewsCount": "6.2k",
     "tagline": "The Middle Land of whitewashed cliffside monasteries and windswept moonscapes.",
@@ -617,6 +712,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1571986020823-8d8a94d97b98?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1568755005853-89e94f703aaa?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks",
+      "Spiritual & Temples"
     ]
   },
   {
@@ -625,7 +725,7 @@ export const topDestinations = [
     "name": "Sundarbans Mangroves",
     "state": "West Bengal",
     "location": "South 24 Parganas, West Bengal",
-    "category": "Wildlife & Forests",
+    "category": "Wildlife & Safari",
     "rating": 4.7,
     "reviewsCount": "4.9k",
     "tagline": "Mysterious delta of tidal mangrove rivers and the elusive Royal Bengal Tiger.",
@@ -645,6 +745,9 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1617275249641-322f7b3db264?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Wildlife & Safari"
     ]
   },
   {
@@ -653,7 +756,7 @@ export const topDestinations = [
     "name": "Kaziranga National Park",
     "state": "Assam",
     "location": "Golaghat, Assam",
-    "category": "Wildlife & Forests",
+    "category": "Wildlife & Safari",
     "rating": 4.9,
     "reviewsCount": "7.8k",
     "tagline": "Vast Brahmaputra grasslands harboring the majestic great one-horned rhinoceros.",
@@ -673,6 +776,9 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1568574348993-54f0cca23c9a?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Wildlife & Safari"
     ]
   },
   {
@@ -681,7 +787,7 @@ export const topDestinations = [
     "name": "Coorg Coffee Estates",
     "state": "Karnataka",
     "location": "Kodagu, Karnataka",
-    "category": "Backwaters & Nature",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "6.4k",
     "tagline": "Aroma of freshly roasted Arabica, misty hills, and lush Kodava hospitality.",
@@ -701,6 +807,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1591197172062-c718f82aba20?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks",
+      "Culture & Art"
     ]
   },
   {
@@ -729,6 +840,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1587135941948-670b381f08ce?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -757,6 +872,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1587135941948-670b381f08ce?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art",
+      "Hill Stations & Nature"
     ]
   },
   {
@@ -785,6 +905,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571536802807-30451e3955d8?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Culture & Art",
+      "Heritage & Forts"
     ]
   },
   {
@@ -793,7 +918,7 @@ export const topDestinations = [
     "name": "Cherrapunji & Living Root Bridges",
     "state": "Meghalaya",
     "location": "Cherrapunji, Meghalaya",
-    "category": "Backwaters & Nature",
+    "category": "Hill Stations & Nature",
     "rating": 4.9,
     "reviewsCount": "7.1k",
     "tagline": "Bio-engineering marvels woven from living roots amidst rain-drenched jungle canyons.",
@@ -813,6 +938,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1552799446-159ba9523315?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -821,7 +950,7 @@ export const topDestinations = [
     "name": "Jim Corbett National Park",
     "state": "Uttarakhand",
     "location": "Nainital, Uttarakhand",
-    "category": "Wildlife & Forests",
+    "category": "Wildlife & Safari",
     "rating": 4.8,
     "reviewsCount": "8.3k",
     "tagline": "India's premier tiger reserve tucked into the wild sal forests of the Ramganga River.",
@@ -841,6 +970,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1568574348993-54f0cca23c9a?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Wildlife & Safari",
+      "Adventure & Treks",
+      "Hill Stations & Nature"
     ]
   },
   {
@@ -849,7 +983,7 @@ export const topDestinations = [
     "name": "Ooty Nilgiri Hills",
     "state": "Tamil Nadu",
     "location": "Ooty, Tamil Nadu",
-    "category": "Hills & Valleys",
+    "category": "Hill Stations & Nature",
     "rating": 4.7,
     "reviewsCount": "9.2k",
     "tagline": "The Queen of Hill Stations wrapped in blue eucalyptus haze and heritage steam trains.",
@@ -869,6 +1003,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1586347886960-b6a30ee0d6a5?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -877,7 +1015,7 @@ export const topDestinations = [
     "name": "Darjeeling Tea Trails",
     "state": "West Bengal",
     "location": "Darjeeling, West Bengal",
-    "category": "Hills & Valleys",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "8.1k",
     "tagline": "Champagne of teas brewed against the snow-draped backdrop of Mount Kanchenjunga.",
@@ -897,6 +1035,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1586347886960-b6a30ee0d6a5?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -925,6 +1067,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Beaches & Coastal",
+      "Adventure & Treks",
+      "Culture & Art"
     ]
   },
   {
@@ -953,6 +1100,12 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Spiritual & Temples",
+      "Beaches & Coastal",
+      "Culture & Art"
     ]
   },
   {
@@ -961,7 +1114,7 @@ export const topDestinations = [
     "name": "Gir National Park",
     "state": "Gujarat",
     "location": "Sasan Gir, Gujarat",
-    "category": "Wildlife & Forests",
+    "category": "Wildlife & Safari",
     "rating": 4.8,
     "reviewsCount": "6.5k",
     "tagline": "The world's exclusive sanctuary for majestic Asiatic lions roaming rugged teak forests.",
@@ -981,6 +1134,9 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1568574348993-54f0cca23c9a?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Wildlife & Safari"
     ]
   },
   {
@@ -1009,6 +1165,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1574165945521-4ba31dbddba7?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Heritage & Forts",
+      "Beaches & Coastal"
     ]
   },
   {
@@ -1017,7 +1178,7 @@ export const topDestinations = [
     "name": "Thekkady Periyar Wildlife",
     "state": "Kerala",
     "location": "Thekkady, Kerala",
-    "category": "Wildlife & Forests",
+    "category": "Wildlife & Safari",
     "rating": 4.8,
     "reviewsCount": "6.1k",
     "tagline": "Highland spice hills surrounding the scenic lake sanctuary of Periyar.",
@@ -1037,6 +1198,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1551918120-9739cb430c6d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Wildlife & Safari",
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1045,7 +1211,7 @@ export const topDestinations = [
     "name": "Mussoorie Hill Station",
     "state": "Uttarakhand",
     "location": "Mussoorie, Uttarakhand",
-    "category": "Hills & Valleys",
+    "category": "Hill Stations & Nature",
     "rating": 4.7,
     "reviewsCount": "8.4k",
     "tagline": "The Queen of the Hills perched gracefully above the Doon Valley with Himalayan panoramas.",
@@ -1065,6 +1231,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1510797215324-95aa89f43c33?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1093,6 +1263,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1520222984843-df35ebc0f24d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1587135941948-670b381f08ce?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1101,7 +1276,7 @@ export const topDestinations = [
     "name": "Loktak Lake & Phumdis",
     "state": "Manipur",
     "location": "Bishnupur, Manipur",
-    "category": "Backwaters & Nature",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "4.2k",
     "tagline": "The world's only floating lake sanctuary with circular biomass islands and dancing deer.",
@@ -1121,6 +1296,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Wildlife & Safari",
+      "Culture & Art"
     ]
   },
   {
@@ -1149,6 +1329,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1586500036706-41963de24d8b?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Beaches & Coastal",
+      "Adventure & Treks",
+      "Heritage & Forts"
     ]
   },
   {
@@ -1177,6 +1362,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -1205,6 +1395,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1597211684565-dca64d72bdfe?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1587135941948-670b381f08ce?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art"
     ]
   },
   {
@@ -1213,7 +1407,7 @@ export const topDestinations = [
     "name": "Wayanad Wildlife Sanctuary",
     "state": "Kerala",
     "location": "Wayanad, Kerala",
-    "category": "Wildlife & Forests",
+    "category": "Wildlife & Safari",
     "rating": 4.8,
     "reviewsCount": "6.3k",
     "tagline": "Lush Western Ghats wilderness of wild Asiatic elephants, misty peaks, and prehistoric caves.",
@@ -1233,6 +1427,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Wildlife & Safari",
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1261,6 +1460,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Beaches & Coastal",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1269,7 +1472,7 @@ export const topDestinations = [
     "name": "Majuli Island",
     "state": "Assam",
     "location": "Majuli, Assam",
-    "category": "Backwaters & Nature",
+    "category": "Culture & Art",
     "rating": 4.8,
     "reviewsCount": "4.5k",
     "tagline": "The world's largest inhabited river island preserving Neo-Vaishnavite satra culture.",
@@ -1289,6 +1492,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1617275249641-322f7b3db264?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1549366021-9f761d450615?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Culture & Art",
+      "Spiritual & Temples",
+      "Hill Stations & Nature"
     ]
   },
   {
@@ -1317,6 +1525,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Heritage & Forts",
+      "Culture & Art",
+      "Spiritual & Temples"
     ]
   },
   {
@@ -1325,7 +1538,7 @@ export const topDestinations = [
     "name": "Pachmarhi Hill Station",
     "state": "Madhya Pradesh",
     "location": "Hoshangabad, Madhya Pradesh",
-    "category": "Hills & Valleys",
+    "category": "Hill Stations & Nature",
     "rating": 4.7,
     "reviewsCount": "5.8k",
     "tagline": "The Queen of Satpura tucked amid sal valleys, ancient cave shelters, and plunging waterfalls.",
@@ -1345,6 +1558,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1466442929976-97f336a657be?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks",
+      "Spiritual & Temples"
     ]
   },
   {
@@ -1353,7 +1571,7 @@ export const topDestinations = [
     "name": "Sohra (Cherrapunji)",
     "state": "Meghalaya",
     "location": "Cherrapunji, Meghalaya",
-    "category": "Hills & Valleys",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "6.9k",
     "tagline": "Dramatic monsoon cliffs dropping into Bangladesh plains amidst swirling rainbow mists.",
@@ -1373,6 +1591,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1552799446-159ba9523315?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1381,7 +1603,7 @@ export const topDestinations = [
     "name": "Pelling & Kanchenjunga View",
     "state": "Sikkim",
     "location": "Pelling, Sikkim",
-    "category": "Lakes & Mountains",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "5.5k",
     "tagline": "Unrivaled front-row panoramas of Kanchenjunga's glistening snow spires in West Sikkim.",
@@ -1401,6 +1623,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571986020823-8d8a94d97b98?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1429,6 +1655,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1518002054494-3a6f94352e9d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1574165945521-4ba31dbddba7?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Heritage & Forts",
+      "Beaches & Coastal"
     ]
   },
   {
@@ -1437,7 +1668,7 @@ export const topDestinations = [
     "name": "Shillong City",
     "state": "Meghalaya",
     "location": "Shillong, Meghalaya",
-    "category": "Hills & Valleys",
+    "category": "Hill Stations & Nature",
     "rating": 4.8,
     "reviewsCount": "8.2k",
     "tagline": "The rock music capital of India nestled among pine-scented hills and mirror lakes.",
@@ -1457,6 +1688,10 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1573496782645-b8699f88789d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1552799446-159ba9523315?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Hill Stations & Nature",
+      "Adventure & Treks"
     ]
   },
   {
@@ -1485,9 +1720,11 @@ export const topDestinations = [
       "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1571536802807-30451e3955d8?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "vibes": [
+      "Spiritual & Temples",
+      "Culture & Art",
+      "Heritage & Forts"
     ]
   }
 ];
-
-export const destinations = topDestinations;
-export default topDestinations;

@@ -11,6 +11,7 @@ export const GUJARAT_PLACES = [
   // --- HERITAGE ---
   {
     id: 801,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Statue of Unity",
     slug: "statue-of-unity",
     state: "Kevadiya, Gujarat",
@@ -34,6 +35,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 802,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Laxmi Vilas Palace",
     slug: "laxmi-vilas-palace",
     state: "Vadodara, Gujarat",
@@ -57,6 +59,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 803,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Rani Ki Vav",
     slug: "rani-ki-vav",
     state: "Patan, Gujarat",
@@ -80,6 +83,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 804,
+    vibes: ["Heritage & Forts","Culture & Art","Spiritual & Temples"],
     name: "Sun Temple, Modhera",
     slug: "sun-temple-modhera",
     state: "Modhera, Gujarat",
@@ -103,6 +107,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 805,
+    vibes: ["Spiritual & Temples","Heritage & Forts"],
     name: "Somnath Temple",
     slug: "somnath-temple",
     state: "Veraval, Gujarat",
@@ -126,6 +131,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 806,
+    vibes: ["Spiritual & Temples","Heritage & Forts"],
     name: "Dwarkadhish Temple",
     slug: "dwarkadhish-temple",
     state: "Dwarka, Gujarat",
@@ -149,6 +155,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 807,
+    vibes: ["Wildlife & Safari"],
     name: "Gir National Park",
     slug: "gir-national-park",
     state: "Sasan Gir, Gujarat",
@@ -172,6 +179,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 808,
+    vibes: ["Culture & Art","Adventure & Treks"],
     name: "Rann of Kutch",
     slug: "rann-of-kutch",
     state: "Dhordo, Gujarat",
@@ -195,6 +203,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 809,
+    vibes: ["Beaches & Coastal","Adventure & Treks"],
     name: "Shivrajpur Beach",
     slug: "shivrajpur-beach",
     state: "Dwarka, Gujarat",
@@ -218,6 +227,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 810,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Saputara",
     slug: "saputara",
     state: "Dang, Gujarat",
@@ -241,6 +251,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 811,
+    vibes: ["Heritage & Forts","Spiritual & Temples"],
     name: "Champaner-Pavagadh",
     slug: "champaner-pavagadh",
     state: "Champaner, Gujarat",
@@ -264,6 +275,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 812,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Sabarmati Ashram",
     slug: "sabarmati-ashram",
     state: "Ahmedabad, Gujarat",
@@ -287,6 +299,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 813,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Adalaj Stepwell",
     slug: "adalaj-stepwell",
     state: "Gandhinagar, Gujarat",
@@ -310,6 +323,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 814,
+    vibes: ["Spiritual & Temples","Heritage & Forts"],
     name: "Palitana Jain Temples",
     slug: "palitana-temples",
     state: "Bhavnagar, Gujarat",
@@ -333,6 +347,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 815,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Akshardham Temple",
     slug: "akshardham-gandhinagar",
     state: "Gandhinagar, Gujarat",
@@ -356,6 +371,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 816,
+    vibes: ["Wildlife & Safari"],
     name: "Velavadar Blackbuck Park",
     slug: "velavadar-national-park",
     state: "Bhavnagar, Gujarat",
@@ -379,6 +395,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 817,
+    vibes: ["Wildlife & Safari","Beaches & Coastal"],
     name: "Marine National Park",
     slug: "marine-national-park",
     state: "Jamnagar, Gujarat",
@@ -402,6 +419,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 818,
+    vibes: ["Beaches & Coastal","Culture & Art"],
     name: "Mandvi Beach",
     slug: "mandvi-beach",
     state: "Kutch, Gujarat",
@@ -425,6 +443,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 819,
+    vibes: ["Beaches & Coastal"],
     name: "Dumas Beach",
     slug: "dumas-beach",
     state: "Surat, Gujarat",
@@ -448,6 +467,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 820,
+    vibes: ["Beaches & Coastal"],
     name: "Tithal Beach",
     slug: "tithal-beach",
     state: "Valsad, Gujarat",
@@ -471,6 +491,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 821,
+    vibes: ["Beaches & Coastal"],
     name: "Gopnath Beach",
     slug: "gopnath-beach",
     state: "Bhavnagar, Gujarat",
@@ -494,6 +515,7 @@ export const GUJARAT_PLACES = [
   },
   {
     id: 822,
+    vibes: ["Beaches & Coastal","Culture & Art"],
     name: "Madhavpur Ghed Beach",
     slug: "madhavpur-ghed-beach",
     state: "Porbandar, Gujarat",

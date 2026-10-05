@@ -1,55 +1,78 @@
-import React, { useMemo } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import React, { useMemo, useEffect } from 'react';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { ALL_PLACES } from '../data/places/index';
-import { ChevronRight, MapPin, Search } from 'lucide-react';
+import { ChevronRight, MapPin, Search, Sparkles, Compass } from 'lucide-react';
+import { matchesVibe, matchesLocation, formatLocationName } from '../data/categories';
 
 export default function SearchResults() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || "";
-  const category = searchParams.get('category') || "";
-  const hasFilters = Boolean(query || category);
-  const results = useMemo(() => {
-    if (!hasFilters) return [];
+  const rawCategory = searchParams.get('category') || "";
+  const category = rawCategory === 'Any Vibe' ? '' : rawCategory;
+  const hasFilters = Boolean(query || category || rawCategory === 'Any Vibe');
 
-    let filtered = ALL_PLACES || [];
-
-    // 1. Filter by Search Query (State, City, or Place Name)
-    if (query) {
-      const q = query.toLowerCase().trim();
-      filtered = filtered.filter(p => {
-        const nameMatch = (p.name || "").toLowerCase().includes(q);
-        const stateMatch = (p.state || "").toLowerCase().includes(q);
-        const locMatch = (p.location || "").toLowerCase().includes(q);
-        const cityStateMatch = (p.cityState || "").toLowerCase().includes(q);
-        return nameMatch || stateMatch || locMatch || cityStateMatch;
-      });
+  const { displayResults, isFallback, fallbackCity } = useMemo(() => {
+    if (!hasFilters) {
+      return { displayResults: [], isFallback: false, fallbackCity: '' };
     }
 
-    // 2. Filter by Category Vibe (e.g., "Heritage", "Spiritual")
-    if (category) {
-      filtered = filtered.filter(p => p.category === category);
-    }
-
+    const all = ALL_PLACES || [];
     const q = query.toLowerCase().trim();
+
+    // 1. Filter by location query (City, State, Name/Title) - case-insensitive & trimmed
+    let locationFiltered = all;
+    if (q) {
+      locationFiltered = all.filter((p) => matchesLocation(p, q));
+    }
+
+    // 2. Vibe Match: If selectedVibe === 'Any Vibe', return all matching locations.
+    // Otherwise, check if item.vibes array includes selectedVibe (with fallback to item.category === selectedVibe)
+    let filtered = locationFiltered;
+    if (category && category !== 'Any Vibe') {
+      filtered = locationFiltered.filter((p) => matchesVibe(p, category));
+    }
+
+    // Scoring for ranking closest matches first
     const getScore = (place) => {
       if (!q) return 0;
-
-      const name = (place.name || '').toLowerCase();
+      const name = (place.name || place.title || '').toLowerCase();
       const state = (place.state || '').toLowerCase();
+      const city = (place.city || '').toLowerCase();
       const location = (place.location || '').toLowerCase();
       const cityState = (place.cityState || '').toLowerCase();
 
       if (name === q) return 4;
       if (name.startsWith(q)) return 3;
       if (name.includes(q)) return 2;
-      if (state.includes(q) || location.includes(q) || cityState.includes(q)) return 1;
+      if (state.includes(q) || city.includes(q) || location.includes(q) || cityState.includes(q)) return 1;
       return 0;
     };
 
-    return [...filtered].sort((a, b) => getScore(b) - getScore(a));
+    const sortedExact = [...filtered].sort((a, b) => getScore(b) - getScore(a));
+
+    if (sortedExact.length > 0) {
+      return { displayResults: sortedExact, isFallback: false, fallbackCity: '' };
+    }
+
+    // 3. Clean Empty State:
+    // If a specific combination (e.g., Jaipur + Beaches) yields 0 results,
+    // show clean message: 'No matching spots for this vibe in [City]. Showing top highlights instead'
+    // and display all spots of that city rather than a broken blank screen.
+    if (q && category && category !== 'Any Vibe' && locationFiltered.length > 0) {
+      const sortedLocationSpots = [...locationFiltered].sort((a, b) => getScore(b) - getScore(a));
+      const cityDisplay = formatLocationName(q, sortedLocationSpots);
+      return {
+        displayResults: sortedLocationSpots,
+        isFallback: true,
+        fallbackCity: cityDisplay
+      };
+    }
+
+    return { displayResults: [], isFallback: false, fallbackCity: '' };
   }, [query, category, hasFilters]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [query, category]);
 
@@ -67,7 +90,7 @@ export default function SearchResults() {
             Search a state, city, or landmark from the home page to see tailored destination matches.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-            {['Taj Mahal', 'Goa', 'Heritage'].map((hint) => (
+            {['Taj Mahal', 'Goa', 'Heritage & Forts'].map((hint) => (
               <div key={hint} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-200">
                 <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Try searching</p>
                 <p className="text-slate-900 font-bold">{hint}</p>
@@ -83,18 +106,14 @@ export default function SearchResults() {
   }
 
   return (
-    // Added 'relative' to the main container
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-6 lg:px-20 relative">
-      
-      {/* --- ADDED: Mid-grey gradient that fades into the background --- */}
+      {/* Grey gradient banner */}
       <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-slate-600 to-transparent pointer-events-none z-0"></div>
 
-      {/* Added 'relative z-10' so the text and cards sit on top of the gradient */}
       <div className="max-w-[1440px] mx-auto relative z-10">
         
-        {/* Dynamic Header based on search parameters */}
-        <div className="mb-12 text-center">
-          {/* Changed text color to white to contrast with the new grey gradient */}
+        {/* Dynamic Header */}
+        <div className="mb-10 text-center">
           <h1 className="text-4xl lg:text-5xl font-serif font-black text-white mb-4 drop-shadow-md">
             {query ? `Discovering ${query}` : "Explore India"}
           </h1>
@@ -103,16 +122,33 @@ export default function SearchResults() {
               {category} Vibe
             </span>
           )}
-          {/* Lightened the paragraph text so it is readable on the grey */}
           <p className="text-slate-200 mt-4 font-medium drop-shadow-sm">
-            Found {results.length} destination{results.length === 1 ? '' : 's'} matching your search.
+            {isFallback 
+              ? `Found top highlights for ${fallbackCity}`
+              : `Found ${displayResults.length} destination${displayResults.length === 1 ? '' : 's'} matching your search.`
+            }
           </p>
         </div>
 
+        {/* Clean Empty State Fallback Notification */}
+        {isFallback && (
+          <div className="mb-12 max-w-3xl mx-auto bg-white/95 backdrop-blur-md border border-orange-200 rounded-3xl p-6 md:p-8 shadow-xl text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 text-orange-600 mb-3 shadow-sm">
+              <Sparkles size={24} />
+            </div>
+            <h3 className="text-lg md:text-xl font-serif font-bold text-slate-800">
+              No matching spots for this vibe in {fallbackCity}. Showing top highlights instead
+            </h3>
+            <p className="text-slate-500 text-xs md:text-sm mt-2">
+              Here are the most popular highlights and attractions to visit in {fallbackCity}.
+            </p>
+          </div>
+        )}
+
         {/* Results Grid */}
-        {results.length > 0 ? (
+        {displayResults.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
-            {results.map(place => (
+            {displayResults.map((place) => (
               <Link to={`/place/${place.id}`} key={place.id} className="group flex flex-col h-full">
                 <div className="h-[500px] overflow-hidden rounded-[80px] relative shadow-2xl transition-all duration-700 group-hover:rounded-[40px]">
                   <img src={place.image} className="w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt={place.name} />
@@ -125,11 +161,31 @@ export default function SearchResults() {
                   </div>
 
                   {/* Bottom Info */}
-                  <div className="absolute bottom-12 left-10 right-10 text-left">
-                    <span className="text-orange-500 font-black uppercase tracking-[0.4em] text-[10px] mb-2 block">{place.category}</span>
-                    <h3 className="text-4xl font-serif font-black text-white mb-6 group-hover:text-orange-400 transition-colors leading-tight">{place.name}</h3>
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center group-hover:w-full group-hover:bg-orange-600 group-hover:text-white transition-all duration-500">
-                      <ChevronRight size={24} />
+                  <div className="absolute bottom-10 left-8 right-8 text-left">
+                    <span className="text-orange-400 font-black uppercase tracking-[0.3em] text-[10px] mb-2 block">
+                      {Array.isArray(place.vibes) && place.vibes.length > 0 ? place.vibes.join(' • ') : place.category}
+                    </span>
+                    <h3 className="text-3xl md:text-4xl font-serif font-black text-white mb-4 group-hover:text-orange-300 transition-colors leading-tight">
+                      {place.name}
+                    </h3>
+                    
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          navigate(`/plan-my-yatra?destination=${encodeURIComponent(place.name || place.title || '')}`);
+                        }}
+                        className="px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-orange-600/40 flex items-center gap-2 active:scale-95 z-20 cursor-pointer"
+                      >
+                        <Compass size={14} />
+                        <span>Plan Trip</span>
+                      </button>
+
+                      <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-white group-hover:text-slate-900 transition-all duration-300 ml-auto">
+                        <ChevronRight size={20} />
+                      </div>
                     </div>
                   </div>
                 </div>

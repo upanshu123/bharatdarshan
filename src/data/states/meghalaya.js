@@ -9,6 +9,7 @@
 export const MEGHALAYA_PLACES = [
   {
     id: 1701,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Double Decker Living Root Bridge",
     slug: "double-decker-root-bridge",
     state: "Nongriat (Sohra), Meghalaya",
@@ -32,6 +33,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1702,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Nohkalikai Falls",
     slug: "nohkalikai-falls",
     state: "Cherrapunji (Sohra), Meghalaya",
@@ -55,6 +57,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1703,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Umngot River",
     slug: "umngot-river-dawki",
     state: "Dawki, Meghalaya",
@@ -78,6 +81,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1704,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Mawsmai Cave",
     slug: "mawsmai-cave",
     state: "Cherrapunji, Meghalaya",
@@ -101,6 +105,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1705,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Laitlum Canyons",
     slug: "laitlum-canyons",
     state: "Smit, Meghalaya",
@@ -124,6 +129,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1706,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Krang Suri Falls",
     slug: "krang-suri-falls",
     state: "Jowai, Meghalaya",
@@ -147,6 +153,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1707,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Elephant Falls",
     slug: "elephant-falls",
     state: "Shillong, Meghalaya",
@@ -170,6 +177,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1708,
+    vibes: ["Hill Stations & Nature","Culture & Art"],
     name: "Mawlynnong Village",
     slug: "mawlynnong-village",
     state: "Pynursla, Meghalaya",
@@ -193,6 +201,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1709,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Umiam Lake",
     slug: "umiam-lake",
     state: "Shillong, Meghalaya",
@@ -216,6 +225,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1710,
+    vibes: ["Hill Stations & Nature","Culture & Art"],
     name: "Mawphlang Sacred Grove",
     slug: "mawphlang-sacred-grove",
     state: "Mawphlang, Meghalaya",
@@ -239,6 +249,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1711,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Wari Chora",
     slug: "wari-chora",
     state: "South Garo Hills, Meghalaya",
@@ -262,6 +273,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1712,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Seven Sisters Falls",
     slug: "seven-sisters-falls",
     state: "Cherrapunji, Meghalaya",
@@ -285,6 +297,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1713,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "Don Bosco Museum",
     slug: "don-bosco-museum",
     state: "Shillong, Meghalaya",
@@ -308,6 +321,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1714,
+    vibes: ["Wildlife & Safari","Hill Stations & Nature"],
     name: "Balpakram National Park",
     slug: "balpakram-national-park",
     state: "South Garo Hills, Meghalaya",
@@ -331,6 +345,7 @@ export const MEGHALAYA_PLACES = [
   },
   {
     id: 1715,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Phe Phe Falls",
     slug: "phe-phe-falls",
     state: "Jowai, Meghalaya",

@@ -11,6 +11,7 @@ export const SIKKIM_PLACES = [
   // --- EAST SIKKIM (Gangtok & Around) ---
   {
     id: 2301,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Tsomgo Lake (Changu)",
     slug: "tsomgo-lake",
     state: "Gangtok, Sikkim",
@@ -34,6 +35,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2302,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Nathu La Pass",
     slug: "nathu-la-pass",
     state: "Gangtok, Sikkim",
@@ -57,6 +59,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2303,
+    vibes: ["Spiritual & Temples","Culture & Art","Heritage & Forts"],
     name: "Rumtek Monastery",
     slug: "rumtek-monastery",
     state: "Gangtok, Sikkim",
@@ -80,6 +83,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2304,
+    vibes: ["Culture & Art","Hill Stations & Nature"],
     name: "MG Marg",
     slug: "mg-marg-gangtok",
     state: "Gangtok, Sikkim",
@@ -105,6 +109,7 @@ export const SIKKIM_PLACES = [
   // --- NORTH SIKKIM (Adventure) ---
   {
     id: 2305,
+    vibes: ["Hill Stations & Nature","Adventure & Treks","Spiritual & Temples"],
     name: "Gurudongmar Lake",
     slug: "gurudongmar-lake",
     state: "Lachen, Sikkim",
@@ -128,6 +133,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2306,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Yumthang Valley",
     slug: "yumthang-valley",
     state: "Lachung, Sikkim",
@@ -153,6 +159,7 @@ export const SIKKIM_PLACES = [
   // --- WEST SIKKIM (Heritage) ---
   {
     id: 2307,
+    vibes: ["Hill Stations & Nature","Adventure & Treks","Spiritual & Temples"],
     name: "Pelling Skywalk & Chenrezig",
     slug: "pelling-skywalk",
     state: "Pelling, Sikkim",
@@ -176,6 +183,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2308,
+    vibes: ["Heritage & Forts","Hill Stations & Nature","Adventure & Treks"],
     name: "Yuksom Heritage Village",
     slug: "yuksom",
     state: "Gyalshing, Sikkim",
@@ -201,6 +209,7 @@ export const SIKKIM_PLACES = [
   // --- SOUTH SIKKIM ---
   {
     id: 2309,
+    vibes: ["Spiritual & Temples","Hill Stations & Nature","Culture & Art"],
     name: "Buddha Park (Ravangla)",
     slug: "buddha-park-ravangla",
     state: "Ravangla, Sikkim",
@@ -224,6 +233,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2310,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Namchi Char Dham",
     slug: "char-dham-namchi",
     state: "Namchi, Sikkim",
@@ -249,6 +259,7 @@ export const SIKKIM_PLACES = [
   // --- OFFBEAT & HIDDEN GEMS ---
   {
     id: 2311,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Zuluk (Silk Route)",
     slug: "zuluk-silk-route",
     state: "Pakyong, Sikkim",
@@ -272,6 +283,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2312,
+    vibes: ["Hill Stations & Nature","Culture & Art"],
     name: "Dzongu Valley",
     slug: "dzongu-valley",
     state: "Mangan, Sikkim",
@@ -294,6 +306,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2313,
+    vibes: ["Spiritual & Temples","Heritage & Forts"],
     name: "Baba Harbhajan Singh Temple",
     slug: "baba-mandir",
     state: "East Sikkim, Sikkim",
@@ -317,6 +330,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2314,
+    vibes: ["Spiritual & Temples","Hill Stations & Nature"],
     name: "Khecheopalri Lake",
     slug: "khecheopalri-lake",
     state: "Pelling, Sikkim",
@@ -340,6 +354,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2315,
+    vibes: ["Hill Stations & Nature","Culture & Art"],
     name: "Temi Tea Garden",
     slug: "temi-tea-garden",
     state: "Namchi, Sikkim",
@@ -363,6 +378,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2316,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Zero Point (Yumesamdong)",
     slug: "zero-point",
     state: "Lachung, Sikkim",
@@ -386,6 +402,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2317,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Aritar (Lampokhari Lake)",
     slug: "aritar-lake",
     state: "Pakyong, Sikkim",
@@ -409,6 +426,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2318,
+    vibes: ["Hill Stations & Nature"],
     name: "Singhik Viewpoint",
     slug: "singhik-viewpoint",
     state: "Mangan, Sikkim",
@@ -432,6 +450,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2319,
+    vibes: ["Heritage & Forts","Hill Stations & Nature"],
     name: "Rabdentse Ruins",
     slug: "rabdentse-ruins",
     state: "Pelling, Sikkim",
@@ -455,6 +474,7 @@ export const SIKKIM_PLACES = [
   },
   {
     id: 2320,
+    vibes: ["Spiritual & Temples","Hill Stations & Nature"],
     name: "Hanuman Tok",
     slug: "hanuman-tok-gangtok",
     state: "Gangtok, Sikkim",

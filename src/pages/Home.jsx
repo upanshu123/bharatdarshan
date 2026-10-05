@@ -6,6 +6,8 @@ import useDebounce from '../hooks/useDebounce';
 import SearchOverlay from '../components/ui/SearchOverlay';
 import localHeroBg from '../assets/bharatdarshannimage.jpeg';
 
+import { STANDARD_EXPERIENCE_TAGS } from '../data/categories';
+
 export default function Home() {
   const [destinationInput, setDestinationInput] = useState("");
   const debouncedSearch = useDebounce(destinationInput, 300);
@@ -16,12 +18,12 @@ export default function Home() {
   const navigate = useNavigate();
   const vibeRef = useRef(null);
 
-  const allCategories = Array.from(new Set(PLACES.map(p => p.category || "")));
+  const allCategories = STANDARD_EXPERIENCE_TAGS;
   const categoriesList = [
-    { id: 'Hill Stations', icon: Mountain, color: 'text-sky-500', bg: 'bg-sky-500/10' },
-    { id: 'Heritage', icon: Castle, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-    { id: 'Spiritual', icon: Sparkles, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-    { id: 'Beaches', icon: Palmtree, color: 'text-teal-500', bg: 'bg-teal-500/10' },
+    { id: 'Heritage & Forts', icon: Castle, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+    { id: 'Spiritual & Temples', icon: Sparkles, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    { id: 'Hill Stations & Nature', icon: Mountain, color: 'text-sky-500', bg: 'bg-sky-500/10' },
+    { id: 'Beaches & Coastal', icon: Palmtree, color: 'text-teal-500', bg: 'bg-teal-500/10' },
   ];
 
   const suggestions = useMemo(() => {
@@ -60,7 +62,8 @@ export default function Home() {
   // --- 2. FIXED SEARCH EXECUTION & CLEARING ---
   const executeSearch = (overrideCategory = null) => {
     const q = (destinationInput || "").trim();
-    const catToSearch = overrideCategory || selectedCategory;
+    const rawCat = overrideCategory || selectedCategory;
+    const catToSearch = rawCat === 'Any Vibe' ? '' : rawCat;
     
     if (!q && !catToSearch) return;
 

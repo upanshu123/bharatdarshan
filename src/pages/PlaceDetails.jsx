@@ -26,6 +26,8 @@ export default function PlaceDetails() {
 
   if (!place) return <div className="p-10 text-center text-slate-500">Place not found!</div>;
 
+  const planTripUrl = `/plan-my-yatra?destination=${encodeURIComponent(place.name || place.title || '')}`;
+
   // Shared Auth Logic for Plan My Yatra
   const handleProtectedAction = (path) => {
     if (user) {
@@ -72,7 +74,7 @@ export default function PlaceDetails() {
 
           {/* Standalone Plan My Yatra Button */}
           <button 
-            onClick={() => handleProtectedAction('/plan')}
+            onClick={() => handleProtectedAction(planTripUrl)}
             className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-orange-600 text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-full shadow-lg shadow-orange-500/30 hover:bg-orange-700 transition-all active:scale-95"
           >
             <Compass size={14} />
@@ -253,11 +255,11 @@ export default function PlaceDetails() {
               Want 1-click Google Location links for stays & transport, custom day-by-day AI itineraries, and budget breakdowns for {place.name}?
             </p>
             <button
-              onClick={() => handleProtectedAction('/plan')}
+              onClick={() => handleProtectedAction(planTripUrl)}
               className="w-full py-3.5 px-4 bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
             >
               <Compass size={16} />
-              Start Planning Yatra
+              Plan Trip
             </button>
           </div>
         </div>

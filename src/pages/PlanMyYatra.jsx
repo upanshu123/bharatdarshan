@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ALL_PLACES } from "../data/places/index";
 import {
   Sparkles, MapPin, Calendar, Users, Wallet, ChevronLeft,
   AlertCircle, RefreshCw, CheckCircle, Clock, Utensils, Hotel,
@@ -96,15 +97,110 @@ function LoadingOverlay({ destination }) {
   );
 }
 
+function resolvePlannerDestination(param) {
+  if (!param || !param.trim()) return null;
+  const raw = param.trim();
+  const lower = raw.toLowerCase();
+
+  // 1. Direct match on PLANNER_DESTINATIONS by id or name
+  let matched = PLANNER_DESTINATIONS.find(
+    (d) => d.id.toLowerCase() === lower || d.name.toLowerCase() === lower
+  );
+  if (matched) return { id: matched.id, name: matched.name };
+
+  // 2. Partial match on PLANNER_DESTINATIONS (e.g. "Amer Fort, Jaipur" contains "Jaipur", or "Goa Beach" contains "Goa")
+  matched = PLANNER_DESTINATIONS.find(
+    (d) => lower.includes(d.name.toLowerCase()) || d.name.toLowerCase().includes(lower)
+  );
+  if (matched) return { id: matched.id, name: matched.name };
+
+  // 3. Match via ALL_PLACES to find associated city/state
+  if (Array.isArray(ALL_PLACES)) {
+    const place = ALL_PLACES.find(
+      (p) =>
+        (p.name && p.name.toLowerCase() === lower) ||
+        (p.title && p.title.toLowerCase() === lower) ||
+        (p.name && lower.includes(p.name.toLowerCase())) ||
+        (p.title && lower.includes(p.title.toLowerCase()))
+    );
+
+    if (place) {
+      const city = (place.city || place.location || "").toLowerCase();
+      const state = (place.state || "").toLowerCase();
+
+      // Check if city matches any planner destination
+      const cityMatch = PLANNER_DESTINATIONS.find(
+        (d) =>
+          (city && (city.includes(d.name.toLowerCase()) || d.name.toLowerCase().includes(city))) ||
+          (city && d.id.toLowerCase() === city)
+      );
+      if (cityMatch) return { id: cityMatch.id, name: cityMatch.name };
+
+      // Check if state matches any planner destination
+      const stateMatch = PLANNER_DESTINATIONS.find(
+        (d) => d.state && state && d.state.toLowerCase() === state
+      );
+      if (stateMatch) return { id: stateMatch.id, name: stateMatch.name };
+
+      // Return the specific place's name as a destination
+      const displayName = place.name || place.title || raw;
+      return { id: displayName, name: displayName };
+    }
+  }
+
+  // 4. Fallback for custom or unlisted destination
+  return { id: raw, name: raw };
+}
+
 function PlannerForm({ onSubmit, loading }) {
+  const [searchParams] = useSearchParams();
   const today = new Date().toISOString().split("T")[0];
+
+  const getInitialDestination = () => {
+    let destQuery = searchParams.get("destination");
+    if (!destQuery && typeof window !== "undefined" && window.location?.search) {
+      const urlParams = new URLSearchParams(window.location.search);
+      destQuery = urlParams.get("destination");
+    }
+    const resolved = resolvePlannerDestination(destQuery);
+    return resolved || { id: "", name: "" };
+  };
+
+  const initialDest = getInitialDestination();
+
   const [form, setForm] = useState({
-    originId: "", origin: "", destination: "", destinationName: "",
+    originId: "", origin: "",
+    destination: initialDest.id,
+    destinationName: initialDest.name,
     startDate: "", endDate: "", travellers: 2,
     budget: "Comfort", tripType: "Heritage", interests: [],
   });
   const [errors, setErrors] = useState({});
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
+
+  // Auto-fill from query parameter on mount or when searchParams change
+  useEffect(() => {
+    let destQuery = searchParams.get("destination");
+    if (!destQuery && typeof window !== "undefined" && window.location?.search) {
+      const urlParams = new URLSearchParams(window.location.search);
+      destQuery = urlParams.get("destination");
+    }
+    if (destQuery && destQuery.trim()) {
+      const resolved = resolvePlannerDestination(destQuery);
+      if (resolved && resolved.id) {
+        setForm(f => {
+          if (f.destination !== resolved.id) {
+            return {
+              ...f,
+              destination: resolved.id,
+              destinationName: resolved.name
+            };
+          }
+          return f;
+        });
+      }
+    }
+  }, [searchParams]);
 
   const toggleInterest = (item) => {
     setForm(f => ({
@@ -137,7 +233,7 @@ function PlannerForm({ onSubmit, loading }) {
     onSubmit({
       ...form,
       days,
-      destinationName: dest?.name || form.destination,
+      destinationName: dest?.name || form.destinationName || form.destination,
       origin: depCity?.name || form.origin,
       departureCity: depCity || null,
     });
@@ -273,11 +369,22 @@ function PlannerForm({ onSubmit, loading }) {
               {/* Native Select with ticket typography & high contrast */}
               <div className="relative">
                 <select
+                  id="destination-select"
                   value={form.destination}
-                  onChange={e => set("destination", e.target.value)}
+                  onChange={e => {
+                    const val = e.target.value;
+                    const destObj = PLANNER_DESTINATIONS.find(d => d.id === val);
+                    set("destination", val);
+                    set("destinationName", destObj?.name || val);
+                  }}
                   className="w-full bg-transparent text-sm md:text-base font-black text-slate-100 focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
                 >
                   <option value="" className="bg-slate-900 text-slate-400">Select a destination...</option>
+                  {form.destination && !PLANNER_DESTINATIONS.some(d => d.id === form.destination) && (
+                    <option value={form.destination} className="bg-slate-900 text-amber-400 font-bold">
+                      {form.destinationName || form.destination} (Selected Destination)
+                    </option>
+                  )}
                   {PLANNER_DESTINATIONS.map(d => (
                     <option key={d.id} value={d.id} className="bg-slate-900 text-white font-medium">
                       {d.name}, {d.state}
@@ -293,7 +400,10 @@ function PlannerForm({ onSubmit, loading }) {
               {form.destination && (
                 <div className="mt-2.5 pt-2.5 border-t border-slate-800 text-[11px] font-medium text-amber-300/90 flex items-start gap-1.5">
                   <span className="shrink-0">📍</span>
-                  <span className="leading-snug">{PLANNER_DESTINATIONS.find(d => d.id === form.destination)?.description || ''}</span>
+                  <span className="leading-snug">
+                    {PLANNER_DESTINATIONS.find(d => d.id === form.destination)?.description ||
+                      `Curated yatra itinerary for ${form.destinationName || form.destination}`}
+                  </span>
                 </div>
               )}
             </div>

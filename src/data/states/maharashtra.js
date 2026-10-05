@@ -10,6 +10,7 @@ export const MAHARASHTRA_PLACES = [
   // --- HERITAGE & UNESCO ---
   {
     id: 1501,
+    vibes: ["Heritage & Forts","Culture & Art","Spiritual & Temples"],
     name: "Ajanta Caves",
     slug: "ajanta-caves",
     state: "Sambhaji Nagar, Maharashtra",
@@ -32,6 +33,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1502,
+    vibes: ["Heritage & Forts","Culture & Art","Spiritual & Temples"],
     name: "Ellora Caves",
     slug: "ellora-caves",
     state: "Sambhaji Nagar, Maharashtra",
@@ -54,6 +56,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1503,
+    vibes: ["Culture & Art","Heritage & Forts","Beaches & Coastal"],
     name: "Gateway of India",
     slug: "gateway-of-india",
     state: "Mumbai, Maharashtra",
@@ -76,6 +79,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1504,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Mahabaleshwar",
     slug: "mahabaleshwar",
     state: "Satara, Maharashtra",
@@ -98,6 +102,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1505,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Lonavala & Khandala",
     slug: "lonavala",
     state: "Pune, Maharashtra",
@@ -120,6 +125,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1506,
+    vibes: ["Wildlife & Safari"],
     name: "Tadoba National Park",
     slug: "tadoba",
     state: "Chandrapur, Maharashtra",
@@ -142,6 +148,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1507,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Shirdi Sai Baba Temple",
     slug: "shirdi",
     state: "Ahmednagar, Maharashtra",
@@ -164,6 +171,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1508,
+    vibes: ["Heritage & Forts","Adventure & Treks"],
     name: "Raigad Fort",
     slug: "raigad-fort",
     state: "Raigad, Maharashtra",
@@ -186,6 +194,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1509,
+    vibes: ["Beaches & Coastal","Spiritual & Temples"],
     name: "Ganpatipule Beach",
     slug: "ganpatipule",
     state: "Ratnagiri, Maharashtra",
@@ -208,6 +217,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1510,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Panchgani",
     slug: "panchgani",
     state: "Satara, Maharashtra",
@@ -230,6 +240,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1511,
+    vibes: ["Beaches & Coastal","Adventure & Treks"],
     name: "Alibaug Beach",
     slug: "alibaug",
     state: "Raigad, Maharashtra",
@@ -252,6 +263,7 @@ export const MAHARASHTRA_PLACES = [
   },
   {
     id: 1512,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Bibi Ka Maqbara",
     slug: "bibi-ka-maqbara",
     state: "Sambhaji Nagar, Maharashtra",

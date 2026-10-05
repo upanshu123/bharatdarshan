@@ -9,6 +9,7 @@
 export const ODISHA_PLACES = [
   {
     id: 2001,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Beaches & Coastal"],
     name: "Konark Sun Temple",
     slug: "konark-sun-temple",
     state: "Konark (Puri), Odisha",
@@ -32,6 +33,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2002,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Beaches & Coastal"],
     name: "Jagannath Temple",
     slug: "jagannath-temple-puri",
     state: "Puri, Odisha",
@@ -55,6 +57,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2003,
+    vibes: ["Spiritual & Temples","Heritage & Forts"],
     name: "Lingaraj Temple",
     slug: "lingaraj-temple",
     state: "Bhubaneswar, Odisha",
@@ -78,6 +81,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2004,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Beaches & Coastal"],
     name: "Chilika Lake (Mangalajodi)",
     slug: "chilika-lake-mangalajodi",
     state: "Khordha, Odisha",
@@ -101,6 +105,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2005,
+    vibes: ["Wildlife & Safari","Hill Stations & Nature"],
     name: "Simlipal National Park",
     slug: "simlipal-national-park",
     state: "Mayurbhanj, Odisha",
@@ -124,6 +129,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2006,
+    vibes: ["Wildlife & Safari","Adventure & Treks"],
     name: "Bhitarkanika National Park",
     slug: "bhitarkanika-national-park",
     state: "Kendrapara, Odisha",
@@ -147,6 +153,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2007,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Daringbadi",
     slug: "daringbadi-hill-station",
     state: "Kandhamal, Odisha",
@@ -170,6 +177,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2008,
+    vibes: ["Hill Stations & Nature","Wildlife & Safari"],
     name: "Hirakud Dam & Debrigarh",
     slug: "hirakud-dam",
     state: "Sambalpur, Odisha",
@@ -193,6 +201,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2009,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Udayagiri & Khandagiri Caves",
     slug: "udayagiri-khandagiri-caves",
     state: "Bhubaneswar, Odisha",
@@ -216,6 +225,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2010,
+    vibes: ["Beaches & Coastal","Spiritual & Temples"],
     name: "Puri Beach",
     slug: "puri-beach-blue-flag",
     state: "Puri, Odisha",
@@ -239,6 +249,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2011,
+    vibes: ["Beaches & Coastal"],
     name: "Chandipur Beach",
     slug: "chandipur-vanishing-beach",
     state: "Balasore, Odisha",
@@ -262,6 +273,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2012,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "Raghurajpur Heritage Village",
     slug: "raghurajpur-art-village",
     state: "Puri, Odisha",
@@ -285,6 +297,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2013,
+    vibes: ["Beaches & Coastal"],
     name: "Gopalpur-on-Sea",
     slug: "gopalpur-beach",
     state: "Ganjam, Odisha",
@@ -308,6 +321,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2014,
+    vibes: ["Wildlife & Safari","Adventure & Treks"],
     name: "Satkosia Gorge",
     slug: "satkosia-tiger-reserve",
     state: "Angul, Odisha",
@@ -331,6 +345,7 @@ export const ODISHA_PLACES = [
   },
   {
     id: 2015,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Khandadhar Waterfall",
     slug: "khandadhar-waterfall-odisha",
     state: "Sundargarh, Odisha",

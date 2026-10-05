@@ -78,6 +78,7 @@ export const TAMIL_NADU_PLACES = [
   },
   {
     id: 2404,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Beaches & Coastal"],
     name: "Ramanathaswamy Temple",
     slug: "rameswaram-temple",
     state: "Rameswaram, Tamil Nadu",
@@ -446,6 +447,7 @@ export const TAMIL_NADU_PLACES = [
   },
   {
     id: 2420,
+    vibes: ["Beaches & Coastal","Adventure & Treks","Heritage & Forts"],
     name: "Dhanushkodi Ghost Town",
     slug: "dhanushkodi-ghost-town",
     state: "Rameswaram, Tamil Nadu",

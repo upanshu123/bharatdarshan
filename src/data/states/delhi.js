@@ -9,6 +9,7 @@
 export const DELHI_PLACES = [
   {
     id: 3301,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Red Fort (Lal Qila)",
     slug: "red-fort-delhi",
     cityState: "Old Delhi, Delhi",
@@ -27,6 +28,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3302,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Qutub Minar",
     slug: "qutub-minar",
     cityState: "South Delhi, Delhi",
@@ -45,6 +47,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3303,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Humayun's Tomb",
     slug: "humayuns-tomb",
     cityState: "New Delhi, Delhi",
@@ -63,6 +66,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3304,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "India Gate",
     slug: "india-gate",
     cityState: "New Delhi, Delhi",
@@ -81,6 +85,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3305,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Rashtrapati Bhavan",
     slug: "rashtrapati-bhavan",
     cityState: "New Delhi, Delhi",
@@ -99,6 +104,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3306,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Culture & Art"],
     name: "Akshardham Temple",
     slug: "akshardham-delhi",
     cityState: "East Delhi, Delhi",
@@ -117,6 +123,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3307,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Lotus Temple",
     slug: "lotus-temple",
     cityState: "South Delhi, Delhi",
@@ -135,6 +142,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3308,
+    vibes: ["Heritage & Forts","Spiritual & Temples","Culture & Art"],
     name: "Jama Masjid",
     slug: "jama-masjid-delhi",
     cityState: "Old Delhi, Delhi",
@@ -153,6 +161,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3309,
+    vibes: ["Heritage & Forts","Hill Stations & Nature"],
     name: "Lodhi Gardens",
     slug: "lodhi-gardens",
     cityState: "New Delhi, Delhi",
@@ -171,6 +180,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3310,
+    vibes: ["Culture & Art"],
     name: "Dilli Haat (INA)",
     slug: "dilli-haat-ina",
     cityState: "South Delhi, Delhi",
@@ -189,6 +199,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3311,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Gurudwara Bangla Sahib",
     slug: "bangla-sahib-delhi",
     cityState: "Connaught Place, Delhi",
@@ -207,6 +218,7 @@ export const DELHI_PLACES = [
   },
   {
     id: 3312,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "National Museum",
     slug: "national-museum-delhi",
     cityState: "Janpath, Delhi",

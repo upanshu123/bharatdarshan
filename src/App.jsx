@@ -50,6 +50,7 @@ const AppShell = () => {
           <Route path="/search" element={<><RouteNavbar /><SearchResults /></>} />
           <Route path="/place/:id" element={<PlaceDetails />} />
           <Route path="/plan" element={<><RouteNavbar /><PlanMyYatra /></>} />
+          <Route path="/plan-my-yatra" element={<><RouteNavbar /><PlanMyYatra /></>} />
           <Route path="/contact" element={<><RouteNavbar /><div className="px-4 md:px-10 py-24 text-center font-serif text-3xl text-slate-900">Official Tourism Support Channel</div></>} />
         </Routes>
       </main>

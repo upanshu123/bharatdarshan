@@ -10,6 +10,7 @@ export const ASSAM_PLACES = [
   // --- WILDLIFE ---
   {
     id: 401,
+    vibes: ["Wildlife & Safari"],
     name: "Kaziranga National Park",
     slug: "kaziranga-national-park",
     state: "Kohora (Golaghat), Assam",
@@ -33,6 +34,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 402,
+    vibes: ["Wildlife & Safari"],
     name: "Manas National Park",
     slug: "manas-national-park",
     state: "Barpeta Road, Assam",
@@ -56,6 +58,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 403,
+    vibes: ["Spiritual & Temples","Heritage & Forts","Culture & Art"],
     name: "Kamakhya Temple",
     slug: "kamakhya-temple",
     state: "Guwahati, Assam",
@@ -79,6 +82,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 404,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Rang Ghar",
     slug: "rang-ghar",
     state: "Sivasagar, Assam",
@@ -102,6 +106,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 405,
+    vibes: ["Culture & Art","Spiritual & Temples"],
     name: "Majuli Island",
     slug: "majuli-island",
     state: "Majuli (Jorhat), Assam",
@@ -125,6 +130,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 406,
+    vibes: ["Spiritual & Temples","Hill Stations & Nature"],
     name: "Umananda Island",
     slug: "umananda-island",
     state: "Guwahati, Assam",
@@ -148,6 +154,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 407,
+    vibes: ["Hill Stations & Nature","Adventure & Treks"],
     name: "Haflong",
     slug: "haflong",
     state: "Dima Hasao, Assam",
@@ -171,6 +178,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 408,
+    vibes: ["Wildlife & Safari","Adventure & Treks"],
     name: "Nameri National Park",
     slug: "nameri-national-park",
     state: "Sonitpur (Tezpur), Assam",
@@ -194,6 +202,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 409,
+    vibes: ["Wildlife & Safari"],
     name: "Pobitora Wildlife Sanctuary",
     slug: "pobitora-wildlife-sanctuary",
     state: "Morigaon (Guwahati), Assam",
@@ -217,6 +226,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 410,
+    vibes: ["Culture & Art","Heritage & Forts"],
     name: "Srimanta Sankaradeva Kalakshetra",
     slug: "kalakshetra-guwahati",
     state: "Guwahati, Assam",
@@ -240,6 +250,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 411,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Digboi Oil City",
     slug: "digboi-oil-city",
     state: "Digboi (Tinsukia), Assam",
@@ -263,6 +274,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 412,
+    vibes: ["Culture & Art"],
     name: "Sualkuchi Silk Village",
     slug: "sualkuchi-silk-village",
     state: "Kamrup (Guwahati), Assam",
@@ -286,6 +298,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 413,
+    vibes: ["Spiritual & Temples","Culture & Art"],
     name: "Hajo Pilgrimage Centre",
     slug: "hajo-pilgrimage",
     state: "Hajo (Kamrup), Assam",
@@ -309,6 +322,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 414,
+    vibes: ["Heritage & Forts","Culture & Art"],
     name: "Tezpur (Agnigarh Hill)",
     slug: "agnigarh-tezpur",
     state: "Tezpur, Assam",
@@ -332,6 +346,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 415,
+    vibes: ["Wildlife & Safari"],
     name: "Hoollongapar Gibbon Sanctuary",
     slug: "gibbon-sanctuary",
     state: "Mariani (Jorhat), Assam",
@@ -355,6 +370,7 @@ export const ASSAM_PLACES = [
   },
   {
     id: 416,
+    vibes: ["Wildlife & Safari","Hill Stations & Nature"],
     name: "Dibru-Saikhowa National Park",
     slug: "dibru-saikhowa",
     state: "Guijan (Tinsukia), Assam",

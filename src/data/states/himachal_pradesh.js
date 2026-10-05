@@ -13,6 +13,7 @@ export const HIMACHAL_PRADESH_PLACES = [
   // --- HILL STATIONS & HERITAGE ---
   {
     id: 1001,
+    vibes: ["Hill Stations & Nature","Adventure & Treks","Heritage & Forts"],
     name: "The Ridge & Mall Road, Shimla",
     slug: "shimla-ridge-mall-road",
     state: "Shimla, Himachal Pradesh",

@@ -1,18 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { MapPin, Star, Search, Sparkles, Filter, Calendar, ArrowRight, Compass, Heart, ShieldCheck } from 'lucide-react';
+import { MapPin, Star, Search, Sparkles, Filter, Calendar, ArrowRight, Compass, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { topDestinations } from '../data/destinations';
+import { STANDARD_EXPERIENCE_TAGS, matchesVibe, matchesLocation, formatLocationName } from '../data/categories';
 
 const categories = [
   "All",
-  "Heritage & Forts",
-  "Beaches & Coastal",
-  "Spiritual & Temples",
-  "Backwaters & Nature",
-  "Lakes & Mountains",
-  "Wildlife & Forests",
-  "Hills & Valleys",
+  ...STANDARD_EXPERIENCE_TAGS
 ];
 
 export default function TopDestinations() {
@@ -27,17 +22,38 @@ export default function TopDestinations() {
     }));
   };
 
-  const filteredDestinations = useMemo(() => {
-    return topDestinations.filter(place => {
-      const matchesCategory = selectedCategory === "All" || place.category === selectedCategory;
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch = !q || 
-        place.name.toLowerCase().includes(q) || 
-        place.location.toLowerCase().includes(q) ||
-        place.description.toLowerCase().includes(q);
-      
-      return matchesCategory && matchesSearch;
+  const { filteredDestinations, isFallback, fallbackCity } = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    const hasCategory = selectedCategory && selectedCategory !== "All" && selectedCategory !== "Any Vibe";
+
+    // 1. Direct match with both location and category/vibe
+    const exact = topDestinations.filter(place => {
+      const matchLoc = !q || matchesLocation(place, q);
+      const matchCat = !hasCategory || matchesVibe(place, selectedCategory);
+      return matchLoc && matchCat;
     });
+
+    if (exact.length > 0) {
+      return { filteredDestinations: exact, isFallback: false, fallbackCity: '' };
+    }
+
+    // 2. Clean empty state fallback:
+    // If a specific combination (e.g., Jaipur + Beaches) yields 0 results,
+    // show a clean message: 'No matching spots for this vibe in [City]. Showing top highlights instead'
+    // and display all spots of that city rather than a broken blank screen.
+    if (q && hasCategory) {
+      const locationSpots = topDestinations.filter(place => matchesLocation(place, q));
+      if (locationSpots.length > 0) {
+        const cityDisplay = formatLocationName(q, locationSpots);
+        return {
+          filteredDestinations: locationSpots,
+          isFallback: true,
+          fallbackCity: cityDisplay
+        };
+      }
+    }
+
+    return { filteredDestinations: [], isFallback: false, fallbackCity: '' };
   }, [selectedCategory, searchQuery]);
 
   return (
@@ -128,6 +144,24 @@ export default function TopDestinations() {
           </div>
         </div>
 
+        {/* Clean Empty State Notification when City + Vibe yields 0 matches */}
+        {isFallback && (
+          <div className="mb-10 max-w-3xl mx-auto p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 backdrop-blur-md flex items-center justify-between gap-4 shadow-xl">
+            <div className="flex items-center gap-3 text-left">
+              <Sparkles className="text-amber-400 shrink-0" size={22} />
+              <p className="text-xs sm:text-sm font-semibold text-amber-100">
+                No matching spots for this vibe in {fallbackCity}. Showing top highlights instead
+              </p>
+            </div>
+            <button
+              onClick={() => setSelectedCategory("All")}
+              className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-orange-400 hover:text-orange-300 underline shrink-0"
+            >
+              Clear Vibe
+            </button>
+          </div>
+        )}
+
         {/* --- DESTINATIONS GRID --- */}
         {filteredDestinations.length === 0 ? (
           <div className="text-center py-20 bg-slate-900/50 rounded-3xl border border-white/10 max-w-md mx-auto">
@@ -159,9 +193,9 @@ export default function TopDestinations() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
                   
-                  {/* Category Pill Tag */}
+                  {/* Category / Vibes Pill Tag */}
                   <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-orange-300 shadow-md">
-                    {place.category}
+                    {Array.isArray(place.vibes) && place.vibes.length > 0 ? place.vibes.join(' • ') : place.category}
                   </div>
 
                   {/* Rating Tag */}
@@ -217,13 +251,23 @@ export default function TopDestinations() {
                       <span>{place.bestTime}</span>
                     </div>
 
-                    <Link 
-                      to={`/place/${place.id}`} 
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-orange-600/30 group-hover:shadow-orange-500/50"
-                    >
-                      <span>Explore Yatra</span>
-                      <ArrowRight size={14} />
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link 
+                        to={`/plan-my-yatra?destination=${encodeURIComponent(place.name || place.title || '')}`}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-orange-600/30"
+                      >
+                        <Compass size={13} />
+                        <span>Plan Trip</span>
+                      </Link>
+
+                      <Link 
+                        to={`/place/${place.id}`} 
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider transition-all border border-white/10"
+                      >
+                        <span>Explore</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
                   </div>
 
                 </div>
