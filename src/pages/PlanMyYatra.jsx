@@ -146,159 +146,263 @@ function PlannerForm({ onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
 
-      {/* ── Route Builder: Origin → Destination ─────────────────── */}
+      {/* ── Route Builder: Departure & Destination Luxury Ticket Badges ── */}
       <div className="relative">
-        <div className="flex flex-col md:flex-row items-start md:items-end gap-5 md:gap-0">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-0">
 
-          {/* Origin */}
+          {/* Departure Ticket Badge */}
           <div className="w-full md:flex-1">
-            <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
-              <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{background:'#34d399',boxShadow:'0 0 8px rgba(52,211,153,0.85)'}}/>
-              Departing From
-            </label>
-            <div className="relative">
-              <select
-                id="origin-city-select"
-                value={form.originId}
-                onChange={e => {
-                  const city = getDepartureCityById(e.target.value);
-                  set("originId", e.target.value);
-                  if (city) set("origin", city.name);
-                }}
-                className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 appearance-none " + (errors.origin ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
-                style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)', paddingRight:'2.5rem'}}
-              >
-                <option value="">Select your departure city...</option>
-                {Object.entries(DEPARTURE_CITIES_BY_REGION).map(([region, cities]) => (
-                  <optgroup key={region} label={`── ${region} ──`}>
-                    {cities.map(city => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}, {city.state}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-            </div>
-            {errors.origin && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.origin}</p>}
-            {form.originId && (() => {
-              const c = getDepartureCityById(form.originId);
-              return c ? (
-                <div className="mt-2 p-2.5 rounded-xl border text-[11px] font-medium text-orange-800 space-y-0.5 transition-all duration-300" style={{background:'rgba(255,237,213,0.8)',borderColor:'rgba(251,146,60,0.22)',boxShadow:'0 2px 8px rgba(251,146,60,0.08)'}}>
-                  <div>🚂 <span className="font-bold">{c.trainStation.name}</span></div>
-                  <div>🚌 <span className="font-bold">{c.busStand.name}</span></div>
+            <div className={"group relative rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.origin ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-400/50 focus-within:border-emerald-400")}>
+              {/* Badge Header Bar */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.9)]"></span>
+                  </span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Departing From</span>
                 </div>
-              ) : null;
-            })()}
+                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200/60">Boarding</span>
+              </div>
+
+              {/* Native Select with ticket typography */}
+              <div className="relative">
+                <select
+                  id="origin-city-select"
+                  value={form.originId}
+                  onChange={e => {
+                    const city = getDepartureCityById(e.target.value);
+                    set("originId", e.target.value);
+                    if (city) set("origin", city.name);
+                  }}
+                  className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
+                >
+                  <option value="" className="text-slate-500">Select departure city...</option>
+                  {Object.entries(DEPARTURE_CITIES_BY_REGION).map(([region, cities]) => (
+                    <optgroup key={region} label={`── ${region} ──`} className="text-slate-800 dark:text-slate-200 font-bold bg-white dark:bg-slate-900">
+                      {cities.map(city => (
+                        <option key={city.id} value={city.id} className="text-slate-800 dark:text-slate-200 font-medium">
+                          {city.name}, {city.state}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-emerald-500 transition-colors">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+
+              {/* Station Info Sub-badge */}
+              {form.originId && (() => {
+                const c = getDepartureCityById(form.originId);
+                return c ? (
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-white/5 flex flex-wrap gap-2 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40">🚂 {c.trainStation.name}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40">🚌 {c.busStand.name}</span>
+                  </div>
+                ) : null;
+              })()}
+            </div>
+            {errors.origin && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.origin}</p>}
           </div>
 
-          {/* Animated Route Connector — desktop only, purely decorative */}
-          <div className="hidden md:flex flex-col items-center justify-center w-20 shrink-0 pb-[3px]" aria-hidden="true">
-            <div className="relative w-full flex items-center justify-center" style={{height:'52px'}}>
-              <div className="absolute w-full h-px" style={{background:'linear-gradient(90deg,rgba(251,146,60,0.06),rgba(251,146,60,0.45),rgba(251,146,60,0.06))'}} />
-              <div className="absolute w-full" style={{height:'2px',background:'linear-gradient(90deg,transparent 0%,rgba(251,146,60,0.95) 50%,transparent 100%)',backgroundSize:'80px 100%',backgroundRepeat:'no-repeat',animation:'yatra-route-dash 1.6s ease-in-out infinite'}} />
-              <div className="relative z-10 w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{background:'linear-gradient(135deg,#c2410c,#ea580c,#f97316)',boxShadow:'0 0 16px rgba(234,88,12,0.5), 0 2px 8px rgba(234,88,12,0.3)'}}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          {/* Animated Route Connector with Glowing Traveling SVG line */}
+          <div className="hidden md:flex flex-col items-center justify-center w-28 shrink-0 px-2 pb-1" aria-hidden="true">
+            <div className="relative w-full flex items-center justify-center">
+              <svg className="w-full h-8 overflow-visible" viewBox="0 0 100 24" fill="none">
+                <defs>
+                  <linearGradient id="route-beam-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#10b981" />
+                    <stop offset="50%" stopColor="#fb923c" />
+                    <stop offset="100%" stopColor="#ea580c" />
+                  </linearGradient>
+                  <filter id="route-glow-filter" x="-20%" y="-40%" width="140%" height="180%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                {/* Background track line */}
+                <line x1="4" y1="12" x2="96" y2="12" stroke="rgba(226,232,240,0.8)" strokeWidth="2" strokeDasharray="3 3" />
+                {/* Glowing traveling dash line */}
+                <line
+                  x1="4" y1="12" x2="96" y2="12"
+                  stroke="url(#route-beam-grad)"
+                  strokeWidth="3"
+                  strokeDasharray="20 75"
+                  filter="url(#route-glow-filter)"
+                  style={{ animation: 'yatra-svg-travel 1.8s linear infinite' }}
+                />
+              </svg>
+              {/* Center floating waypoint capsule */}
+              <div className="absolute z-10 w-7 h-7 rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center shadow-[0_0_14px_rgba(249,115,22,0.55)] border-2 border-white">
+                <Navigation size={12} className="rotate-45" />
               </div>
+            </div>
+            <span className="text-[9px] font-black uppercase tracking-widest text-orange-500/80 mt-0.5">Route</span>
+          </div>
+
+          {/* Mobile connector */}
+          <div className="flex md:hidden items-center justify-center w-full py-1" aria-hidden="true">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200/80 text-[10px] font-black text-orange-600 shadow-sm">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              <span>Express Route</span>
+              <span className="animate-pulse">➔</span>
+              <span className="flex h-1.5 w-1.5 rounded-full bg-orange-500"></span>
             </div>
           </div>
 
-          {/* Destination */}
+          {/* Destination Ticket Badge */}
           <div className="w-full md:flex-1">
-            <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
-              <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{background:'#f97316',boxShadow:'0 0 8px rgba(249,115,22,0.85)'}}/>
-              Destination
-            </label>
-            <div className="relative">
-              <select
-                value={form.destination}
-                onChange={e => set("destination", e.target.value)}
-                className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 appearance-none " + (errors.destination ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
-                style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)', paddingRight:'2.5rem'}}
-              >
-                <option value="">Select a destination...</option>
-                {PLANNER_DESTINATIONS.map(d => <option key={d.id} value={d.id}>{d.name}, {d.state}</option>)}
-              </select>
-              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            <div className={"group relative rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.destination ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-orange-300 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
+              {/* Badge Header Bar */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.9)]"></span>
+                  </span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Destination</span>
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 border border-orange-200/60">Arrival</span>
               </div>
+
+              {/* Native Select with ticket typography */}
+              <div className="relative">
+                <select
+                  value={form.destination}
+                  onChange={e => set("destination", e.target.value)}
+                  className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1 pr-7 appearance-none"
+                >
+                  <option value="" className="text-slate-500">Select a destination...</option>
+                  {PLANNER_DESTINATIONS.map(d => (
+                    <option key={d.id} value={d.id} className="text-slate-800 dark:text-slate-200 font-medium">
+                      {d.name}, {d.state}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-orange-500 transition-colors">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+
+              {/* Destination Highlight preview */}
+              {form.destination && (
+                <div className="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-white/5 text-[11px] font-medium text-orange-800 dark:text-orange-300 flex items-start gap-1.5">
+                  <span className="shrink-0">📍</span>
+                  <span className="leading-snug">{PLANNER_DESTINATIONS.find(d => d.id === form.destination)?.description || ''}</span>
+                </div>
+              )}
             </div>
-            {errors.destination && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.destination}</p>}
-            {form.destination && (
-              <div className="mt-2 p-2.5 rounded-xl border text-[11px] font-semibold text-orange-800 flex items-start gap-1.5 transition-all duration-300" style={{background:'rgba(255,237,213,0.8)',borderColor:'rgba(251,146,60,0.22)',boxShadow:'0 2px 8px rgba(251,146,60,0.08)'}}>
-                <span className="shrink-0">📍</span>
-                <span className="leading-snug">{PLANNER_DESTINATIONS.find(d => d.id === form.destination)?.description || ''}</span>
-              </div>
-            )}
+            {errors.destination && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.destination}</p>}
           </div>
         </div>
       </div>
 
-      {/* ── Dates ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* ── Dates: Luxury Ticket Badges ───────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
-            <span className="text-orange-400">📅</span> Start Date
-          </label>
-          <input type="date" min={today} value={form.startDate} onChange={e => set("startDate", e.target.value)}
-            className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 " + (errors.startDate ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
-            style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}} />
-          {errors.startDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.startDate}</p>}
+          <div className={"group rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.startDate ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-orange-300 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <Calendar size={13} className="text-orange-500" /> Start Date
+              </span>
+              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">Depart</span>
+            </div>
+            <input
+              type="date"
+              min={today}
+              value={form.startDate}
+              onChange={e => set("startDate", e.target.value)}
+              className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1"
+            />
+          </div>
+          {errors.startDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.startDate}</p>}
         </div>
+
         <div>
-          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-2">
-            <span className="text-orange-400">📅</span> End Date
-          </label>
-          <input type="date" min={form.startDate || today} value={form.endDate} onChange={e => set("endDate", e.target.value)}
-            className={"w-full rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400/50 transition-all duration-200 " + (errors.endDate ? "border-2 border-red-400 bg-red-50" : "border border-slate-200 bg-white hover:border-orange-300")}
-            style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}} />
-          {errors.endDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠</span> {errors.endDate}</p>}
+          <div className={"group rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 " + (errors.endDate ? "border-2 border-red-400 bg-red-50/90 shadow-md shadow-red-500/10" : "border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:border-orange-300 focus-within:ring-2 focus-within:ring-orange-400/50 focus-within:border-orange-400")}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <Calendar size={13} className="text-orange-500" /> End Date
+              </span>
+              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">Return</span>
+            </div>
+            <input
+              type="date"
+              min={form.startDate || today}
+              value={form.endDate}
+              onChange={e => set("endDate", e.target.value)}
+              className="w-full bg-transparent text-sm md:text-base font-black text-slate-900 dark:text-white focus:outline-none cursor-pointer py-1"
+            />
+          </div>
+          {errors.endDate && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-semibold"><span>⚠</span> {errors.endDate}</p>}
         </div>
       </div>
 
       {/* ── Travellers & Budget Tier ────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
-            <span className="text-orange-400">👥</span> Travellers
-          </label>
-          <div className="flex items-center gap-4 p-3.5 rounded-2xl border border-slate-200 bg-white" style={{boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
-            <button type="button" onClick={() => set("travellers", Math.max(1, form.travellers - 1))}
-              className="w-11 h-11 rounded-xl border border-slate-200 text-slate-700 font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none">−</button>
-            <span className="text-3xl font-black text-slate-900 w-10 text-center select-none">{form.travellers}</span>
-            <button type="button" onClick={() => set("travellers", Math.min(20, form.travellers + 1))}
-              className="w-11 h-11 rounded-xl border border-slate-200 text-slate-700 font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none">+</button>
-            <span className="text-xs text-slate-400 font-medium">{form.travellers === 1 ? "person" : "people"}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Travellers Counter */}
+        <div className="rounded-2xl p-4 border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <Users size={13} className="text-indigo-500" /> Travellers
+            </span>
+            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border border-indigo-200/60">Party Size</span>
+          </div>
+          <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => set("travellers", Math.max(1, form.travellers - 1))}
+                className="w-11 h-11 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-white font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none"
+              >
+                −
+              </button>
+              <span className="text-3xl font-black text-slate-900 dark:text-white w-10 text-center select-none font-serif">
+                {form.travellers}
+              </span>
+              <button
+                type="button"
+                onClick={() => set("travellers", Math.min(20, form.travellers + 1))}
+                className="w-11 h-11 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-white font-black hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all duration-200 flex items-center justify-center text-xl active:scale-90 touch-manipulation select-none"
+              >
+                +
+              </button>
+            </div>
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              {form.travellers === 1 ? "Solo Yatri" : `${form.travellers} Yatris`}
+            </span>
           </div>
         </div>
+
+        {/* Budget Tier */}
         <div>
-          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
-            <span className="text-orange-400">💰</span> Budget Tier
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-2">
+            <Wallet size={13} className="text-emerald-500" /> Budget Tier
           </label>
           <div className="grid grid-cols-2 gap-2">
             {BUDGET_TIERS.map(b => (
-              <button key={b.id} type="button" onClick={() => set("budget", b.id)}
-                className="relative px-3 py-2.5 rounded-xl text-xs font-bold text-left overflow-hidden active:scale-95 transition-all duration-200 touch-manipulation select-none"
-                style={form.budget === b.id ? {
-                  background:'linear-gradient(135deg,#c2410c,#ea580c,#f97316)',
-                  border:'1.5px solid transparent',
-                  color:'#fff',
-                  boxShadow:'0 0 18px rgba(234,88,12,0.4), 0 4px 14px rgba(180,70,0,0.22)',
-                  transform:'translateY(-1px) scale(1.01)'
-                } : {
-                  background:'#fff',
-                  border:'1.5px solid rgba(226,232,240,0.9)',
-                  color:'#475569',
-                  boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
-                }}>
-                {form.budget === b.id && (
-                  <span className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 60%)'}}/>
+              <button
+                key={b.id}
+                type="button"
+                onClick={() => set("budget", b.id)}
+                className={"relative px-3 py-2.5 rounded-xl text-left overflow-hidden transition-all duration-200 touch-manipulation select-none " + (
+                  form.budget === b.id
+                    ? "bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25 ring-2 ring-orange-500/50 scale-[1.02]"
+                    : "bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 hover:scale-[1.02] active:scale-95 shadow-sm text-slate-700 dark:text-slate-300"
                 )}
-                <span className="relative block font-black text-sm">{b.symbol} {b.label}</span>
-                <span className="relative opacity-75 text-[10px]">{b.desc}</span>
+              >
+                {form.budget === b.id && (
+                  <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg,rgba(255,255,255,0.2) 0%,transparent 60%)' }} />
+                )}
+                <span className="relative block font-black text-xs md:text-sm">{b.symbol} {b.label}</span>
+                <span className={"relative text-[10px] block mt-0.5 " + (form.budget === b.id ? "text-orange-100" : "text-slate-400 dark:text-slate-500")}>
+                  {b.desc}
+                </span>
               </button>
             ))}
           </div>
@@ -307,28 +411,32 @@ function PlannerForm({ onSubmit, loading }) {
 
       {/* ── Trip Style ──────────────────────────────────────────────── */}
       <div>
-        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
-          <span className="text-orange-400">🧭</span> Trip Style
+        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-3">
+          <Sparkles size={13} className="text-orange-400" /> Trip Style
         </label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {TRIP_TYPES.map(t => (
-            <button key={t.id} type="button" onClick={() => set("tripType", t.id)}
-              className="relative p-3.5 rounded-2xl text-left transition-all duration-200 overflow-hidden active:scale-95 touch-manipulation select-none"
-              style={form.tripType === t.id ? {
-                background:'linear-gradient(145deg,rgba(255,237,213,0.97),rgba(255,247,237,1))',
-                border:'1.5px solid #ea580c',
-                boxShadow:'0 0 0 1px rgba(234,88,12,0.10), 0 6px 20px rgba(234,88,12,0.14), inset 0 1px 0 rgba(255,255,255,0.9)',
-                transform:'translateY(-1px)'
-              } : {
-                background:'rgba(255,255,255,0.92)',
-                border:'1.5px solid rgba(226,232,240,0.8)',
-                boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
-              }}>
-              <span className="text-2xl block mb-1.5" style={{filter:form.tripType===t.id?'drop-shadow(0 0 6px rgba(234,88,12,0.5))':'none',transition:'filter 0.22s ease'}}>{t.icon}</span>
-              <span className={"text-xs font-black block transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-700" : "text-slate-800")}>{t.label}</span>
-              <span className={"text-[10px] block mt-0.5 transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-500" : "text-slate-400")}>{t.desc}</span>
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => set("tripType", t.id)}
+              className={"relative p-3.5 rounded-2xl text-left transition-all duration-200 overflow-hidden touch-manipulation select-none " + (
+                form.tripType === t.id
+                  ? "bg-gradient-to-br from-orange-50 to-amber-50/90 dark:from-orange-950/40 dark:to-amber-950/30 border border-orange-500/80 shadow-lg shadow-orange-500/25 ring-2 ring-orange-500/50 scale-[1.02]"
+                  : "bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 hover:scale-[1.02] active:scale-95 shadow-sm"
+              )}
+            >
+              <span className="text-2xl block mb-1.5 transition-transform duration-200" style={{ filter: form.tripType === t.id ? 'drop-shadow(0 0 6px rgba(234,88,12,0.5))' : 'none' }}>
+                {t.icon}
+              </span>
+              <span className={"text-xs font-black block transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-700 dark:text-orange-300" : "text-slate-800 dark:text-slate-200")}>
+                {t.label}
+              </span>
+              <span className={"text-[10px] block mt-0.5 transition-colors duration-200 " + (form.tripType === t.id ? "text-orange-500 dark:text-orange-400" : "text-slate-400 dark:text-slate-500")}>
+                {t.desc}
+              </span>
               {form.tripType === t.id && (
-                <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center" style={{background:'#ea580c',boxShadow:'0 0 8px rgba(234,88,12,0.55)'}}>
+                <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center bg-orange-600 shadow-[0_0_8px_rgba(234,88,12,0.6)]">
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7"/></svg>
                 </div>
               )}
@@ -339,38 +447,51 @@ function PlannerForm({ onSubmit, loading }) {
 
       {/* ── Interests ──────────────────────────────────────────────── */}
       <div>
-        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 mb-3">
-          <span className="text-orange-400">✨</span> Your Interests
+        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-3">
+          <Star size={13} className="text-amber-500" /> Your Interests
           <span className="font-normal normal-case text-slate-400 ml-0.5">(optional)</span>
         </label>
         <div className="flex flex-wrap gap-2">
           {INTERESTS.map(item => (
-            <button key={item} type="button" onClick={() => toggleInterest(item)}
-              className="px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 active:scale-95 touch-manipulation select-none"
-              style={form.interests.includes(item) ? {
-                background:'linear-gradient(135deg,#0f172a,#1e1b4b)',
-                color:'#fff',
-                border:'1px solid rgba(99,102,241,0.55)',
-                boxShadow:'0 0 12px rgba(99,102,241,0.22), inset 0 1px 0 rgba(255,255,255,0.08)',
-                transform:'translateY(-1px)'
-              } : {
-                background:'#fff',
-                color:'#64748b',
-                border:'1px solid rgba(226,232,240,0.9)',
-                boxShadow:'0 1px 4px rgba(0,0,0,0.04)'
-              }}>
+            <button
+              key={item}
+              type="button"
+              onClick={() => toggleInterest(item)}
+              className={"px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 touch-manipulation select-none " + (
+                form.interests.includes(item)
+                  ? "bg-gradient-to-r from-slate-900 to-indigo-950 text-white shadow-lg shadow-indigo-500/25 ring-2 ring-indigo-500/50 scale-[1.03]"
+                  : "bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 hover:scale-[1.03] active:scale-95 shadow-sm text-slate-600 dark:text-slate-300"
+              )}
+            >
               {item}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ── Generate CTA ─────────────────────────────────────────── */}
-      <button type="submit" disabled={loading} id="generate-itinerary-btn"
-        className="yatra-glow-btn relative w-full disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest active:scale-[0.97] flex items-center justify-center gap-3 overflow-hidden touch-manipulation select-none"
-        style={{background:'linear-gradient(135deg,#b45309 0%,#ea580c 35%,#f97316 68%,#fb923c 100%)',boxShadow:'0 0 32px 4px rgba(251,146,60,0.38), 0 6px 24px rgba(234,88,12,0.42)'}}>
-        <span className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.22) 50%,transparent 100%)',backgroundSize:'200% 100%',animation:'yatra-btn-shimmer 2.2s linear infinite'}}/>
-        <Sparkles size={16} className="relative z-10" />
+      {/* ── Generate CTA (Magnetic Style with Continuous Light Shimmer Sweep) ── */}
+      <button
+        type="submit"
+        disabled={loading}
+        id="generate-itinerary-btn"
+        className="group relative w-full disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 md:py-5 rounded-2xl font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 overflow-hidden touch-manipulation select-none cursor-pointer transition-all duration-300 hover:scale-[1.015] active:scale-[0.98]"
+        style={{
+          background: 'linear-gradient(135deg, #b45309 0%, #ea580c 32%, #f97316 68%, #fb923c 100%)',
+          boxShadow: '0 0 35px rgba(249,115,22,0.45), 0 12px 28px rgba(234,88,12,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
+        }}
+      >
+        {/* High-visibility continuous light shimmer sweep */}
+        <span
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.35) 48%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.35) 52%, transparent 80%)',
+            backgroundSize: '250% 100%',
+            animation: 'yatra-btn-sweep 2.8s ease-in-out infinite',
+          }}
+        />
+        <Sparkles size={18} className="relative z-10 text-amber-200 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+        <span className="relative z-10 drop-shadow-sm font-black tracking-widest text-white">Generate My AI Itinerary</span>
+        <span className="relative z-10 text-white/80 group-hover:translate-x-1 transition-transform duration-200">➔</span>
       </button>
     </form>
   );
@@ -1258,6 +1379,14 @@ export default function PlanMyYatra() {
           0% { opacity: 0; transform: translateY(22px) scale(0.985); }
           100% { opacity: 1; transform: translateY(0px) scale(1); }
         }
+        @keyframes yatra-svg-travel {
+          0% { stroke-dashoffset: 95; }
+          100% { stroke-dashoffset: -95; }
+        }
+        @keyframes yatra-btn-sweep {
+          0% { background-position: -150% 0; }
+          50%, 100% { background-position: 250% 0; }
+        }
         .yatra-glow-btn:hover { box-shadow: 0 0 44px 8px rgba(251,146,60,0.58), 0 6px 28px rgba(234,88,12,0.52) !important; transform: scale(1.02); }
         .yatra-glow-btn { transition: all 0.28s ease !important; }
       `}</style>
@@ -1340,8 +1469,16 @@ export default function PlanMyYatra() {
         </div>
 
         {(stage === "form" || stage === "loading") && (
-          <div className="rounded-[32px] p-8 md:p-12" style={{background:'rgba(255,255,255,0.97)',boxShadow:'0 8px 52px rgba(234,88,12,0.08), 0 2px 14px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)',border:'1.5px solid rgba(251,146,60,0.11)',backdropFilter:'blur(8px)'}}>
-            <PlannerForm onSubmit={handleSubmit} loading={stage === "loading"} />
+          <div className="relative">
+            {/* Ambient warm saffron/amber and indigo mesh blur gradients */}
+            <div className="absolute -top-14 -left-14 w-72 h-72 rounded-full bg-gradient-to-tr from-amber-500/20 to-orange-500/15 blur-3xl pointer-events-none animate-pulse" style={{animationDuration:'6s'}} />
+            <div className="absolute -bottom-14 -right-14 w-80 h-80 rounded-full bg-gradient-to-bl from-indigo-500/18 to-violet-500/12 blur-3xl pointer-events-none animate-pulse" style={{animationDuration:'8s', animationDelay:'2s'}} />
+            <div className="absolute top-1/2 left-1/3 w-60 h-60 rounded-full bg-orange-400/10 blur-2xl pointer-events-none" />
+
+            {/* Sleek frosted glass container */}
+            <div className="relative z-10 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] rounded-3xl p-6 md:p-12 overflow-hidden">
+              <PlannerForm onSubmit={handleSubmit} loading={stage === "loading"} />
+            </div>
           </div>
         )}
 
