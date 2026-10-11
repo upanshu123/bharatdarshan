@@ -235,19 +235,18 @@ export default function Home() {
       </section>
 
       {/* Signature Vibes Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20 md:py-28 relative z-20">
-        {/* Subtle Amber/Saffron Radial Ambient Glow */}
-        <div className="pointer-events-none absolute w-[500px] h-[300px] bg-amber-500/10 blur-[120px] rounded-full top-0 left-1/2 -translate-x-1/2 z-0"></div>
+      <section className="bg-white relative z-20">
+        <div className="max-w-7xl mx-auto px-6 py-20 md:py-28 relative">
 
         {/* Section Header */}
         <div className="relative z-10 text-center max-w-2xl mx-auto mb-14 md:mb-16">
-          <span className="text-amber-400 font-semibold tracking-[0.25em] text-xs uppercase mb-3 block">
+          <span className="text-amber-600 font-semibold tracking-[0.25em] text-xs uppercase mb-3 block">
             Signature Vibes
           </span>
-          <h2 className="text-3xl md:text-5xl font-serif font-black text-white italic mb-4">
+          <h2 className="text-3xl md:text-5xl font-serif font-black text-slate-900 italic mb-4">
             Curated Experiences
           </h2>
-          <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
+          <p className="text-slate-500 text-sm md:text-base leading-relaxed">
             Discover India through handpicked vibes tailored to your travel passion.
           </p>
         </div>
@@ -258,22 +257,20 @@ export default function Home() {
             <div 
               key={cat.id} 
               onClick={() => executeSearch(cat.id)} 
-              className="vibe-card group relative bg-white/[0.04] backdrop-blur-md p-8 rounded-[36px] border border-white/10 hover:border-amber-500/40 transition-all duration-300 cursor-pointer flex flex-col items-start hover:-translate-y-1.5 shadow-xl hover:shadow-[0_12px_36px_rgba(245,158,11,0.15)] overflow-hidden"
+              className="vibe-card group relative bg-white p-8 rounded-[36px] border border-slate-200/90 shadow-sm hover:shadow-md hover:border-amber-500/50 transition-all duration-300 cursor-pointer flex flex-col items-start hover:-translate-y-1.5 overflow-hidden"
             >
-              {/* Inner ambient card glow on hover */}
-              <div className="absolute -top-10 -right-10 w-28 h-28 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all pointer-events-none"></div>
-
-              <div className={`${cat.bg} vibe-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6 border border-white/10 shadow-inner`}>
+              <div className={`${cat.bg} vibe-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6 border border-slate-100 shadow-sm`}>
                 <cat.icon className={`${cat.color} w-8 h-8`} />
               </div>
-              <h3 className="text-xl font-serif font-bold text-white tracking-tight group-hover:text-amber-300 transition-colors">
+              <h3 className="text-xl font-serif font-bold text-slate-900 tracking-tight group-hover:text-amber-600 transition-colors">
                 {cat.id}
               </h3>
-              <p className="text-xs text-zinc-400 mt-2 font-medium flex items-center gap-1.5 opacity-80 group-hover:opacity-100 group-hover:text-zinc-200 transition-all">
-                Explore destinations <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform text-amber-400" />
+              <p className="text-xs text-slate-500 mt-2 font-medium flex items-center gap-1.5 opacity-80 group-hover:opacity-100 group-hover:text-slate-700 transition-all">
+                Explore destinations <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform text-amber-500" />
               </p>
             </div>
           ))}
+        </div>
         </div>
       </section>
 

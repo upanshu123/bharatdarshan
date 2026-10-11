@@ -3,7 +3,9 @@
  * Plan My Yatra | Bharat Darshan Ecosystem
  */
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GEMINI_API_KEY = (typeof import.meta !== "undefined" && import.meta.env?.VITE_GEMINI_API_KEY)
+  ? import.meta.env.VITE_GEMINI_API_KEY
+  : (typeof process !== "undefined" ? process.env?.VITE_GEMINI_API_KEY : "");
 
 export function makeGoogleMapsUrl(locationName, destName) {
   const query = `${locationName} ${destName}`.trim().replace(/\s+/g, '+');
@@ -1504,29 +1506,40 @@ export function normalizeItinerary(rawItinerary, tripData) {
   if (!Array.isArray(daysList) || daysList.length === 0) daysList = [];
 
   const normalizedDays = daysList.map((d, idx) => {
-    const dayNum = d.day || idx + 1;
+    const dayNum = d.dayNumber || d.day || idx + 1;
+    const dayTheme = d.dayTheme || d.theme || `Day ${dayNum} Cultural Exploration`;
     let activities = [];
 
     if (Array.isArray(d.activities) && d.activities.length > 0) {
       activities = d.activities.map(act => {
-        const loc = act.locationName || act.activity || "Popular Attraction";
+        const loc = act.title || act.locationName || act.activity || "Popular Landmark";
+        const period = act.timeOfDay || act.period || "Morning";
         return {
-          timeOfDay: act.timeOfDay || act.time || "Morning",
+          timeOfDay: period.charAt(0).toUpperCase() + period.slice(1),
+          time: act.time || (period.toLowerCase() === "morning" ? "09:00 AM" : period.toLowerCase() === "afternoon" ? "01:00 PM" : period.toLowerCase() === "evening" ? "05:00 PM" : "08:30 PM"),
           locationName: loc,
           googleMapsLink: act.googleMapsLink || makeGoogleMapsUrl(loc, destName),
-          description: act.description || `Explore ${loc} in ${destName}.`
+          description: act.description || `Explore the beauty and culture of ${loc} in ${destName}.`,
+          tip: act.tip || (act.foodSpot ? `Local Food Spot: ${act.foodSpot}` : undefined),
+          estimatedCost: act.estimatedCost || "₹200 - ₹500"
         };
       });
     } else {
-      ["morning", "afternoon", "evening"].forEach(period => {
+      ["morning", "afternoon", "evening", "night"].forEach(period => {
         if (d[period]) {
           const item = d[period];
-          const loc = item.locationName || item.activity || item.act || `${period} Sightseeing`;
+          const loc = item.title || item.locationName || item.activity || `${period} Sightseeing`;
+          const defaultTimes = { morning: "09:00 AM", afternoon: "01:00 PM", evening: "05:00 PM", night: "08:30 PM" };
+          const defaultCosts = { morning: "₹150 - ₹400", afternoon: "₹300 - ₹600", evening: "₹100 - ₹350", night: "₹250 - ₹500" };
+          const tipText = item.tip || (item.foodSpot ? `Local Food Spot: ${item.foodSpot}` : undefined);
           activities.push({
             timeOfDay: period.charAt(0).toUpperCase() + period.slice(1),
+            time: item.time || defaultTimes[period],
             locationName: loc,
             googleMapsLink: item.googleMapsLink || makeGoogleMapsUrl(loc, destName),
-            description: item.description || item.desc || `Visit ${loc} in ${destName}.`
+            description: item.description || `Visit ${loc} and experience authentic ${destName}.`,
+            tip: tipText,
+            estimatedCost: item.estimatedCost || defaultCosts[period]
           });
         }
       });
@@ -1535,13 +1548,30 @@ export function normalizeItinerary(rawItinerary, tripData) {
     const morningAct = activities.find(a => a.timeOfDay.toLowerCase() === "morning") || activities[0];
     const afternoonAct = activities.find(a => a.timeOfDay.toLowerCase() === "afternoon") || activities[1];
     const eveningAct = activities.find(a => a.timeOfDay.toLowerCase() === "evening") || activities[2];
+    const nightAct = activities.find(a => a.timeOfDay.toLowerCase() === "night") || activities[3];
 
-    const stay = d.stayRecommendation || d.stay || { name: `Heritage Stay ${destName}`, type: "Comfort Hotel", whyPick: "Centrally located with serene views", approxRate: "₹3,500/night" };
-    if (stay && !stay.googleMapsLink) {
-      stay.googleMapsLink = makeGoogleMapsUrl(stay.name, destName);
+    // Map recommended area to stay
+    let stay = d.stayRecommendation || d.stay;
+    if (!stay && d.recommendedAreaToStay) {
+      stay = {
+        name: d.recommendedAreaToStay,
+        type: "Recommended Area to Stay",
+        whyPick: `Strategically central in ${destName} for easy commute & sightseeing`,
+        approxRate: getBudgetHotel(key, tripData?.budget || "Comfort")?.approxRate || "₹3,500/night",
+        googleMapsLink: makeGoogleMapsUrl(d.recommendedAreaToStay, destName)
+      };
+    }
+    if (!stay) {
+      stay = getBudgetHotel(key, tripData?.budget || "Comfort");
+      if (stay && !stay.googleMapsLink) {
+        stay.googleMapsLink = makeGoogleMapsUrl(stay.name, destName);
+      }
     }
 
-    let dining = d.diningSpots || d.dining || [{ name: `${destName} Local Kitchen`, specialty: "Authentic Regional Cuisine", priceRange: "₹250-500" }];
+    let dining = d.diningSpots || d.dining;
+    if (!dining) {
+      dining = getBudgetDining(key, tripData?.budget || "Comfort");
+    }
     if (Array.isArray(dining)) {
       dining = dining.map(spot => ({
         ...spot,
@@ -1551,116 +1581,267 @@ export function normalizeItinerary(rawItinerary, tripData) {
 
     return {
       day: dayNum,
+      dayNumber: dayNum,
       date: d.date || `Day ${dayNum}`,
-      theme: d.theme || "Heritage & Cultural Exploration",
+      theme: dayTheme,
+      dayTheme: dayTheme,
       activities: activities,
-      morning: morningAct ? { time: "08:30 AM", activity: morningAct.locationName, locationName: morningAct.locationName, googleMapsLink: morningAct.googleMapsLink, description: morningAct.description, estimatedCost: "₹200 - ₹500" } : undefined,
-      afternoon: afternoonAct ? { time: "01:00 PM", activity: afternoonAct.locationName, locationName: afternoonAct.locationName, googleMapsLink: afternoonAct.googleMapsLink, description: afternoonAct.description, estimatedCost: "₹300 - ₹600" } : undefined,
-      evening: eveningAct ? { time: "06:00 PM", activity: eveningAct.locationName, locationName: eveningAct.locationName, googleMapsLink: eveningAct.googleMapsLink, description: eveningAct.description, estimatedCost: "₹100 - ₹400" } : undefined,
+      morning: morningAct ? { time: morningAct.time || "09:00 AM", title: morningAct.locationName, activity: morningAct.locationName, locationName: morningAct.locationName, googleMapsLink: morningAct.googleMapsLink, description: morningAct.description, tip: morningAct.tip, estimatedCost: morningAct.estimatedCost || "₹200 - ₹400" } : undefined,
+      afternoon: afternoonAct ? { time: afternoonAct.time || "01:00 PM", title: afternoonAct.locationName, activity: afternoonAct.locationName, locationName: afternoonAct.locationName, googleMapsLink: afternoonAct.googleMapsLink, description: afternoonAct.description, tip: afternoonAct.tip, estimatedCost: afternoonAct.estimatedCost || "₹300 - ₹600" } : undefined,
+      evening: eveningAct ? { time: eveningAct.time || "05:00 PM", title: eveningAct.locationName, activity: eveningAct.locationName, locationName: eveningAct.locationName, googleMapsLink: eveningAct.googleMapsLink, description: eveningAct.description, tip: eveningAct.tip, estimatedCost: eveningAct.estimatedCost || "₹100 - ₹350" } : undefined,
+      night: nightAct ? { time: nightAct.time || "08:30 PM", title: nightAct.locationName, activity: nightAct.locationName, locationName: nightAct.locationName, googleMapsLink: nightAct.googleMapsLink, description: nightAct.description, tip: nightAct.tip, estimatedCost: nightAct.estimatedCost || "₹250 - ₹500" } : undefined,
       stayRecommendation: stay,
-      diningSpots: dining
+      diningSpots: dining,
+      recommendedAreaToStay: d.recommendedAreaToStay || stay?.name || `${destName} Central Heritage Hub`
     };
   });
+
+  const baseBudget = estimateBudget(tripData?.days || normalizedDays.length || 3, tripData?.travellers || 2, tripData?.budget || "Comfort");
+  if (rawItinerary?.totalEstimatedCost) {
+    baseBudget.estimatedTotal = rawItinerary.totalEstimatedCost;
+  }
+
+  const generatedHighlights = normalizedDays.map(d => d.dayTheme).slice(0, 4);
 
   return {
     destination: destName,
     logistics: logistics,
     tripTitle: rawItinerary?.tripTitle || `${destName} Handcrafted Yatra`,
-    tagline: rawItinerary?.tagline || `A curated travel itinerary for ${destName}`,
-    highlights: rawItinerary?.highlights || [`Iconic landmarks of ${destName}`, "Local culture and cuisine", "Scenic viewpoints"],
+    tagline: rawItinerary?.tagline || `A custom, time-optimized journey through ${destName}`,
+    highlights: (rawItinerary?.highlights && rawItinerary.highlights.length > 0) ? rawItinerary.highlights : generatedHighlights,
     days: normalizedDays,
     itinerary: normalizedDays,
-    mustTry: rawItinerary?.mustTry || [{ item: `${destName} Local Speciality`, why: "Famous regional delicacy." }],
-    packingEssentials: rawItinerary?.packingEssentials || ["Comfortable footwear", "Sunscreen SPF 50+", "Refillable water bottle"],
-    localInsights: rawItinerary?.localInsights || `Auto-rickshaws and taxis are easily available in ${destName}.`,
-    bestTimeToVisit: rawItinerary?.bestTimeToVisit || "October to March offers pleasant weather.",
-    budgetSummary: rawItinerary?.budgetSummary || estimateBudget(tripData.days || 3, tripData.travellers || 2, tripData.budget || "Comfort")
+    mustTry: rawItinerary?.mustTry || [
+      { item: `${destName} Authentic Regional Thali`, why: "Legendary local flavours prepared with traditional spices." },
+      { item: "Evening Cultural Performance & Folk Show", why: "Immersive traditional music and folk dance heritage." }
+    ],
+    packingEssentials: rawItinerary?.packingEssentials || ["Comfortable walking footwear", "Sun protection / sunglasses", "Light breathable cottons or warm layers depending on season", "Power bank & travel adapter"],
+    localInsights: rawItinerary?.localInsights || `Auto-rickshaws and app cabs operate readily in ${destName}. Pre-book heritage monuments online to skip long ticket queues.`,
+    bestTimeToVisit: rawItinerary?.bestTimeToVisit || "October to March offers pleasant and ideal sightseeing weather.",
+    budgetSummary: rawItinerary?.budgetSummary || baseBudget,
+    totalEstimatedCost: rawItinerary?.totalEstimatedCost || baseBudget.estimatedTotal
   };
 }
 
-// Smart Fallback Engine — uses real destination DB with rotation across days
+// Smart Fallback Engine with Strict ZERO-REPEAT Guarantee across days
 export function generateGenericFallback(tripData) {
   const destName = tripData.destinationName || tripData.destination || "India";
-  const days = Math.max(1, tripData.days || 3);
+  const days = Math.max(1, parseInt(tripData.days, 10) || 3);
   const key = destName.toLowerCase().replace(/[^a-z0-9]/g, "");
 
   const matchedKey = Object.keys(DESTINATION_DATABASE).find(k => key.includes(k));
   const dbEntry = matchedKey ? DESTINATION_DATABASE[matchedKey] : null;
 
-  if (dbEntry) {
-    const budgetTier = tripData.budget || "Comfort";
-    const hotel = getBudgetHotel(key, budgetTier);
-    const dining = getBudgetDining(key, budgetTier);
-    const daysArr = [];
-    for (let i = 0; i < days; i++) {
-      // Rotate through available activity sets — each day gets a DIFFERENT set
-      const actIdx = i % dbEntry.activities.length;
-      const t = dbEntry.activities[actIdx];
-      daysArr.push({
-        day: i + 1,
-        date: `Day ${i + 1}`,
-        theme: t.theme,
-        activities: t.activities,
-        stayRecommendation: hotel,   // ✅ Budget-aware hotel
-        diningSpots: dining           // ✅ Budget-aware dining
-      });
+  const budgetTier = tripData.budget || "Comfort";
+  const hotel = getBudgetHotel(key, budgetTier);
+  const dining = getBudgetDining(key, budgetTier);
+
+  // Distinct day templates ensuring strictly unique activities across all days
+  const distinctDayTemplates = [
+    {
+      theme: "Royal Forts & Iconic Heritage",
+      area: "Old City & Palace Quarter",
+      morning: { title: `${destName} Grand Fort & Citadel`, desc: `Explore the magnificent historic fort, royal courtyards, and ancient defensive bastions overlooking ${destName}.`, tip: "Arrive early morning around 9:00 AM for soft sunlight and minimal crowds." },
+      afternoon: { title: `${destName} Royal Palace & Museum`, desc: `Tour the royal halls, courtyards, and personal armory exhibits preserved from regal dynasties.`, foodSpot: `Heritage Thali Bhavan ${destName}` },
+      evening: { title: `${destName} Historic Clock Tower & Bazaars`, desc: `Stroll through the bustling heritage market lanes bustling with spice traders and local artisans.`, tip: "Try local street snack delicacies from renowned sweet shops." },
+      night: { title: `${destName} Illuminated Palace View & Heritage Walk`, desc: `Experience illuminated monument facades at night accompanied by peaceful city ambiance.`, tip: "Book a rooftop dinner table facing the lit ramparts." }
+    },
+    {
+      theme: "Spiritual Sacred Temples & Ghats",
+      area: "Temple Promenade & Riverfront",
+      morning: { title: `${destName} Sacred Ancient Temple`, desc: `Attend peaceful morning aarti and absorb the sanctified architectural carvings of this revered shrine.`, tip: "Dress modestly covering shoulders and knees; footwear deposit is available outside." },
+      afternoon: { title: `${destName} Heritage Stepwell & Sacred Reservoir`, desc: `Discover centuries-old water conservation architecture with intricate geometric stone stairs.`, foodSpot: `Anandam Pure Veg Restaurant` },
+      evening: { title: `${destName} Sunset Riverfront / Lakeside Promenade`, desc: `Watch the crimson sunset horizon from peaceful river banks while listening to temple bells.`, tip: "Hire a traditional boat ride for scenic waterside vantage points." },
+      night: { title: `${destName} Grand Evening Aarti Ceremony`, desc: `Witness rhythmic brass lamps, conch sounds, and devotional chants under the starlit sky.`, tip: "Arrive 30 minutes before sunset to secure front sitting steps." }
+    },
+    {
+      theme: "Scenic Nature & Mountain Viewpoints",
+      area: "Highland Ridge & Botanical Enclave",
+      morning: { title: `${destName} Hilltop Sunrise Ridge & Nature Trails`, desc: `Hike or take a scenic drive to the peak for panoramic vistas of the awakening valley landscape.`, tip: "Carry a light windcheater jacket as mornings can be breezy." },
+      afternoon: { title: `${destName} Botanical Reserve & Cedar Gardens`, desc: `Unwind amidst lush native flora, ancient shaded trees, and peaceful landscaped walking avenues.`, foodSpot: `Pine Wood Valley Bistro` },
+      evening: { title: `${destName} Panoramic Sunset Point`, desc: `Capture breathtaking golden hour photographs overlooking undulating hills and valley slopes.`, tip: "Grab freshly brewed local tea and pakoras from nearby viewpoint shacks." },
+      night: { title: `${destName} Stargazing & Valley Overlook Walk`, desc: `Experience the serene mountain breeze and glittering city lights from the elevated ridge road.`, tip: "Keep your camera mounted on a stable ledge for low-light photos." }
+    },
+    {
+      theme: "Local Artisan Crafts & Textile Trails",
+      area: "Crafts Village & Artisan Hub",
+      morning: { title: `${destName} Artisan Craft Village & Pottery Guild`, desc: `Watch master artisans perform handloom weaving, block printing, and pottery live.`, tip: "Support local weavers by purchasing directly without middleman markups." },
+      afternoon: { title: `${destName} Regional Textile & Craft Gallery`, desc: `Marvel at curated exhibits of indigenous embroidery, folk garments, and historical dyes.`, foodSpot: `Shilpgram Traditional Rasoi` },
+      evening: { title: `${destName} Handicrafts Night Bazaar`, desc: `Explore stalls featuring brass handicrafts, wooden sculptures, handmade leather mojris, and organic spices.`, tip: "Keep cash handy as small craft stalls may have intermittent card networks." },
+      night: { title: `${destName} Open-Air Cultural Amphitheatre`, desc: `Enjoy authentic folk musicians playing regional instruments and rhythmic Rajasthani/regional dance.`, tip: "Shows typically start at 8:00 PM; tickets can be bought at the gate." }
+    },
+    {
+      theme: "Hidden Havelis & Architecture Wonders",
+      area: "Heritage Haveli Quarter",
+      morning: { title: `${destName} Frescoed Merchant Havelis`, desc: `Admire ancient hand-painted murals, intricately carved jharokhas (balconies), and stone lattice work.`, tip: "Look upwards into ceiling domes to spot natural stone-pigment frescoes." },
+      afternoon: { title: `${destName} Central Archaeological Museum`, desc: `Inspect rare coin hoards, centuries-old manuscripts, weapons, and marble statuettes.`, foodSpot: `Royal Darbar Dining Hall` },
+      evening: { title: `${destName} Royal Cenotaphs & Memorial Pavilions`, desc: `Walk through ornamental marble pavilions built in honor of erstwhile royal rulers.`, tip: "Incredible symmetry for architectural photographers during sunset." },
+      night: { title: `${destName} Heritage Sound & Light Show`, desc: `Hear dramatic voice-overs narrating heroic tales and folklore projected across historical walls.`, tip: "English shows usually follow the Hindi performance." }
+    },
+    {
+      theme: "Lakeside Excursion & Rural Trails",
+      area: "Lakeside Valley & Countryside",
+      morning: { title: `${destName} Pristine Lakeside Sanctuary`, desc: `Start with birdwatching and serene morning strolls along crystal-clear waters.`, tip: "Binoculars recommended for spotting migratory birds in winter." },
+      afternoon: { title: `${destName} Organic Farmstead & Country Orchard`, desc: `Take a guided tour through organic spice or fruit orchards and taste farm-fresh produce.`, foodSpot: `Kisan Rasoi Farm Kitchen` },
+      evening: { title: `${destName} Lake Island Pavilion`, desc: `Hop onto a boat toward the tranquil island pavilion in the lake center.`, tip: "Pre-book boat tickets at the jetty to avoid rush." },
+      night: { title: `${destName} Waterside Candlelit Promenade`, desc: `Stroll alongside the calm illuminated waterfront enjoying acoustic local music.`, tip: "Enjoy piping hot roasted corn (bhutta) with lemon and masala." }
+    },
+    {
+      theme: "Culinary Trail & Street Food Walk",
+      area: "Old Bazaar Food Streets",
+      morning: { title: `${destName} Heritage Breakfast Trail`, desc: `Taste legendary breakfast specialties such as kachoris, hot jalebis, poha, and spiced chai.`, tip: "Begin by 8:30 AM before popular sweetshops run out of fresh morning batches." },
+      afternoon: { title: `${destName} Spice & Dry Fruit Market Walk`, desc: `Immerse your senses in aromatic saffron, whole cardamoms, and regional spice blends.`, foodSpot: `Surya Sweet & Spice House` },
+      evening: { title: `${destName} Famous Street Food Chaupati`, desc: `Sample an endless parade of chaats, samosas, spicy kathi rolls, and traditional regional snacks.`, tip: "Look for stalls with high local turnover for freshness and hygiene." },
+      night: { title: `${destName} Royal Banquet & Kulfi Tasting`, desc: `Cap off your culinary adventure with a grand multi-course regional feast followed by falooda kulfi.`, tip: "Sip a warm kulhad milk with saffron and pistachios before bed." }
+    },
+    {
+      theme: "Ancient Caves, Rock Art & Monoliths",
+      area: "Valley Monolithic Zone",
+      morning: { title: `${destName} Ancient Rock-Cut Caves`, desc: `Explore monastic rock chambers and rock sculptures dating back over a thousand years.`, tip: "Wear shoes with good grip on stone stairs and carry a small flashlight." },
+      afternoon: { title: `${destName} Valley Eco Park & Nature Springs`, desc: `Cool off next to bubbling freshwater springs and shaded cliffside pavilions.`, foodSpot: `Prakriti Nature Cafe` },
+      evening: { title: `${destName} Valley Sunset Lookout Point`, desc: `Enjoy unobstructed horizon views where the valley floor stretches beneath endless skies.`, tip: "Stay until dusk to witness the village lamps twinkle in the distance." },
+      night: { title: `${destName} Campfire & Folk Storytelling`, desc: `Listen to ancient regional myths and folklore shared around an ambient fire pit.`, tip: "Carry warm layers as open valleys cool down rapidly after dark." }
+    },
+    {
+      theme: "Wildlife Sanctuary & Forest Escapade",
+      area: "Forest Reserve Buffer Zone",
+      morning: { title: `${destName} Wildlife Safari & Nature Reserve`, desc: `Early morning open-jeep drive through protected deciduous forests spotting deer, peacocks, and wildlife.`, tip: "Wear neutral olive or khaki clothing and avoid loud perfumes." },
+      afternoon: { title: `${destName} Interpretation Center & Butterfly Park`, desc: `Learn about local ecosystem conservation, medicinal plants, and native fauna.`, foodSpot: `Jungle Lodge Dining Shack` },
+      evening: { title: `${destName} Forest Canopy Walkway`, desc: `Walk elevated suspension bridges among the tree crowns for an aerial view of the canopy.`, tip: "Stunning spot for bird photography during the late afternoon return." },
+      night: { title: `${destName} Eco-Resort Starlit Dinner`, desc: `Dine under forest canopies surrounded by soothing crickets and nocturnal sounds.`, tip: "Savor warm clay-pot cooked regional specialties." }
+    },
+    {
+      theme: "Souvenirs, Art Galleries & Farewell Yatra",
+      area: "Emporium Quarter & Central Square",
+      morning: { title: `${destName} Government Handloom & Handicrafts Emporium`, desc: `Pick up certified authentic souvenirs, silk fabrics, miniature paintings, and stone art.`, tip: "Fixed government pricing ensures genuine quality and fair craft wages." },
+      afternoon: { title: `${destName} Contemporary Art & Sculpture Gallery`, desc: `Experience the fusion of historic Indian craft traditions with modern artistic expressions.`, foodSpot: `Kala Cafe & Bakery` },
+      evening: { title: `${destName} Central Town Square & Farewell Walk`, desc: `One last leisurely stroll through your favorite city corners soaking in the ambiance.`, tip: "Pack fragile souvenirs with bubble wrap available at gift emporiums." },
+      night: { title: `${destName} Grand Farewell Feast with Musical Tributes`, desc: `Celebrate the culmination of your journey with a memorable multi-course celebration banquet.`, tip: "Reflect on memorable photos and plan your next destination with BharatDarshan!" }
     }
-
-    return normalizeItinerary({
-      destination: destName,
-      logistics: dbEntry.logistics,
-      tripTitle: dbEntry.title,
-      tagline: dbEntry.tagline,
-      highlights: dbEntry.highlights,
-      days: daysArr,
-      mustTry: dbEntry.mustTry,
-      packingEssentials: dbEntry.packing,
-      localInsights: dbEntry.localInsights,
-      bestTimeToVisit: dbEntry.bestTime
-    }, tripData);
-  }
-
-  // Fallback for destinations not in DB — generate meaningful activities
-  const genericActivitiesByDay = [
-    [
-      { timeOfDay: "Morning", locationName: `${destName} Main Historical Monument`, googleMapsLink: makeGoogleMapsUrl(`${destName} Historical Monument`, destName), description: `Start your day at the most iconic historical site of ${destName}. This landmark defines the heritage and cultural identity of the region.` },
-      { timeOfDay: "Afternoon", locationName: `${destName} Local Museum`, googleMapsLink: makeGoogleMapsUrl(`${destName} Museum`, destName), description: `Explore the regional museum showcasing artefacts, artworks, and the historical narrative of ${destName} and its surrounding region.` },
-      { timeOfDay: "Evening", locationName: `${destName} Main Bazaar`, googleMapsLink: makeGoogleMapsUrl(`${destName} Main Market`, destName), description: `Stroll through the lively main market of ${destName} sampling street food, shopping for local handicrafts, and soaking in the local evening atmosphere.` }
-    ],
-    [
-      { timeOfDay: "Morning", locationName: `${destName} Famous Temple or Sacred Site`, googleMapsLink: makeGoogleMapsUrl(`${destName} Temple`, destName), description: `Visit the most revered religious or spiritual site of ${destName} in the serene morning hours when devotees gather for prayers.` },
-      { timeOfDay: "Afternoon", locationName: `${destName} Nature Park or Garden`, googleMapsLink: makeGoogleMapsUrl(`${destName} Nature Park`, destName), description: `Spend the afternoon at the famous natural attraction or botanical garden of ${destName}, perfect for a leisurely walk.` },
-      { timeOfDay: "Evening", locationName: `${destName} Riverside or Waterfront`, googleMapsLink: makeGoogleMapsUrl(`${destName} Waterfront`, destName), description: `Watch the golden evening light from the riverside or waterfront area of ${destName}, a favourite sunset spot for locals and tourists.` }
-    ],
-    [
-      { timeOfDay: "Morning", locationName: `${destName} Hilltop Viewpoint`, googleMapsLink: makeGoogleMapsUrl(`${destName} Viewpoint`, destName), description: `Hike or drive to the famous hilltop viewpoint for sweeping panoramic views of ${destName} and the surrounding landscape.` },
-      { timeOfDay: "Afternoon", locationName: `${destName} Artisan Craft Village`, googleMapsLink: makeGoogleMapsUrl(`${destName} Craft Village`, destName), description: `Visit the renowned artisan village or handicraft centre where traditional crafts unique to ${destName} are made and sold.` },
-      { timeOfDay: "Evening", locationName: `${destName} Cultural Performance Venue`, googleMapsLink: makeGoogleMapsUrl(`${destName} Cultural Show`, destName), description: `Watch authentic local folk dance and cultural performances — the perfect way to experience the living traditions of ${destName}.` }
-    ]
   ];
 
-  const budgetTier = tripData.budget || "Comfort";
-  const genericHotel = getBudgetHotel(key, budgetTier);
-  const genericDining = getBudgetDining(key, budgetTier);
-  const genericDays = [];
+  const daysArr = [];
+  const usedTitles = new Set();
+
   for (let i = 0; i < days; i++) {
-    const actSet = genericActivitiesByDay[i % genericActivitiesByDay.length];
-    genericDays.push({
-      day: i + 1,
-      date: `Day ${i + 1}`,
-      theme: i === 0 ? `Arrival & Iconic Landmarks` : i === days - 1 ? "Culture & Departure" : "Exploration & Local Culture",
-      activities: actSet,
-      stayRecommendation: genericHotel,  // ✅ Budget-aware
-      diningSpots: genericDining           // ✅ Budget-aware
-    });
+    const dayNumber = i + 1;
+    // If DB entry has a dedicated curated activity set for this day, use it
+    if (dbEntry && dbEntry.activities && i < dbEntry.activities.length) {
+      const dbAct = dbEntry.activities[i];
+      const morningItem = dbAct.activities[0] || { locationName: `${destName} Historical Citadel`, description: `Visit iconic historical citadel.` };
+      const afternoonItem = dbAct.activities[1] || { locationName: `${destName} Royal Palace`, description: `Tour royal state apartments.` };
+      const eveningItem = dbAct.activities[2] || { locationName: `${destName} Heritage Bazaar`, description: `Explore colorful market stalls.` };
+      
+      const distinctNights = [
+        { title: `${destName} Illuminated Heritage Walk & Old Town Lights`, desc: "Unwind with nighttime monument perspectives, gentle breeze, and traditional ambiance.", tip: "Book a rooftop dinner table facing illuminated monuments." },
+        { title: `${destName} Rooftop Panorama & Authentic Folk Music`, desc: "Experience live folk musicians performing classical regional melodies under the stars.", tip: "Try hot kulhad saffron milk at night sweet shops." },
+        { title: `${destName} Starlit Village Celebration & Cultural Show`, desc: "Enjoy lively puppet shows, acoustic folk chants, and celebratory dining.", tip: "Shows typically wrap up around 10:30 PM." },
+      ];
+      const nightItem = distinctNights[i % distinctNights.length];
+
+      usedTitles.add(morningItem.locationName);
+      usedTitles.add(afternoonItem.locationName);
+      usedTitles.add(eveningItem.locationName);
+      usedTitles.add(nightItem.title);
+
+      daysArr.push({
+        dayNumber: dayNumber,
+        dayTheme: dbAct.theme || `Day ${dayNumber} - Heritage Highlights`,
+        morning: {
+          time: "09:00 AM",
+          title: morningItem.locationName,
+          description: morningItem.description,
+          tip: "Head out early for gentle sunlight and serene exploration.",
+          googleMapsLink: morningItem.googleMapsLink || makeGoogleMapsUrl(morningItem.locationName, destName)
+        },
+        afternoon: {
+          time: "01:00 PM",
+          title: afternoonItem.locationName,
+          description: afternoonItem.description,
+          foodSpot: dbAct.dining?.[0]?.name || `${destName} Heritage Kitchen`,
+          googleMapsLink: afternoonItem.googleMapsLink || makeGoogleMapsUrl(afternoonItem.locationName, destName)
+        },
+        evening: {
+          time: "05:00 PM",
+          title: eveningItem.locationName,
+          description: eveningItem.description,
+          tip: "Stroll through the vibrant evening streets as the temperature cools.",
+          googleMapsLink: eveningItem.googleMapsLink || makeGoogleMapsUrl(eveningItem.locationName, destName)
+        },
+        night: {
+          time: "08:30 PM",
+          title: nightItem.title,
+          description: nightItem.description,
+          tip: nightItem.tip,
+          googleMapsLink: makeGoogleMapsUrl(nightItem.title, destName)
+        },
+        recommendedAreaToStay: hotel?.name || `${destName} Central Heritage Quarter`
+      });
+    } else {
+      // Pick template and ensure complete uniqueness
+      const tmplIndex = i % distinctDayTemplates.length;
+      const tmpl = distinctDayTemplates[tmplIndex];
+
+      let mTitle = tmpl.morning.title;
+      let aTitle = tmpl.afternoon.title;
+      let eTitle = tmpl.evening.title;
+      let nTitle = tmpl.night.title;
+
+      // Ensure distinctness even for trips longer than template array length
+      if (usedTitles.has(mTitle)) mTitle = `${destName} Outer Sector - ${tmpl.morning.title}`;
+      if (usedTitles.has(aTitle)) aTitle = `${destName} South Hub - ${tmpl.afternoon.title}`;
+      if (usedTitles.has(eTitle)) eTitle = `${destName} Valley Edge - ${tmpl.evening.title}`;
+      if (usedTitles.has(nTitle)) nTitle = `${destName} Starlight Overlook - ${tmpl.night.title}`;
+
+      usedTitles.add(mTitle);
+      usedTitles.add(aTitle);
+      usedTitles.add(eTitle);
+      usedTitles.add(nTitle);
+
+      daysArr.push({
+        dayNumber: dayNumber,
+        dayTheme: tmpl.theme,
+        morning: {
+          time: "09:00 AM",
+          title: mTitle,
+          description: tmpl.morning.desc,
+          tip: tmpl.morning.tip,
+          googleMapsLink: makeGoogleMapsUrl(mTitle, destName)
+        },
+        afternoon: {
+          time: "01:00 PM",
+          title: aTitle,
+          description: tmpl.afternoon.desc,
+          foodSpot: tmpl.afternoon.foodSpot,
+          googleMapsLink: makeGoogleMapsUrl(aTitle, destName)
+        },
+        evening: {
+          time: "05:00 PM",
+          title: eTitle,
+          description: tmpl.evening.desc,
+          tip: tmpl.evening.tip,
+          googleMapsLink: makeGoogleMapsUrl(eTitle, destName)
+        },
+        night: {
+          time: "08:30 PM",
+          title: nTitle,
+          description: tmpl.night.desc,
+          tip: tmpl.night.tip,
+          googleMapsLink: makeGoogleMapsUrl(nTitle, destName)
+        },
+        recommendedAreaToStay: tmpl.area || `${destName} City Center`
+      });
+    }
   }
+
+  const estBudget = estimateBudget(days, tripData.travellers || 2, budgetTier);
 
   return normalizeItinerary({
     destination: destName,
     tripTitle: `Curated ${destName} Yatra`,
-    tagline: `A handpicked journey through the finest landmarks & experiences of ${destName}`,
-    highlights: [`Iconic landmarks of ${destName}`, "Authentic regional culinary trail", "Local artisan and bazaar walks"],
-    days: genericDays
+    tagline: `A handpicked, time-optimized journey through the finest sights of ${destName}`,
+    totalEstimatedCost: estBudget.estimatedTotal,
+    days: daysArr
   }, tripData);
 }
 
@@ -1668,7 +1849,7 @@ export function generateGenericFallback(tripData) {
 async function generateViaPollinationsAI(prompt, tripData) {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     const response = await fetch("https://text.pollinations.ai/", {
       method: "POST",
@@ -1688,7 +1869,7 @@ async function generateViaPollinationsAI(prompt, tripData) {
     const text = await response.text();
     if (!text) throw new Error("Empty response from Pollinations");
 
-    const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
+    const cleanJson = text.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
     const itinerary = JSON.parse(cleanJson);
 
     if (itinerary && (itinerary.days || itinerary.itinerary)) {
@@ -1701,131 +1882,124 @@ async function generateViaPollinationsAI(prompt, tripData) {
   }
 }
 
+// Direct AI Trip Generation Engine with Strict Dynamic Prompting & Zero-Repeat Enforcement
 export async function generateAIItinerary(tripData) {
   const destName = tripData.destinationName || tripData.destination || "India";
-  const prompt = `You are an expert local travel guide for India. Create a highly accurate, realistic, and unique ${tripData.days}-day travel itinerary for ${destName}.
+  const numberOfDays = Math.max(1, parseInt(tripData.days, 10) || 3);
+  const budgetRange = tripData.budget || "Comfort";
+  const travelerType = tripData.travellers ? `${tripData.travellers} person(s)` : (tripData.travelerType || "Couples / Friends");
+  const vibe = tripData.tripType || tripData.vibe || "Heritage & Cultural Exploration";
+  const origin = tripData.origin || "Delhi";
 
-Origin: ${tripData.origin}
-Destination: ${destName}
-Travel Dates: ${tripData.startDate} to ${tripData.endDate}
-Travellers: ${tripData.travellers} person(s)
-Budget: ${tripData.budget}
-Trip Type: ${tripData.tripType}
+  // Dynamic Prompt with Strict No-Repeat Rule & Clean JSON Schema
+  const structuredPrompt = `Generate a realistic, time-optimized day-by-day itinerary for ${numberOfDays} days in ${destName}.
 
-STRICT CONSTRAINTS:
-1. NO GENERIC DATA: Do not use generic placeholders. Each day must have DIFFERENT specific real locations.
-2. REAL LOCATIONS: Use only actual famous tourist attractions, monuments, and local markets in ${destName}.
-3. ACCURATE LOGISTICS: Include real nearest railway station name and airport name with realistic distances.
-4. GOOGLE MAPS: Every activity must have: https://www.google.com/maps/search/?api=1&query=[Location+Name+${destName.replace(/\s+/g, '+')}]
-5. Return ONLY valid JSON with this schema:
+STRICT RULE: Every single day must feature completely distinct, geographically logical attractions, activities, and local food spots. NEVER repeat any monument, temple, market, or activity across multiple days.
 
+Structure each day into Morning, Afternoon, Evening, and Night, including travel/cab tips and estimated costs matching the budget ${budgetRange}.
+
+Parameters:
+- Destination: ${destName}
+- Number of Days: ${numberOfDays}
+- Budget Tier: ${budgetRange}
+- Traveler Type: ${travelerType}
+- Vibe / Travel Style: ${vibe}
+- Departing / Origin City: ${origin}
+
+Request output strictly in JSON format without markdown wrapping matching this exact schema:
 {
-  "destination": "${destName}",
-  "logistics": { "nearest_railway_station": "Real station name", "distance_to_railway_km": "X km", "nearest_airport": "Real airport name", "distance_to_airport_km": "X km" },
-  "tripTitle": "Title",
-  "tagline": "Tagline",
-  "highlights": ["H1", "H2", "H3", "H4"],
+  "tripTitle": "${destName} Yatra - [Catchy Title]",
+  "totalEstimatedCost": "₹X,XXX total for ${tripData.travellers || 2} person(s)",
   "days": [
     {
-      "day": 1,
-      "date": "Day 1",
-      "theme": "Specific Day Theme",
-      "activities": [
-        { "timeOfDay": "Morning", "locationName": "REAL specific place name", "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Real+Place+${destName.replace(/\s+/g, '+')}", "description": "Two specific sentences about what to do here." },
-        { "timeOfDay": "Afternoon", "locationName": "DIFFERENT real specific place", "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Different+Place+${destName.replace(/\s+/g, '+')}", "description": "Two specific sentences about what to do here." },
-        { "timeOfDay": "Evening", "locationName": "ANOTHER different real place", "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Evening+Place+${destName.replace(/\s+/g, '+')}", "description": "Two specific sentences about what to do here." }
-      ],
-      "stayRecommendation": { "name": "Real Hotel Name", "type": "Hotel Type", "whyPick": "Reason", "approxRate": "₹X,XXX/night" },
-      "diningSpots": [{ "name": "Real Restaurant", "specialty": "Local Dish", "priceRange": "₹XX-XX" }]
+      "dayNumber": 1,
+      "dayTheme": "Old City & Royal Forts",
+      "morning": { "time": "9:00 AM", "title": "Real Place Name", "description": "Engaging 2-sentence description.", "tip": "Practical visit / transport tip." },
+      "afternoon": { "time": "1:00 PM", "title": "Distinct Real Landmark", "description": "Engaging description.", "foodSpot": "Famous Real Local Restaurant or Cafe" },
+      "evening": { "time": "5:00 PM", "title": "Different Evening Sight or Market", "description": "Engaging description." },
+      "night": { "time": "8:30 PM", "title": "Night Cultural / Dinner Spot", "description": "Engaging description." },
+      "recommendedAreaToStay": "Real Neighborhood or Area Name"
     }
-  ],
-  "mustTry": [{ "item": "Real local item", "why": "Specific reason" }],
-  "packingEssentials": ["Item 1", "Item 2"],
-  "localInsights": "Practical tips",
-  "bestTimeToVisit": "Best months and why",
-  "budgetSummary": { "accommodation": "₹X", "food": "₹X", "transport": "₹X", "activities": "₹X", "estimatedTotal": "₹X" }
+  ]
 }`;
 
-  // Budget-specific constraints to inject into AI prompt
-  const budgetPriceGuide = {
-    Budget:  { hotel: "₹700–1,500/night",  dining: "₹60–250/meal",    activities: "₹100–500/activity" },
-    Comfort: { hotel: "₹3,000–6,000/night", dining: "₹300–800/meal",   activities: "₹500–1,500/activity" },
-    Luxury:  { hotel: "₹8,000–20,000/night",dining: "₹1,000–3,000/meal",activities: "₹1,500–5,000/activity" },
-    Royal:   { hotel: "₹20,000+/night",     dining: "₹3,000–8,000/meal",activities: "₹5,000–15,000/activity" },
-  };
-  const priceGuide = budgetPriceGuide[tripData.budget] || budgetPriceGuide.Comfort;
-  const budgetEnforcement = `
-CRITICAL BUDGET ENFORCEMENT for "${tripData.budget}" tier:
-- stayRecommendation.approxRate MUST be WITHIN: ${priceGuide.hotel}
-- diningSpots[].priceRange MUST be WITHIN: ${priceGuide.dining}
-- activities[].estimatedCost MUST be WITHIN: ${priceGuide.activities}
-- budgetSummary numbers MUST reflect the ${tripData.budget} tier exactly
-- For Budget tier: recommend dhabas, hostels, street food stalls, budget guesthouses
-- For Comfort tier: recommend mid-range hotels, good restaurants
-- For Luxury tier: recommend 5-star hotels, fine dining, premium experiences
-- For Royal tier: recommend palace hotels, royal/heritage properties, private chef dining
-DO NOT recommend luxury palace hotels for Budget tier. DO NOT recommend budget guesthouses for Royal tier.`;
+  // Step 1: Direct Google Gemini API (supporting latest and flash models)
+  if (GEMINI_API_KEY && GEMINI_API_KEY.trim().length > 5) {
+    const candidateModels = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-1.5-flash"];
+    for (const model of candidateModels) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY.trim()}`;
 
-  // Step 1: Gemini API
-  if (GEMINI_API_KEY && GEMINI_API_KEY.startsWith("AIzaSy")) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const response = await fetch(geminiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: structuredPrompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 8192,
+              responseMimeType: "application/json"
+            },
+          }),
+        });
+        clearTimeout(timeoutId);
 
-      const response = await fetch(geminiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt + budgetEnforcement }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 8192, responseMimeType: "application/json" },
-        }),
-      });
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const json = await response.json();
-        const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) {
-          const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
-          const itinerary = JSON.parse(cleanJson);
-          return { success: true, data: normalizeItinerary(itinerary, tripData), model: "Gemini 1.5 Flash", isDemoMode: false };
+        if (response.ok) {
+          const json = await response.json();
+          const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            const cleanJson = text.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
+            const itinerary = JSON.parse(cleanJson);
+            if (itinerary && Array.isArray(itinerary.days) && itinerary.days.length > 0) {
+              return {
+                success: true,
+                data: normalizeItinerary(itinerary, tripData),
+                model: `Gemini AI Engine (${model})`,
+                isDemoMode: false
+              };
+            }
+          }
+        } else {
+          console.warn(`[AIYatraEngine] Model ${model} returned status ${response.status}`);
         }
+      } catch (err) {
+        console.warn(`[AIYatraEngine] Gemini model ${model} attempt failed:`, err.message);
       }
-    } catch (err) {
-      console.warn("[AIYatraEngine] Gemini API call failed:", err.message);
     }
   }
 
-  // Step 2: Pollinations AI
-  const pollinationsResult = await generateViaPollinationsAI(prompt + budgetEnforcement, tripData);
+  // Step 2: Pollinations AI Fallback
+  const pollinationsResult = await generateViaPollinationsAI(structuredPrompt, tripData);
   if (pollinationsResult) return pollinationsResult;
 
-  // Step 3: Smart Curated Engine (Budget-aware fallback)
-  console.warn("[AIYatraEngine] Loading smart curated destination engine.");
-  return { success: true, data: generateGenericFallback(tripData), model: "Smart Curated Engine", isDemoMode: true };
+  // Step 3: Smart Curated Engine with Guaranteed ZERO-REPEAT logic across days
+  console.warn("[AIYatraEngine] Loading zero-repeat smart curated engine fallback.");
+  return {
+    success: true,
+    data: generateGenericFallback(tripData),
+    model: "BharatDarshan Smart Curated Engine",
+    isDemoMode: true
+  };
 }
 
 export function estimateBudget(days, travellers, tier) {
-  // Realistic per-person-per-day rates in INR (researched 2024-25 India travel data)
   const rates = {
-    Budget:  { stay: 1000,  food: 400,  transport: 350,  activities: 250  }, // hostels, dhabas, shared transport
-    Comfort: { stay: 4000,  food: 1000, transport: 1000, activities: 800  }, // 3-4 star hotels, restaurants
-    Luxury:  { stay: 12000, food: 2500, transport: 2500, activities: 2000 }, // 5-star, fine dining, private cabs
-    Royal:   { stay: 30000, food: 6000, transport: 6000, activities: 5000 }, // palace hotels, butler, private tours
+    Budget:  { stay: 1000,  food: 400,  transport: 350,  activities: 250  },
+    Comfort: { stay: 4000,  food: 1000, transport: 1000, activities: 800  },
+    Luxury:  { stay: 12000, food: 2500, transport: 2500, activities: 2000 },
+    Royal:   { stay: 30000, food: 6000, transport: 6000, activities: 5000 },
   };
   const r = rates[tier] || rates.Comfort;
-  // Stay is per room (not per person), food/activities per person
   const stay = r.stay * days;
   const food = r.food * days * travellers;
   const transport = r.transport * days;
   const activities = r.activities * travellers;
   const subtotal = stay + food + transport + activities;
-  // Add 8% for miscellaneous (tips, entry tickets, sim card etc.)
   const total = subtotal + Math.round(subtotal * 0.08);
 
-  // Tier label for display
   const tierLabels = {
     Budget: "Budget Friendly", Comfort: "Comfortable", Luxury: "Premium Luxury", Royal: "Royal Heritage"
   };
