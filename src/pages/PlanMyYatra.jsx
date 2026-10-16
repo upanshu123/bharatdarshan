@@ -614,6 +614,36 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   const departureCity = tripData?.departureCity || null;
   const [copied, setCopied] = useState(false);
   const [pdfGenerating, setPdfGenerating] = useState(false);
+  const [activeDayIdx, setActiveDayIdx] = useState(0);
+  const [showHostTipsDrawer, setShowHostTipsDrawer] = useState(false);
+
+  // Reset active tab if itinerary changes
+  useEffect(() => {
+    setActiveDayIdx(0);
+  }, [itinerary]);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (showHostTipsDrawer) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showHostTipsDrawer]);
+
+  // Escape key listener to close drawer
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && showHostTipsDrawer) {
+        setShowHostTipsDrawer(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showHostTipsDrawer]);
 
   const handleDownloadPDF = () => {
     setPdfGenerating(true);
@@ -896,174 +926,388 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       )}
 
-      {/* ── Day-by-Day Timeline ── */}
+      {/* ── Day-by-Day Timeline Section ── */}
       <div>
-        <h3 className="text-xl font-serif font-black text-slate-900 mb-6 flex items-center gap-2">
-          <Calendar className="text-orange-600" size={20} /> Day-by-Day Itinerary
-        </h3>
-        <div className="relative">
-          {/* Vertical neon guide rail */}
-          <div className="hidden md:block absolute left-[19px] top-8 bottom-8 w-px" style={{background:'linear-gradient(to bottom,rgba(251,146,60,0.7),rgba(99,102,241,0.5),rgba(251,146,60,0.2))',boxShadow:'0 0 6px rgba(251,146,60,0.3)'}} />
+        {/* Sticky Horizontal Day Tabs Bar */}
+        <div className="sticky top-2 md:top-4 z-20 bg-slate-50/95 backdrop-blur-md py-3 -mx-2 px-2 md:mx-0 md:px-0">
+          <div className="flex items-center justify-between gap-3 mb-2.5 px-1">
+            <div className="flex items-center gap-2">
+              <Calendar className="text-orange-600" size={18} />
+              <h3 className="text-base md:text-lg font-serif font-black text-slate-900">
+                Day-by-Day Timeline
+              </h3>
+            </div>
+            {days && days.length > 0 && (
+              <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 bg-white px-2.5 py-1 rounded-full border border-slate-200/90 shadow-2xs">
+                Day {Math.min(Math.max(0, activeDayIdx), days.length - 1) + 1} of {days.length}
+              </span>
+            )}
+          </div>
 
-          <div className="space-y-6">
+          {/* Horizontal Day Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5">
             {(days || []).map((day, idx) => {
-              const activitiesList = (day.activities && day.activities.length > 0)
-                ? day.activities
-                : ["morning", "afternoon", "evening", "night"]
-                    .filter(p => day[p])
-                    .map(p => ({
-                      timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
-                      time: day[p].time,
-                      locationName: day[p].title || day[p].locationName || day[p].activity,
-                      googleMapsLink: day[p].googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((day[p].title || day[p].locationName || day[p].activity) + ' ' + tripData.destinationName)}`,
-                      description: day[p].description,
-                      tip: day[p].tip || (day[p].foodSpot ? "Local Food Spot: " + day[p].foodSpot : undefined),
-                      estimatedCost: day[p].estimatedCost
-                    }));
-
-              const accentColors = [
-                {from:'#c2410c',to:'#ea580c',glow:'rgba(234,88,12,0.35)'},
-                {from:'#b45309',to:'#d97706',glow:'rgba(217,119,6,0.3)'},
-                {from:'#5b21b6',to:'#7c3aed',glow:'rgba(124,58,237,0.3)'},
-                {from:'#0e7490',to:'#0891b2',glow:'rgba(8,145,178,0.3)'},
-                {from:'#15803d',to:'#16a34a',glow:'rgba(22,163,74,0.3)'},
-                {from:'#b91c1c',to:'#dc2626',glow:'rgba(220,38,38,0.3)'},
-                {from:'#be185d',to:'#db2777',glow:'rgba(219,39,119,0.3)'},
-              ];
-              const ac = accentColors[idx % accentColors.length];
-              const timeIcons = { morning: '🌅', afternoon: '☀️', evening: '🌙', night: '✨' };
-
+              const currentActive = Math.min(Math.max(0, activeDayIdx), (days?.length || 1) - 1);
+              const isActive = idx === currentActive;
               return (
-                <div
+                <button
                   key={day.dayNumber ?? day.day ?? idx}
-                  className="relative md:pl-10"
-                  style={{animation:`yatra-card-rise 0.5s ease-out both`,animationDelay:`${idx * 80}ms`}}
+                  type="button"
+                  onClick={() => setActiveDayIdx(idx)}
+                  className={`shrink-0 px-4 py-2 rounded-full text-xs font-black transition-all duration-200 flex items-center gap-2 cursor-pointer ${
+                    isActive
+                      ? "bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-md shadow-orange-500/25 scale-[1.02] border border-orange-500"
+                      : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/90 shadow-2xs"
+                  }`}
+                  aria-selected={isActive}
                 >
-                  {/* Timeline milestone node */}
-                  <div className="hidden md:flex absolute left-0 top-5 w-10 h-10 rounded-full items-center justify-center shrink-0 z-10" style={{background:`linear-gradient(135deg,${ac.from},${ac.to})`,boxShadow:`0 0 16px ${ac.glow}, 0 2px 8px rgba(0,0,0,0.2)`,border:'2.5px solid rgba(255,255,255,0.15)'}}>
-                    <span className="text-white font-black text-xs">{String(day.dayNumber || day.day || idx + 1).padStart(2,'0')}</span>
-                  </div>
-
-                  {/* Day card */}
-                  <div className="rounded-2xl overflow-hidden" style={{border:`1.5px solid ${ac.glow.replace('0.35','0.18').replace('0.3','0.15')}`,boxShadow:`0 4px 28px ${ac.glow.replace('0.35','0.07').replace('0.3','0.06')}, 0 1px 4px rgba(0,0,0,0.05)`}}>
-                    {/* Header */}
-                    <div className="px-5 py-4 flex items-center justify-between" style={{background:`linear-gradient(135deg,${ac.from} 0%,${ac.to} 100%)`,boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white font-black text-base" style={{textShadow:'0 1px 4px rgba(0,0,0,0.25)'}}>Day {day.dayNumber || day.day || idx + 1}</span>
-                          {day.date && <span className="text-white/60 text-xs font-medium">{day.date}</span>}
-                        </div>
-                        <p className="text-white/85 text-sm font-semibold mt-0.5">{day.dayTheme || day.theme}</p>
-                      </div>
-                      <span className="text-2xl" style={{filter:'drop-shadow(0 0 6px rgba(255,255,255,0.3))'}}>
-                        {activitiesList[0] ? (timeIcons[(activitiesList[0].timeOfDay||'').toLowerCase()] || '🗓️') : '🗓️'}
-                      </span>
-                    </div>
-
-                    {/* Body — bento activity slots */}
-                    <div className="p-5 space-y-3 bg-white">
-                      {activitiesList.map((act, aIdx) => {
-                        const timeLower = (act.timeOfDay || "").toLowerCase();
-                        const icon = timeLower.includes("morning") ? "🌅" : timeLower.includes("afternoon") ? "☀️" : timeLower.includes("night") ? "✨" : "🌙";
-                        const mapUrl = act.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((act.locationName || act.activity) + ' ' + tripData.destinationName)}`;
-                        const tagBg = timeLower.includes('morning') ? 'rgba(251,146,60,0.10)' : timeLower.includes('afternoon') ? 'rgba(234,179,8,0.10)' : timeLower.includes('night') ? 'rgba(139,92,246,0.10)' : 'rgba(99,102,241,0.10)';
-                        const tagColor = timeLower.includes('morning') ? '#c2410c' : timeLower.includes('afternoon') ? '#92400e' : timeLower.includes('night') ? '#6d28d9' : '#4338ca';
-
-                        return (
-                          <div key={`${act.timeOfDay || 'act'}-${act.locationName || act.activity || aIdx}`} className="flex gap-3 rounded-xl p-3.5 group transition-all duration-200" style={{background:'#f8fafc',border:'1px solid rgba(226,232,240,0.7)'}}>
-                            <div className="text-xl shrink-0 mt-0.5">{icon}</div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex flex-wrap items-center gap-2 mb-1">
-                                {/* Time-of-day micro-tag */}
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider" style={{background:tagBg,color:tagColor}}>
-                                  {act.time ? `${act.timeOfDay} · ${act.time}` : (act.timeOfDay || 'Activity')}
-                                </span>
-                                {act.estimatedCost && <span className="px-2 py-0.5 rounded-full text-[10px] font-black text-emerald-700" style={{background:'rgba(16,185,129,0.10)',color:'#047857'}}>₹ {act.estimatedCost}</span>}
-                              </div>
-                              <div className="flex flex-wrap items-start justify-between gap-2">
-                                <h4 className="font-black text-slate-900 text-sm leading-snug flex-1">{act.locationName || act.activity}</h4>
-                                <a
-                                  href={mapUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition-all duration-200 hover:scale-105"
-                                  style={{background:'rgba(16,185,129,0.10)',color:'#047857',border:'1px solid rgba(16,185,129,0.2)'}}
-                                >
-                                  📍 Maps ↗
-                                </a>
-                              </div>
-                              {act.description && <p className="text-slate-500 text-xs leading-relaxed mt-1">{act.description}</p>}
-                              {act.tip && (
-                                <p className="text-[11px] font-semibold mt-2 px-2.5 py-1.5 rounded-lg" style={{background:'rgba(251,146,60,0.08)',color:'#c2410c',borderLeft:'2px solid rgba(234,88,12,0.4)'}}>
-                                  {act.tip.startsWith("Local Food Spot:") ? "🍽️ " : "💡 "}{act.tip}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-
-                      {/* Stay recommendation */}
-                      {day.stayRecommendation && (
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 rounded-xl p-3.5" style={{background:'rgba(59,130,246,0.05)',border:'1px solid rgba(59,130,246,0.15)'}}>
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-base" style={{background:'rgba(59,130,246,0.12)'}}>🏨</div>
-                            <div>
-                              <span className="text-[10px] font-black uppercase tracking-wider" style={{color:'#1d4ed8'}}>
-                                {day.stayRecommendation.type || 'Recommended Area to Stay'}
-                              </span>
-                              <p className="font-black text-slate-900 text-sm">{day.stayRecommendation.name}</p>
-                              {day.stayRecommendation.approxRate && <p className="text-xs text-slate-500">{day.stayRecommendation.approxRate}</p>}
-                              {day.stayRecommendation.whyPick && <p className="text-xs mt-0.5" style={{color:'#1d4ed8'}}>{day.stayRecommendation.whyPick}</p>}
-                            </div>
-                          </div>
-                          <a
-                            href={day.stayRecommendation.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(day.stayRecommendation.name + ' ' + tripData.destinationName)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 self-end md:self-auto hover:scale-105 active:scale-95"
-                            style={{background:'linear-gradient(135deg,#1d4ed8,#2563eb)',color:'#fff',boxShadow:'0 2px 10px rgba(37,99,235,0.3)'}}
-                          >
-                            📍 Location ↗
-                          </a>
-                        </div>
-                      )}
-
-                      {/* Dining spots */}
-                      {day.diningSpots && day.diningSpots.length > 0 && (
-                        <div className="rounded-xl p-3.5" style={{background:'rgba(245,158,11,0.05)',border:'1px solid rgba(245,158,11,0.15)'}}>
-                          <div className="flex items-center gap-2 mb-2.5">
-                            <Utensils size={13} style={{color:'#b45309'}} />
-                            <span className="text-[10px] font-black uppercase tracking-wider" style={{color:'#b45309'}}>Dining & Local Cuisine</span>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {day.diningSpots.map((d, i) => (
-                              <div key={d.name || i} className="flex justify-between items-center p-2.5 rounded-lg" style={{background:'rgba(255,255,255,0.8)',border:'1px solid rgba(245,158,11,0.2)'}}>
-                                <div className="min-w-0 pr-2">
-                                  <p className="text-xs font-black text-slate-800 truncate">{d.name}</p>
-                                  <p className="text-[10px] text-slate-500 truncate">{d.specialty} · {d.priceRange}</p>
-                                </div>
-                                <a
-                                  href={d.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.name + ' ' + tripData.destinationName)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold transition-all duration-200 shrink-0 ml-1 hover:scale-105"
-                                  style={{background:'linear-gradient(135deg,#b45309,#d97706)',color:'#fff',boxShadow:'0 1px 6px rgba(180,83,9,0.3)'}}
-                                >
-                                  📍 ↗
-                                </a>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                  <span>Day {day.dayNumber || day.day || idx + 1}</span>
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
+                </button>
               );
             })}
           </div>
         </div>
+
+        {/* Single Active Day Card View */}
+        {days && days.length > 0 && (() => {
+          const currentDayIdx = Math.min(Math.max(0, activeDayIdx), days.length - 1);
+          const day = days[currentDayIdx];
+          if (!day) return null;
+
+          const accentColors = [
+            { from: '#c2410c', to: '#ea580c', glow: 'rgba(234,88,12,0.35)' },
+            { from: '#b45309', to: '#d97706', glow: 'rgba(217,119,6,0.3)' },
+            { from: '#5b21b6', to: '#7c3aed', glow: 'rgba(124,58,237,0.3)' },
+            { from: '#0e7490', to: '#0891b2', glow: 'rgba(8,145,178,0.3)' },
+            { from: '#15803d', to: '#16a34a', glow: 'rgba(22,163,74,0.3)' },
+            { from: '#b91c1c', to: '#dc2626', glow: 'rgba(220,38,38,0.3)' },
+            { from: '#be185d', to: '#db2777', glow: 'rgba(219,39,119,0.3)' },
+          ];
+          const ac = accentColors[currentDayIdx % accentColors.length];
+
+          // 3 Sleek Slots: Morning, Afternoon, Evening
+          const morningItem = day.morning || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('morning')) || (day.activities || [])[0];
+          const afternoonItem = day.afternoon || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('afternoon')) || (day.activities || [])[1];
+          const eveningItem = day.evening || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('evening')) || (day.activities || [])[2];
+
+          const glanceRows = [
+            {
+              key: "morning",
+              label: "Morning",
+              icon: "🌅",
+              badgeBg: "rgba(251,146,60,0.12)",
+              badgeColor: "#c2410c",
+              time: morningItem?.time || "09:00 AM",
+              title: morningItem?.title || morningItem?.locationName || morningItem?.activity || "Morning Sightseeing",
+              desc: morningItem?.description || morningItem?.desc || "Explore iconic sights and heritage courtyards with crisp morning light.",
+              mapsLink: morningItem?.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((morningItem?.title || morningItem?.locationName || 'Morning') + ' ' + (tripData?.destinationName || ''))}`
+            },
+            {
+              key: "afternoon",
+              label: "Afternoon",
+              icon: "☀️",
+              badgeBg: "rgba(234,179,8,0.12)",
+              badgeColor: "#92400e",
+              time: afternoonItem?.time || "01:00 PM",
+              title: afternoonItem?.title || afternoonItem?.locationName || afternoonItem?.activity || "Afternoon Landmark & Cultural Spot",
+              desc: afternoonItem?.description || afternoonItem?.desc || "Tour prominent landmarks, royal museums, and authentic dining places.",
+              mapsLink: afternoonItem?.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((afternoonItem?.title || afternoonItem?.locationName || 'Afternoon') + ' ' + (tripData?.destinationName || ''))}`
+            },
+            {
+              key: "evening",
+              label: "Evening",
+              icon: "🌙",
+              badgeBg: "rgba(99,102,241,0.12)",
+              badgeColor: "#4338ca",
+              time: eveningItem?.time || "05:00 PM",
+              title: eveningItem?.title || eveningItem?.locationName || eveningItem?.activity || "Evening Promenade & Bazaars",
+              desc: eveningItem?.description || eveningItem?.desc || "Stroll through vibrant evening bazaars, scenic sunset viewpoints, and night lights.",
+              mapsLink: eveningItem?.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((eveningItem?.title || eveningItem?.locationName || 'Evening') + ' ' + (tripData?.destinationName || ''))}`
+            }
+          ];
+
+          return (
+            <div
+              key={currentDayIdx}
+              className="animate-yatra-tab-fade rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm bg-white"
+            >
+              {/* Active Day Header */}
+              <div
+                className="px-5 py-4 flex items-center justify-between text-white"
+                style={{
+                  background: `linear-gradient(135deg, ${ac.from} 0%, ${ac.to} 100%)`,
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.16)'
+                }}
+              >
+                <div className="min-w-0 pr-3">
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-base md:text-lg">
+                      Day {day.dayNumber || day.day || currentDayIdx + 1}
+                    </span>
+                    {day.date && (
+                      <span className="text-white/75 text-xs font-medium">· {day.date}</span>
+                    )}
+                  </div>
+                  <p className="text-white/90 text-xs md:text-sm font-semibold truncate mt-0.5">
+                    {day.dayTheme || day.theme}
+                  </p>
+                </div>
+
+                {/* Day navigation arrow buttons */}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveDayIdx(Math.max(0, currentDayIdx - 1))}
+                    disabled={currentDayIdx === 0}
+                    className="w-8 h-8 rounded-lg bg-black/20 hover:bg-black/35 disabled:opacity-30 disabled:pointer-events-none text-white flex items-center justify-center text-sm font-bold transition active:scale-95 cursor-pointer"
+                    title="Previous day"
+                    aria-label="Previous day"
+                  >
+                    ‹
+                  </button>
+                  <span className="text-xs font-black text-white px-1">
+                    {currentDayIdx + 1}/{days.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveDayIdx(Math.min(days.length - 1, currentDayIdx + 1))}
+                    disabled={currentDayIdx === days.length - 1}
+                    className="w-8 h-8 rounded-lg bg-black/20 hover:bg-black/35 disabled:opacity-30 disabled:pointer-events-none text-white flex items-center justify-center text-sm font-bold transition active:scale-95 cursor-pointer"
+                    title="Next day"
+                    aria-label="Next day"
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+
+              {/* Compact 3-Row Day Glance */}
+              <div className="p-4 md:p-5 space-y-2.5">
+                {glanceRows.map((row) => (
+                  <div
+                    key={row.key}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 transition-all duration-200"
+                  >
+                    {/* Period Icon badge */}
+                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center text-xl shrink-0">
+                      {row.icon}
+                    </div>
+
+                    {/* Title + 1-line description + time badge */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span
+                          className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0"
+                          style={{ background: row.badgeBg, color: row.badgeColor }}
+                        >
+                          {row.time}
+                        </span>
+                        <h4 className="font-black text-slate-900 text-xs md:text-sm truncate">
+                          {row.title}
+                        </h4>
+                      </div>
+                      <p className="text-[11px] md:text-xs text-slate-500 font-medium truncate">
+                        {row.desc}
+                      </p>
+                    </div>
+
+                    {/* Maps link */}
+                    <a
+                      href={row.mapsLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/70 shadow-2xs"
+                      title={`View ${row.title} on Google Maps`}
+                    >
+                      <span>📍 Maps</span>
+                      <span className="text-[9px]">↗</span>
+                    </a>
+                  </div>
+                ))}
+
+                {/* Slide-Up Host Tips Drawer Trigger Button */}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowHostTipsDrawer(true)}
+                    className="w-full py-3.5 px-4 rounded-xl font-black text-xs md:text-sm text-amber-950 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 hover:from-amber-100 hover:to-orange-100 border border-amber-200/90 shadow-2xs flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.99] cursor-pointer group"
+                  >
+                    <span className="text-base group-hover:scale-110 transition-transform duration-200">💡</span>
+                    <span>View Local Host Tips & Hacks</span>
+                    <span className="text-amber-600 group-hover:translate-x-1 transition-transform duration-200">➔</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Slide-Up Host Tips Drawer / Mobile Bottom Sheet ── */}
+        {showHostTipsDrawer && days && days.length > 0 && (() => {
+          const currentDayIdx = Math.min(Math.max(0, activeDayIdx), days.length - 1);
+          const day = days[currentDayIdx];
+          if (!day) return null;
+
+          return (
+            <div className="fixed inset-0 z-[2500] flex items-end md:items-center justify-center p-0 md:p-6">
+              {/* Backdrop dismiss */}
+              <div
+                className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in"
+                onClick={() => setShowHostTipsDrawer(false)}
+                aria-hidden="true"
+              />
+
+              {/* Drawer Sheet Container */}
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="host-tips-drawer-title"
+                className="relative z-10 w-full max-w-xl bg-white rounded-t-[28px] md:rounded-[28px] shadow-2xl border-t md:border border-slate-200/90 max-h-[85vh] flex flex-col overflow-hidden animate-yatra-drawer-up"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Mobile drag handle */}
+                <div className="w-12 h-1.5 rounded-full bg-slate-300 mx-auto mt-3 mb-1 md:hidden shrink-0" />
+
+                {/* Header */}
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4 shrink-0 bg-gradient-to-r from-amber-50/70 via-white to-orange-50/50">
+                  <div className="min-w-0">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-100/70 mb-1 border border-amber-200/70">
+                      <span>💡 Local Host Playbook</span>
+                    </div>
+                    <h3 id="host-tips-drawer-title" className="font-serif font-black text-slate-900 text-base md:text-lg truncate">
+                      Day {day.dayNumber || day.day || currentDayIdx + 1}: {day.dayTheme || day.theme}
+                    </h3>
+                  </div>
+
+                  {/* Close button (✕) */}
+                  <button
+                    type="button"
+                    onClick={() => setShowHostTipsDrawer(false)}
+                    className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+                    aria-label="Close tips drawer"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Scrollable Tips Content */}
+                <div className="p-6 overflow-y-auto space-y-4 text-slate-800">
+                  {/* 1. 💡 Local Hack */}
+                  <div className="rounded-2xl p-4.5 bg-amber-50/90 border border-amber-200/90 shadow-2xs">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-lg">💡</span>
+                      <h4 className="font-black text-xs md:text-sm uppercase tracking-wider text-amber-900">
+                        Local Hack
+                      </h4>
+                    </div>
+                    <p className="text-xs md:text-sm font-medium text-amber-950 leading-relaxed pl-7">
+                      {day.insiderTip || day.tip || day.morning?.tip || day.afternoon?.tip || day.evening?.tip || "Book entry tickets online in advance to bypass peak ticketing queues. Connect with registered local guides at monument gates for authentic oral histories and hidden vantage angles."}
+                    </p>
+                  </div>
+
+                  {/* 2. ⏰ Ideal Timing & Crowds */}
+                  <div className="rounded-2xl p-4.5 bg-indigo-50/80 border border-indigo-100/90 shadow-2xs">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-lg">⏰</span>
+                      <h4 className="font-black text-xs md:text-sm uppercase tracking-wider text-indigo-900">
+                        Ideal Timing & Crowds
+                      </h4>
+                    </div>
+                    <p className="text-xs md:text-sm font-medium text-indigo-950 leading-relaxed pl-7">
+                      {day.bestTimeWindow || day.timing || "08:30 AM – 11:30 AM (Minimal crowds & pleasant light) & 04:30 PM – 07:00 PM (Breezy sunset & twilight ambience). Midday (12:00 PM – 03:00 PM) is best spent exploring indoor galleries or relaxing at authentic cafes."}
+                    </p>
+                  </div>
+
+                  {/* 3. 👟 Comfort & Practical Note */}
+                  <div className="rounded-2xl p-4.5 bg-emerald-50/80 border border-emerald-100/90 shadow-2xs">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-lg">👟</span>
+                      <h4 className="font-black text-xs md:text-sm uppercase tracking-wider text-emerald-900">
+                        Comfort & Practical Note
+                      </h4>
+                    </div>
+                    <p className="text-xs md:text-sm font-medium text-emerald-950 leading-relaxed pl-7">
+                      {day.practicalNote || day.note || "Wear comfortable, cushioned walking footwear suitable for cobbled ramps and stone steps. Keep a refillable hydration bottle, sun protection, and modest clothing for spiritual sites."}
+                    </p>
+                  </div>
+
+                  {/* Where to Stay (Host Recommendation) */}
+                  {day.stayRecommendation && (
+                    <div className="rounded-2xl p-4 bg-blue-50/70 border border-blue-100 shadow-2xs">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🏨</span>
+                          <div>
+                            <span className="text-[10px] font-black uppercase tracking-wider text-blue-700">Recommended Area / Stay</span>
+                            <p className="font-black text-slate-900 text-sm">{day.stayRecommendation.name}</p>
+                          </div>
+                        </div>
+                        {day.stayRecommendation.googleMapsLink && (
+                          <a
+                            href={day.stayRecommendation.googleMapsLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition"
+                          >
+                            📍 Map ↗
+                          </a>
+                        )}
+                      </div>
+                      {day.stayRecommendation.whyPick && (
+                        <p className="text-xs text-blue-800 font-medium pl-7">{day.stayRecommendation.whyPick}</p>
+                      )}
+                      {day.stayRecommendation.approxRate && (
+                        <p className="text-[11px] text-slate-500 font-bold pl-7 mt-1">Est. Rate: {day.stayRecommendation.approxRate}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Local Dining Spots */}
+                  {day.diningSpots && day.diningSpots.length > 0 && (
+                    <div className="rounded-2xl p-4 bg-orange-50/70 border border-orange-100 shadow-2xs">
+                      <div className="flex items-center gap-2 mb-2.5">
+                        <span className="text-lg">🍽️</span>
+                        <span className="text-xs font-black uppercase tracking-wider text-orange-800">Local Cuisine & Dining</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-7">
+                        {day.diningSpots.map((spot, sIdx) => (
+                          <div key={sIdx} className="p-2.5 rounded-xl bg-white border border-orange-200/70 flex items-center justify-between">
+                            <div className="min-w-0 pr-2">
+                              <p className="text-xs font-black text-slate-900 truncate">{spot.name}</p>
+                              <p className="text-[10px] text-slate-500 truncate">{spot.specialty} · {spot.priceRange}</p>
+                            </div>
+                            {spot.googleMapsLink && (
+                              <a
+                                href={spot.googleMapsLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs font-bold text-orange-600 hover:text-orange-700 shrink-0 p-1"
+                              >
+                                📍 ↗
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer close button */}
+                <div className="p-4 border-t border-slate-100 bg-slate-50/80 flex items-center justify-end shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setShowHostTipsDrawer(false)}
+                    className="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-black text-xs hover:bg-slate-800 transition active:scale-95 cursor-pointer shadow-xs"
+                  >
+                    Close (✕)
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* ── Glass Cockpit Budget Summary ── */}
@@ -1521,6 +1765,20 @@ export default function PlanMyYatra() {
         @keyframes yatra-btn-sweep {
           0% { background-position: -150% 0; }
           50%, 100% { background-position: 250% 0; }
+        }
+        @keyframes yatra-tab-fade {
+          0% { opacity: 0; transform: translateY(8px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes yatra-drawer-up {
+          0% { transform: translateY(100%); opacity: 0.6; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-yatra-tab-fade {
+          animation: yatra-tab-fade 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .animate-yatra-drawer-up {
+          animation: yatra-drawer-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
         .yatra-glow-btn:hover { box-shadow: 0 0 44px 8px rgba(251,146,60,0.58), 0 6px 28px rgba(234,88,12,0.52) !important; transform: scale(1.02); }
         .yatra-glow-btn { transition: all 0.28s ease !important; }

@@ -1592,7 +1592,10 @@ export function normalizeItinerary(rawItinerary, tripData) {
       night: nightAct ? { time: nightAct.time || "08:30 PM", title: nightAct.locationName, activity: nightAct.locationName, locationName: nightAct.locationName, googleMapsLink: nightAct.googleMapsLink, description: nightAct.description, tip: nightAct.tip, estimatedCost: nightAct.estimatedCost || "₹250 - ₹500" } : undefined,
       stayRecommendation: stay,
       diningSpots: dining,
-      recommendedAreaToStay: d.recommendedAreaToStay || stay?.name || `${destName} Central Heritage Hub`
+      recommendedAreaToStay: d.recommendedAreaToStay || stay?.name || `${destName} Central Heritage Hub`,
+      insiderTip: d.insiderTip || d.tip || morningAct?.tip || afternoonAct?.tip || eveningAct?.tip || "Book top monument tickets online via official portals to bypass long on-site lines. Engage an authorized heritage guide at the gate for authentic oral histories.",
+      bestTimeWindow: d.bestTimeWindow || d.timing || `${morningAct?.time || "08:30 AM"} – 11:30 AM & 04:30 PM – 07:00 PM (Light crowds & pleasant temperatures)`,
+      practicalNote: d.practicalNote || d.note || "Wear comfortable, cushioned walking footwear suitable for cobbled ramps and steps. Keep modest attire for sacred shrines, and carry light hydration."
     };
   });
 
@@ -1641,6 +1644,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Royal Forts & Iconic Heritage",
       area: "Old City & Palace Quarter",
+      insiderTip: "Book fort and palace entry tickets online via the official portal to skip the 45-minute ticket line at the gate. Hire an authorized guide for verified royal folklore.",
+      bestTimeWindow: "08:30 AM – 11:30 AM (Soft lighting & minimal crowds) & 04:30 PM – 06:30 PM (Golden hour photography)",
+      practicalNote: "Wear comfortable walking shoes with good tread for cobbled stone ramps. Keep a sun hat and refillable water bottle handy.",
       morning: { title: `${destName} Grand Fort & Citadel`, desc: `Explore the magnificent historic fort, royal courtyards, and ancient defensive bastions overlooking ${destName}.`, tip: "Arrive early morning around 9:00 AM for soft sunlight and minimal crowds." },
       afternoon: { title: `${destName} Royal Palace & Museum`, desc: `Tour the royal halls, courtyards, and personal armory exhibits preserved from regal dynasties.`, foodSpot: `Heritage Thali Bhavan ${destName}` },
       evening: { title: `${destName} Historic Clock Tower & Bazaars`, desc: `Stroll through the bustling heritage market lanes bustling with spice traders and local artisans.`, tip: "Try local street snack delicacies from renowned sweet shops." },
@@ -1649,6 +1655,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Spiritual Sacred Temples & Ghats",
       area: "Temple Promenade & Riverfront",
+      insiderTip: "Arrive 30 minutes before evening aarti to secure front riverside steps. For temple inner sanctums, keep slip-on footwear for easy deposit outside.",
+      bestTimeWindow: "06:00 AM – 08:30 AM (Morning serenity & aarti) & 05:30 PM – 07:30 PM (Evening twilight ceremonies)",
+      practicalNote: "Dress modestly covering shoulders and knees. Keep ₹10–₹20 cash notes for footwear counters and flower offerings.",
       morning: { title: `${destName} Sacred Ancient Temple`, desc: `Attend peaceful morning aarti and absorb the sanctified architectural carvings of this revered shrine.`, tip: "Dress modestly covering shoulders and knees; footwear deposit is available outside." },
       afternoon: { title: `${destName} Heritage Stepwell & Sacred Reservoir`, desc: `Discover centuries-old water conservation architecture with intricate geometric stone stairs.`, foodSpot: `Anandam Pure Veg Restaurant` },
       evening: { title: `${destName} Sunset Riverfront / Lakeside Promenade`, desc: `Watch the crimson sunset horizon from peaceful river banks while listening to temple bells.`, tip: "Hire a traditional boat ride for scenic waterside vantage points." },
@@ -1657,6 +1666,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Scenic Nature & Mountain Viewpoints",
       area: "Highland Ridge & Botanical Enclave",
+      insiderTip: "Morning viewpoints offer the clearest mountain visibility before valley clouds roll in. Grab hot local spiced chai at the summit ridge.",
+      bestTimeWindow: "06:30 AM – 10:00 AM (Crisp panoramic vistas) & 04:00 PM – 06:30 PM (Golden sunset glow over peaks)",
+      practicalNote: "Highland mornings can be breezy; pack a light fleece or windbreaker. Keep motion sickness medicine if sensitive to hairpin roads.",
       morning: { title: `${destName} Hilltop Sunrise Ridge & Nature Trails`, desc: `Hike or take a scenic drive to the peak for panoramic vistas of the awakening valley landscape.`, tip: "Carry a light windcheater jacket as mornings can be breezy." },
       afternoon: { title: `${destName} Botanical Reserve & Cedar Gardens`, desc: `Unwind amidst lush native flora, ancient shaded trees, and peaceful landscaped walking avenues.`, foodSpot: `Pine Wood Valley Bistro` },
       evening: { title: `${destName} Panoramic Sunset Point`, desc: `Capture breathtaking golden hour photographs overlooking undulating hills and valley slopes.`, tip: "Grab freshly brewed local tea and pakoras from nearby viewpoint shacks." },
@@ -1665,6 +1677,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Local Artisan Crafts & Textile Trails",
       area: "Crafts Village & Artisan Hub",
+      insiderTip: "Purchase directly from certified weavers' cooperatives or government craft emporiums to ensure authentic handloom hallmarks without agent commissions.",
+      bestTimeWindow: "10:00 AM – 01:00 PM (Artisans actively crafting) & 05:00 PM – 08:30 PM (Vibrant bazaar atmosphere)",
+      practicalNote: "Maintain ₹500–₹1000 in cash notes as smaller village artisan stalls can experience intermittent digital payment connectivity.",
       morning: { title: `${destName} Artisan Craft Village & Pottery Guild`, desc: `Watch master artisans perform handloom weaving, block printing, and pottery live.`, tip: "Support local weavers by purchasing directly without middleman markups." },
       afternoon: { title: `${destName} Regional Textile & Craft Gallery`, desc: `Marvel at curated exhibits of indigenous embroidery, folk garments, and historical dyes.`, foodSpot: `Shilpgram Traditional Rasoi` },
       evening: { title: `${destName} Handicrafts Night Bazaar`, desc: `Explore stalls featuring brass handicrafts, wooden sculptures, handmade leather mojris, and organic spices.`, tip: "Keep cash handy as small craft stalls may have intermittent card networks." },
@@ -1673,6 +1688,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Hidden Havelis & Architecture Wonders",
       area: "Heritage Haveli Quarter",
+      insiderTip: "Look upwards into courtyard ceiling arches to spot pristine 200-year-old stone-pigment frescoes. Avoid flash photography to protect historic mineral dyes.",
+      bestTimeWindow: "09:00 AM – 12:00 PM (Best sunlight for courtyard photography) & 04:00 PM – 06:30 PM (Comfortable walking weather)",
+      practicalNote: "Old haveli lanes are narrow; navigating on foot or taking an e-rickshaw to the main square archway is easiest.",
       morning: { title: `${destName} Frescoed Merchant Havelis`, desc: `Admire ancient hand-painted murals, intricately carved jharokhas (balconies), and stone lattice work.`, tip: "Look upwards into ceiling domes to spot natural stone-pigment frescoes." },
       afternoon: { title: `${destName} Central Archaeological Museum`, desc: `Inspect rare coin hoards, centuries-old manuscripts, weapons, and marble statuettes.`, foodSpot: `Royal Darbar Dining Hall` },
       evening: { title: `${destName} Royal Cenotaphs & Memorial Pavilions`, desc: `Walk through ornamental marble pavilions built in honor of erstwhile royal rulers.`, tip: "Incredible symmetry for architectural photographers during sunset." },
@@ -1681,6 +1699,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Lakeside Excursion & Rural Trails",
       area: "Lakeside Valley & Countryside",
+      insiderTip: "Book boat rides directly from the authorized municipal jetty counter. Opt for the late afternoon departure to experience the water in twilight glow.",
+      bestTimeWindow: "07:00 AM – 10:30 AM (Calm water & birdwatching) & 04:30 PM – 07:00 PM (Refreshing lakeside breeze & sunset)",
+      practicalNote: "Use UV sunglasses to protect from water glare, and keep phones/cameras inside a water-resistant pouch during boat rides.",
       morning: { title: `${destName} Pristine Lakeside Sanctuary`, desc: `Start with birdwatching and serene morning strolls along crystal-clear waters.`, tip: "Binoculars recommended for spotting migratory birds in winter." },
       afternoon: { title: `${destName} Organic Farmstead & Country Orchard`, desc: `Take a guided tour through organic spice or fruit orchards and taste farm-fresh produce.`, foodSpot: `Kisan Rasoi Farm Kitchen` },
       evening: { title: `${destName} Lake Island Pavilion`, desc: `Hop onto a boat toward the tranquil island pavilion in the lake center.`, tip: "Pre-book boat tickets at the jetty to avoid rush." },
@@ -1689,6 +1710,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Culinary Trail & Street Food Walk",
       area: "Old Bazaar Food Streets",
+      insiderTip: "Queue at sweetshops with the largest crowd of local families — high turnover guarantees hot, fresh batches of jalebis and savory kachoris.",
+      bestTimeWindow: "08:00 AM – 10:30 AM (Fresh breakfast morning batches) & 06:00 PM – 09:30 PM (Vibrant evening food street chaupati)",
+      practicalNote: "Choose vendors cooking food freshly in front of you. Always drink packaged or purified drinking water.",
       morning: { title: `${destName} Heritage Breakfast Trail`, desc: `Taste legendary breakfast specialties such as kachoris, hot jalebis, poha, and spiced chai.`, tip: "Begin by 8:30 AM before popular sweetshops run out of fresh morning batches." },
       afternoon: { title: `${destName} Spice & Dry Fruit Market Walk`, desc: `Immerse your senses in aromatic saffron, whole cardamoms, and regional spice blends.`, foodSpot: `Surya Sweet & Spice House` },
       evening: { title: `${destName} Famous Street Food Chaupati`, desc: `Sample an endless parade of chaats, samosas, spicy kathi rolls, and traditional regional snacks.`, tip: "Look for stalls with high local turnover for freshness and hygiene." },
@@ -1697,6 +1721,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Ancient Caves, Rock Art & Monoliths",
       area: "Valley Monolithic Zone",
+      insiderTip: "Carry a small LED flashlight to view intricate ceiling engravings and relief sculptures in darker cave recesses. Do not touch rock surfaces.",
+      bestTimeWindow: "08:30 AM – 11:30 AM (Pleasant interior rock temperatures) & 04:00 PM – 06:00 PM (Gentle late afternoon light)",
+      practicalNote: "Wear sturdy shoes with rubber grip for stone steps. Carry adequate drinking water as cliffside vendor stalls are limited.",
       morning: { title: `${destName} Ancient Rock-Cut Caves`, desc: `Explore monastic rock chambers and rock sculptures dating back over a thousand years.`, tip: "Wear shoes with good grip on stone stairs and carry a small flashlight." },
       afternoon: { title: `${destName} Valley Eco Park & Nature Springs`, desc: `Cool off next to bubbling freshwater springs and shaded cliffside pavilions.`, foodSpot: `Prakriti Nature Cafe` },
       evening: { title: `${destName} Valley Sunset Lookout Point`, desc: `Enjoy unobstructed horizon views where the valley floor stretches beneath endless skies.`, tip: "Stay until dusk to witness the village lamps twinkle in the distance." },
@@ -1705,6 +1732,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Wildlife Sanctuary & Forest Escapade",
       area: "Forest Reserve Buffer Zone",
+      insiderTip: "Book jungle safaris 2–4 weeks ahead on the official forest portal. Early morning safaris generally yield higher bird and mammal activity.",
+      bestTimeWindow: "05:45 AM – 09:30 AM (Peak morning animal activity) & 03:00 PM – 06:00 PM (Late afternoon waterhole sightings)",
+      practicalNote: "Wear muted earth tones (olive, khaki, brown) and strictly avoid strong perfumes or phone ringtones on safari tracks.",
       morning: { title: `${destName} Wildlife Safari & Nature Reserve`, desc: `Early morning open-jeep drive through protected deciduous forests spotting deer, peacocks, and wildlife.`, tip: "Wear neutral olive or khaki clothing and avoid loud perfumes." },
       afternoon: { title: `${destName} Interpretation Center & Butterfly Park`, desc: `Learn about local ecosystem conservation, medicinal plants, and native fauna.`, foodSpot: `Jungle Lodge Dining Shack` },
       evening: { title: `${destName} Forest Canopy Walkway`, desc: `Walk elevated suspension bridges among the tree crowns for an aerial view of the canopy.`, tip: "Stunning spot for bird photography during the late afternoon return." },
@@ -1713,6 +1743,9 @@ export function generateGenericFallback(tripData) {
     {
       theme: "Souvenirs, Art Galleries & Farewell Yatra",
       area: "Emporium Quarter & Central Square",
+      insiderTip: "Request protective bubble-wrap packaging for terracotta or marble handicrafts right at the counter to safeguard them for your journey home.",
+      bestTimeWindow: "10:30 AM – 02:00 PM (Unhurried boutique browsing) & 06:30 PM – 09:30 PM (Celebratory farewell feast)",
+      practicalNote: "Check domestic transport weight limits if buying heavy stone or brass keepsakes. Keep original purchase invoices accessible.",
       morning: { title: `${destName} Government Handloom & Handicrafts Emporium`, desc: `Pick up certified authentic souvenirs, silk fabrics, miniature paintings, and stone art.`, tip: "Fixed government pricing ensures genuine quality and fair craft wages." },
       afternoon: { title: `${destName} Contemporary Art & Sculpture Gallery`, desc: `Experience the fusion of historic Indian craft traditions with modern artistic expressions.`, foodSpot: `Kala Cafe & Bakery` },
       evening: { title: `${destName} Central Town Square & Farewell Walk`, desc: `One last leisurely stroll through your favorite city corners soaking in the ambiance.`, tip: "Pack fragile souvenirs with bubble wrap available at gift emporiums." },
@@ -1775,7 +1808,10 @@ export function generateGenericFallback(tripData) {
           tip: nightItem.tip,
           googleMapsLink: makeGoogleMapsUrl(nightItem.title, destName)
         },
-        recommendedAreaToStay: hotel?.name || `${destName} Central Heritage Quarter`
+        recommendedAreaToStay: hotel?.name || `${destName} Central Heritage Quarter`,
+        insiderTip: morningItem.tip || afternoonItem.tip || "Book palace & fort ticket slots online in advance to bypass long ticket lines. Hire an authorized guide at the gate for authentic oral histories.",
+        bestTimeWindow: "08:30 AM – 11:30 AM (Minimal crowds & calm light) & 04:30 PM – 07:00 PM (Golden hour & cool breeze)",
+        practicalNote: "Wear comfortable, cushioned walking shoes for stone walkways. Carry a light water bottle and keep modest attire for shrines."
       });
     } else {
       // Pick template and ensure complete uniqueness
@@ -1829,7 +1865,10 @@ export function generateGenericFallback(tripData) {
           tip: tmpl.night.tip,
           googleMapsLink: makeGoogleMapsUrl(nTitle, destName)
         },
-        recommendedAreaToStay: tmpl.area || `${destName} City Center`
+        recommendedAreaToStay: tmpl.area || `${destName} City Center`,
+        insiderTip: tmpl.insiderTip,
+        bestTimeWindow: tmpl.bestTimeWindow,
+        practicalNote: tmpl.practicalNote
       });
     }
   }
@@ -1914,7 +1953,10 @@ Request output strictly in JSON format without markdown wrapping matching this e
     {
       "dayNumber": 1,
       "dayTheme": "Old City & Royal Forts",
-      "morning": { "time": "9:00 AM", "title": "Real Place Name", "description": "Engaging 2-sentence description.", "tip": "Practical visit / transport tip." },
+      "insiderTip": "Actionable insider hack to skip ticket lines or find hidden viewpoint gems",
+      "bestTimeWindow": "08:30 AM – 11:30 AM & 04:30 PM – 07:00 PM (Minimal crowds & pleasant light)",
+      "practicalNote": "Footwear note, clothing recommendations, or local transit advice",
+      "morning": { "time": "9:00 AM", "title": "Real Place Name", "description": "Engaging 1-2 sentence description.", "tip": "Practical visit / transport tip." },
       "afternoon": { "time": "1:00 PM", "title": "Distinct Real Landmark", "description": "Engaging description.", "foodSpot": "Famous Real Local Restaurant or Cafe" },
       "evening": { "time": "5:00 PM", "title": "Different Evening Sight or Market", "description": "Engaging description." },
       "night": { "time": "8:30 PM", "title": "Night Cultural / Dinner Spot", "description": "Engaging description." },
