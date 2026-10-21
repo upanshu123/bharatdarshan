@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ALL_PLACES } from "../data/places/index";
 import {
   Sparkles, MapPin, Calendar, Users, Wallet, ChevronLeft,
   AlertCircle, RefreshCw, CheckCircle, Clock, Utensils, Hotel,
   Navigation, Star, Package, Info, Plane, Car, LogOut, Lock, MessageSquarePlus, X,
-  Download, Copy, Check
+  Download, Copy, Check, Play, ChevronRight, ChevronDown, Trophy, Zap, Sun, Moon, Sunset,
+  SquareCheck, Square, Flag, ArrowRight, Target, Coffee
 } from "lucide-react";
 import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebaseConfig";
@@ -608,6 +609,544 @@ function PlannerForm({ onSubmit, loading }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// LIVE TRIP MODE COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+function LiveTripMode({ itinerary, tripData, onExit }) {
+  const { tripTitle, days } = itinerary;
+  const [currentDayIdx, setCurrentDayIdx] = useState(0);
+  const [completed, setCompleted] = useState(() => {
+    // completed[dayIdx][slotKey] = true/false
+    const init = {};
+    (days || []).forEach((_, di) => { init[di] = {}; });
+    return init;
+  });
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [confetti, setConfetti] = useState([]);
+  const [expandedSlot, setExpandedSlot] = useState(null);
+
+  const totalActivities = (days || []).reduce((acc, day, di) => {
+    const slots = getSlotsForDay(day, di, tripData);
+    return acc + slots.length;
+  }, 0);
+
+  const completedCount = Object.values(completed).reduce((acc, dayMap) => {
+    return acc + Object.values(dayMap).filter(Boolean).length;
+  }, 0);
+
+  const progressPct = totalActivities > 0 ? Math.round((completedCount / totalActivities) * 100) : 0;
+
+  function getSlotsForDay(day, dayIdx, tripData) {
+    const dest = tripData?.destinationName || '';
+    const morningItem = day.morning || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('morning')) || (day.activities || [])[0];
+    const afternoonItem = day.afternoon || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('afternoon')) || (day.activities || [])[1];
+    const eveningItem = day.evening || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('evening')) || (day.activities || [])[2];
+    const nightItem = day.night || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('night')) || (day.activities || [])[3];
+
+    return [
+      morningItem && {
+        key: 'morning', label: 'Morning', icon: '🌅', color: '#f97316', bg: 'rgba(251,146,60,0.10)',
+        time: morningItem.time || '09:00 AM',
+        title: morningItem.title || morningItem.locationName || morningItem.activity || 'Morning Exploration',
+        desc: morningItem.description || morningItem.desc || 'Explore the morning sights.',
+        tip: morningItem.insiderTip || morningItem.insider_tip || null,
+        mapsLink: morningItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((morningItem.title || morningItem.locationName || 'Morning') + ' ' + dest)}`
+      },
+      afternoonItem && {
+        key: 'afternoon', label: 'Afternoon', icon: '☀️', color: '#d97706', bg: 'rgba(234,179,8,0.10)',
+        time: afternoonItem.time || '01:00 PM',
+        title: afternoonItem.title || afternoonItem.locationName || afternoonItem.activity || 'Afternoon Landmark',
+        desc: afternoonItem.description || afternoonItem.desc || 'Visit iconic landmarks.',
+        tip: afternoonItem.insiderTip || afternoonItem.insider_tip || null,
+        mapsLink: afternoonItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((afternoonItem.title || afternoonItem.locationName || 'Afternoon') + ' ' + dest)}`
+      },
+      eveningItem && {
+        key: 'evening', label: 'Evening', icon: '🌆', color: '#7c3aed', bg: 'rgba(124,58,237,0.10)',
+        time: eveningItem.time || '06:00 PM',
+        title: eveningItem.title || eveningItem.locationName || eveningItem.activity || 'Evening Stroll',
+        desc: eveningItem.description || eveningItem.desc || 'Stroll through the bazaars.',
+        tip: eveningItem.insiderTip || eveningItem.insider_tip || null,
+        mapsLink: eveningItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((eveningItem.title || eveningItem.locationName || 'Evening') + ' ' + dest)}`
+      },
+      nightItem && {
+        key: 'night', label: 'Night', icon: '🌙', color: '#1d4ed8', bg: 'rgba(29,78,216,0.10)',
+        time: nightItem.time || '09:00 PM',
+        title: nightItem.title || nightItem.locationName || nightItem.activity || 'Night Experience',
+        desc: nightItem.description || nightItem.desc || 'Enjoy the evening atmosphere.',
+        tip: nightItem.insiderTip || nightItem.insider_tip || null,
+        mapsLink: nightItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((nightItem.title || nightItem.locationName || 'Night') + ' ' + dest)}`
+      }
+    ].filter(Boolean);
+  }
+
+  const toggleActivity = useCallback((dayIdx, slotKey) => {
+    setCompleted(prev => {
+      const updated = {
+        ...prev,
+        [dayIdx]: { ...prev[dayIdx], [slotKey]: !prev[dayIdx]?.[slotKey] }
+      };
+      // Check if ALL activities completed
+      const total = (days || []).reduce((acc, day, di) => acc + getSlotsForDay(day, di, tripData).length, 0);
+      const done = Object.values(updated).reduce((acc, dayMap) => acc + Object.values(dayMap).filter(Boolean).length, 0);
+      if (done === total && total > 0) {
+        setTimeout(() => triggerCelebration(), 300);
+      }
+      return updated;
+    });
+  }, [days, tripData]);
+
+  const triggerCelebration = () => {
+    const pieces = Array.from({ length: 60 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      color: ['#f97316','#eab308','#10b981','#3b82f6','#a855f7','#ef4444','#06b6d4'][i % 7],
+      size: Math.random() * 10 + 6,
+      delay: Math.random() * 1.2,
+      duration: Math.random() * 2 + 2,
+      rotate: Math.random() * 360
+    }));
+    setConfetti(pieces);
+    setShowCelebration(true);
+    setTimeout(() => setConfetti([]), 4000);
+  };
+
+  const currentDay = days?.[currentDayIdx];
+  const slots = currentDay ? getSlotsForDay(currentDay, currentDayIdx, tripData) : [];
+  const dayCompletedCount = Object.values(completed[currentDayIdx] || {}).filter(Boolean).length;
+  const dayTotal = slots.length;
+  const dayPct = dayTotal > 0 ? Math.round((dayCompletedCount / dayTotal) * 100) : 0;
+  const isDayComplete = dayCompletedCount === dayTotal && dayTotal > 0;
+
+  // Escape to exit
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onExit(); };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onExit]);
+
+  const accentColors = [
+    { from: '#c2410c', to: '#ea580c' },
+    { from: '#b45309', to: '#d97706' },
+    { from: '#5b21b6', to: '#7c3aed' },
+    { from: '#0e7490', to: '#0891b2' },
+    { from: '#15803d', to: '#16a34a' },
+    { from: '#b91c1c', to: '#dc2626' },
+    { from: '#be185d', to: '#db2777' },
+  ];
+  const ac = accentColors[currentDayIdx % accentColors.length];
+
+  return (
+    <div className="fixed inset-0 z-[4000] flex flex-col bg-slate-950 text-white overflow-hidden">
+      <style>{`
+        @keyframes livetrip-confetti {
+          0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        @keyframes livetrip-pop {
+          0% { transform: scale(0.8); opacity: 0; }
+          60% { transform: scale(1.06); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes livetrip-check {
+          0% { transform: scale(0) rotate(-45deg); }
+          70% { transform: scale(1.2) rotate(5deg); }
+          100% { transform: scale(1) rotate(0deg); }
+        }
+        @keyframes livetrip-progress {
+          from { width: 0%; }
+        }
+        @keyframes livetrip-pulse-ring {
+          0% { transform: scale(1); opacity: 0.7; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+        @keyframes livetrip-slide-up {
+          from { transform: translateY(18px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes livetrip-celebrate {
+          0% { transform: scale(0.6); opacity: 0; }
+          50% { transform: scale(1.08); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .livetrip-slot { animation: livetrip-slide-up 0.28s cubic-bezier(0.16,1,0.3,1) both; }
+        .livetrip-slot:nth-child(1) { animation-delay: 0ms; }
+        .livetrip-slot:nth-child(2) { animation-delay: 60ms; }
+        .livetrip-slot:nth-child(3) { animation-delay: 120ms; }
+        .livetrip-slot:nth-child(4) { animation-delay: 180ms; }
+        .livetrip-check-anim { animation: livetrip-check 0.32s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .livetrip-pop { animation: livetrip-pop 0.3s cubic-bezier(0.16,1,0.3,1) both; }
+        .livetrip-celebrate { animation: livetrip-celebrate 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+      `}</style>
+
+      {/* Confetti particles */}
+      {confetti.map(p => (
+        <div
+          key={p.id}
+          style={{
+            position: 'fixed',
+            left: `${p.x}%`,
+            top: '-30px',
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            borderRadius: p.id % 3 === 0 ? '50%' : '2px',
+            background: p.color,
+            animation: `livetrip-confetti ${p.duration}s ease-in ${p.delay}s both`,
+            zIndex: 9999,
+            transform: `rotate(${p.rotate}deg)`,
+            pointerEvents: 'none'
+          }}
+        />
+      ))}
+
+      {/* ── TOP HEADER BAR ── */}
+      <div
+        className="shrink-0 px-4 pt-4 pb-3 flex items-center justify-between border-b border-white/10"
+        style={{ background: `linear-gradient(135deg, ${ac.from}ee 0%, ${ac.to}dd 100%)` }}
+      >
+        {/* Left: Live badge + title */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="relative shrink-0">
+            <div className="w-3 h-3 rounded-full bg-white" />
+            <div className="absolute inset-0 rounded-full bg-white" style={{ animation: 'livetrip-pulse-ring 1.4s ease-out infinite' }} />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[9px] font-black uppercase tracking-widest text-white/70">LIVE TRIP MODE</div>
+            <div className="font-black text-sm text-white truncate">{tripData?.destinationName || 'My Yatra'}</div>
+          </div>
+        </div>
+
+        {/* Center: Overall progress */}
+        <div className="hidden sm:flex items-center gap-2">
+          <div className="text-center">
+            <div className="text-xs font-black text-white">{completedCount}/{totalActivities}</div>
+            <div className="text-[9px] text-white/60 uppercase tracking-wider">Done</div>
+          </div>
+          <div className="w-24 h-1.5 rounded-full bg-white/20 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-white transition-all duration-700"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <div className="text-xs font-black text-white">{progressPct}%</div>
+        </div>
+
+        {/* Right: Exit */}
+        <button
+          onClick={onExit}
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/25 hover:bg-black/40 text-white text-xs font-bold transition active:scale-95 cursor-pointer border border-white/15"
+        >
+          <X size={13} /> Exit
+        </button>
+      </div>
+
+      {/* ── DAY SELECTOR TABS ── */}
+      <div className="shrink-0 px-4 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-white/10 bg-slate-900">
+        {(days || []).map((day, idx) => {
+          const dSlots = getSlotsForDay(day, idx, tripData);
+          const dDone = Object.values(completed[idx] || {}).filter(Boolean).length;
+          const dComplete = dSlots.length > 0 && dDone === dSlots.length;
+          const isActive = idx === currentDayIdx;
+          return (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => { setCurrentDayIdx(idx); setExpandedSlot(null); }}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all duration-200 border cursor-pointer ${
+                isActive
+                  ? 'bg-white text-slate-900 border-white shadow-lg shadow-white/10'
+                  : dComplete
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : 'bg-white/8 text-white/60 border-white/10 hover:bg-white/15 hover:text-white'
+              }`}
+            >
+              {dComplete && <CheckCircle size={10} className="text-emerald-400" />}
+              <span>Day {day.dayNumber || day.day || idx + 1}</span>
+              {dSlots.length > 0 && (
+                <span className={`text-[9px] px-1 py-0.5 rounded-full font-black ${
+                  isActive ? 'bg-slate-200 text-slate-700' : dComplete ? 'bg-emerald-500/30 text-emerald-300' : 'bg-white/10 text-white/50'
+                }`}>{dDone}/{dSlots.length}</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── MAIN SCROLL AREA ── */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Day header */}
+        {currentDay && (
+          <div
+            className="px-4 py-5"
+            style={{
+              background: `linear-gradient(160deg, ${ac.from}22 0%, transparent 60%)`,
+              borderBottom: '1px solid rgba(255,255,255,0.06)'
+            }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-white/40">DAY {currentDayIdx + 1} OF {days.length}</span>
+                <h2 className="text-xl font-serif font-black text-white leading-tight mt-0.5">
+                  {currentDay.dayTheme || currentDay.theme || `Day ${currentDayIdx + 1}`}
+                </h2>
+                {currentDay.date && (
+                  <p className="text-xs text-white/50 font-medium mt-0.5">{currentDay.date}</p>
+                )}
+              </div>
+              {/* Day progress circle */}
+              <div className="relative w-14 h-14 shrink-0">
+                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
+                  <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                  <circle
+                    cx="28" cy="28" r="22" fill="none"
+                    stroke={isDayComplete ? '#10b981' : 'white'}
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeDasharray={`${2 * Math.PI * 22}`}
+                    strokeDashoffset={`${2 * Math.PI * 22 * (1 - dayPct / 100)}`}
+                    style={{ transition: 'stroke-dashoffset 0.6s ease, stroke 0.4s ease' }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  {isDayComplete
+                    ? <CheckCircle size={18} className="text-emerald-400" />
+                    : <span className="text-xs font-black text-white leading-none">{dayPct}%</span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile overall progress */}
+            <div className="sm:hidden flex items-center gap-2 mt-1">
+              <div className="flex-1 h-1 rounded-full bg-white/15 overflow-hidden">
+                <div className="h-full rounded-full bg-white/70 transition-all duration-700" style={{ width: `${progressPct}%` }} />
+              </div>
+              <span className="text-[10px] font-black text-white/50">{completedCount}/{totalActivities} total</span>
+            </div>
+          </div>
+        )}
+
+        {/* Activity Checklist */}
+        <div className="px-4 py-4 space-y-3">
+          {slots.map((slot, si) => {
+            const isDone = !!completed[currentDayIdx]?.[slot.key];
+            const isExpanded = expandedSlot === `${currentDayIdx}-${slot.key}`;
+            return (
+              <div
+                key={slot.key}
+                className={`livetrip-slot rounded-2xl border transition-all duration-300 overflow-hidden ${
+                  isDone
+                    ? 'bg-emerald-950/60 border-emerald-500/30'
+                    : 'bg-white/5 border-white/10 hover:border-white/20'
+                }`}
+              >
+                {/* Main row */}
+                <div className="flex items-center gap-3 p-4">
+                  {/* Check button */}
+                  <button
+                    type="button"
+                    onClick={() => toggleActivity(currentDayIdx, slot.key)}
+                    className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center transition-all duration-200 cursor-pointer border-2 ${
+                      isDone
+                        ? 'bg-emerald-500 border-emerald-500'
+                        : 'bg-transparent border-white/25 hover:border-white/60'
+                    }`}
+                    aria-label={isDone ? 'Mark incomplete' : 'Mark complete'}
+                  >
+                    {isDone && <Check size={14} className="text-white livetrip-check-anim" strokeWidth={3} />}
+                  </button>
+
+                  {/* Icon badge */}
+                  <div
+                    className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center text-lg"
+                    style={{ background: slot.bg }}
+                  >
+                    {slot.icon}
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span
+                        className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full"
+                        style={{ color: slot.color, background: slot.bg }}
+                      >
+                        {slot.time}
+                      </span>
+                      <span className="text-[9px] font-bold text-white/35 uppercase tracking-wider">{slot.label}</span>
+                    </div>
+                    <h4 className={`font-black text-sm leading-tight ${ isDone ? 'line-through text-white/35' : 'text-white' }`}>
+                      {slot.title}
+                    </h4>
+                  </div>
+
+                  {/* Expand + Maps */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <a
+                      href={slot.mapsLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      className="w-8 h-8 rounded-xl bg-white/8 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 flex items-center justify-center text-sm transition-all cursor-pointer"
+                      title="Open in Google Maps"
+                    >
+                      📍
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setExpandedSlot(isExpanded ? null : `${currentDayIdx}-${slot.key}`)}
+                      className="w-8 h-8 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 flex items-center justify-center transition-all cursor-pointer"
+                    >
+                      <ChevronDown size={14} className={`text-white/50 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Expanded detail */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 pt-0 livetrip-pop">
+                    <div className="ml-[calc(2rem+2.25rem+0.75rem)] space-y-2.5">
+                      <p className="text-xs text-white/60 leading-relaxed">{slot.desc}</p>
+                      {slot.tip && (
+                        <div className="flex items-start gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                          <span className="text-base shrink-0 mt-0.5">💡</span>
+                          <div>
+                            <div className="text-[9px] font-black uppercase tracking-wider text-amber-400 mb-0.5">Local Insider Tip</div>
+                            <p className="text-xs text-amber-200/80 leading-relaxed">{slot.tip}</p>
+                          </div>
+                        </div>
+                      )}
+                      <a
+                        href={slot.mapsLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/25 text-emerald-300 text-xs font-bold transition cursor-pointer"
+                      >
+                        📍 Open in Google Maps ↗
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Day Complete Banner */}
+        {isDayComplete && (
+          <div className="mx-4 mb-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-900/70 to-teal-900/70 border border-emerald-500/30 livetrip-pop">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/25 flex items-center justify-center text-xl">🎉</div>
+              <div>
+                <div className="font-black text-emerald-300 text-sm">Day {currentDayIdx + 1} Complete!</div>
+                <div className="text-xs text-emerald-400/70">All activities checked off. Incredible!</div>
+              </div>
+            </div>
+            {currentDayIdx < days.length - 1 && (
+              <button
+                type="button"
+                onClick={() => { setCurrentDayIdx(currentDayIdx + 1); setExpandedSlot(null); }}
+                className="mt-3 w-full py-2.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-emerald-200 text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer border border-emerald-500/30"
+              >
+                Next Day: {days[currentDayIdx + 1]?.dayTheme || days[currentDayIdx + 1]?.theme || `Day ${currentDayIdx + 2}`} <ChevronRight size={13} />
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Bottom spacing */}
+        <div className="h-6" />
+      </div>
+
+      {/* ── DAY NAVIGATION FOOTER ── */}
+      <div className="shrink-0 px-4 py-3 border-t border-white/10 bg-slate-900 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          disabled={currentDayIdx === 0}
+          onClick={() => { setCurrentDayIdx(d => d - 1); setExpandedSlot(null); }}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 text-white text-xs font-bold transition disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+        >
+          <ChevronLeft size={14} /> Prev Day
+        </button>
+
+        {/* Center overall stats */}
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-1.5">
+            <Target size={12} className="text-white/40" />
+            <span className="text-[10px] font-black text-white/50">{completedCount}/{totalActivities} Activities</span>
+          </div>
+          <div className="flex items-center justify-center gap-1 mt-1">
+            {(days || []).map((_, di) => {
+              const dSlots = getSlotsForDay(days[di], di, tripData);
+              const dDone = Object.values(completed[di] || {}).filter(Boolean).length;
+              const dComplete = dSlots.length > 0 && dDone === dSlots.length;
+              return (
+                <div
+                  key={di}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: di === currentDayIdx ? '16px' : '6px',
+                    height: '4px',
+                    background: dComplete ? '#10b981' : di === currentDayIdx ? 'white' : 'rgba(255,255,255,0.2)'
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          disabled={currentDayIdx === days.length - 1}
+          onClick={() => { setCurrentDayIdx(d => d + 1); setExpandedSlot(null); }}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 text-white text-xs font-bold transition disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+        >
+          Next Day <ChevronRight size={14} />
+        </button>
+      </div>
+
+      {/* ── FULL TRIP CELEBRATION OVERLAY ── */}
+      {showCelebration && (
+        <div className="fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-slate-950/92 backdrop-blur-md">
+          <div className="text-center px-8 livetrip-celebrate">
+            <div className="text-8xl mb-4">🏆</div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-amber-500/20 border border-amber-500/30">
+              <Trophy size={13} className="text-amber-400" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">Yatra Complete!</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-serif font-black text-white mb-3">
+              You did it, Yatri! 🇮🇳
+            </h2>
+            <p className="text-white/60 text-sm mb-2 font-medium max-w-xs mx-auto">
+              All {totalActivities} activities completed across {days.length} days in{' '}
+              <strong className="text-white">{tripData?.destinationName}</strong>.
+            </p>
+            <p className="text-white/40 text-xs mb-8">What a journey. BharatDarshan is proud of you!</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => setShowCelebration(false)}
+                className="px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-sm font-bold border border-white/20 transition cursor-pointer"
+              >
+                View Itinerary
+              </button>
+              <button
+                onClick={onExit}
+                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-black transition shadow-lg shadow-orange-500/30 cursor-pointer"
+              >
+                🎊 Back to Planner
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 function ItineraryResult({ itinerary, tripData, onReset }) {
   if (!itinerary) return null;
   const { tripTitle, tagline, highlights, days, mustTry, packingEssentials, localInsights, bestTimeToVisit, budgetSummary, logistics } = itinerary;
@@ -616,6 +1155,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [activeDayIdx, setActiveDayIdx] = useState(0);
   const [showHostTipsDrawer, setShowHostTipsDrawer] = useState(false);
+  const [showLiveTripMode, setShowLiveTripMode] = useState(false);
 
   // Reset active tab if itinerary changes
   useEffect(() => {
@@ -760,16 +1300,56 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   };
 
   return (
-    <div className="space-y-8 pb-20 print-container">
+    <>
+      {/* Live Trip Mode fullscreen overlay */}
+      {showLiveTripMode && (
+        <LiveTripMode
+          itinerary={itinerary}
+          tripData={tripData}
+          onExit={() => setShowLiveTripMode(false)}
+        />
+      )}
+
+      <div className="space-y-8 pb-20 print-container">
       {/* ── Trip Hero Banner ─── */}
       <div className="rounded-3xl p-8 md:p-12 text-slate-900 shadow-sm border border-slate-200 bg-white relative overflow-hidden">
         {/* Subtle ambient light glow */}
         <div style={{position:'absolute',top:'-60px',left:'-40px',width:'360px',height:'360px',borderRadius:'50%',background:'radial-gradient(circle,rgba(245,158,11,0.06) 0%,transparent 70%)',pointerEvents:'none'}} />
         
-        {/* AI badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-4 bg-amber-50 border border-amber-200 shadow-xs">
-          <Sparkles size={12} className="text-amber-600" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-700">Gemini 3.6 Flash AI Engine</span>
+        {/* AI badge + Start Trip button row */}
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 shadow-xs">
+            <Sparkles size={12} className="text-amber-600" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-700">Gemini 3.6 Flash AI Engine</span>
+          </div>
+          {/* 🚀 START LIVE TRIP MODE BUTTON */}
+          <button
+            type="button"
+            id="start-live-trip-btn"
+            onClick={() => setShowLiveTripMode(true)}
+            className="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider text-white overflow-hidden cursor-pointer shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 active:scale-95 hover:scale-[1.03]"
+            style={{ background: 'linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #f97316 100%)' }}
+          >
+            {/* shimmer sweep */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'yatra-btn-sweep 2.5s ease-in-out infinite'
+              }}
+            />
+            {/* pulse ring */}
+            <div className="relative shrink-0">
+              <div className="w-2.5 h-2.5 rounded-full bg-white" />
+              <div
+                className="absolute inset-0 rounded-full bg-white/60"
+                style={{ animation: 'livetrip-pulse-ring 1.4s ease-out infinite' }}
+              />
+            </div>
+            <Play size={13} className="relative z-10 fill-white" />
+            <span className="relative z-10">Start Live Trip</span>
+          </button>
         </div>
         <h2 className="text-3xl md:text-4xl font-serif font-black text-slate-900 mb-2">{tripTitle}</h2>
         <p className="text-slate-600 font-medium mb-5">{tagline}</p>
@@ -1497,8 +2077,10 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </button>
       </div>
     </div>
+    </>
   );
 }
+
 
 export default function PlanMyYatra() {
   const navigate = useNavigate();
@@ -1773,6 +2355,10 @@ export default function PlanMyYatra() {
         @keyframes yatra-drawer-up {
           0% { transform: translateY(100%); opacity: 0.6; }
           100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes livetrip-pulse-ring {
+          0% { transform: scale(1); opacity: 0.7; }
+          100% { transform: scale(1.8); opacity: 0; }
         }
         .animate-yatra-tab-fade {
           animation: yatra-tab-fade 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
