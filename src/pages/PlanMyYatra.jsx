@@ -610,31 +610,98 @@ function PlannerForm({ onSubmit, loading }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// LIVE TRIP MODE COMPONENT
+// LIVE TRIP MODE COMPONENT — Premium Trip Companion
+// Exclusive features: Live Clock, Expense Tracker, Notes, Navigate Now, SOS
 // ─────────────────────────────────────────────────────────────────────────────
 function LiveTripMode({ itinerary, tripData, onExit }) {
-  const { tripTitle, days } = itinerary;
+  const { days } = itinerary;
   const [currentDayIdx, setCurrentDayIdx] = useState(0);
+
+  // Storage key uniquely tied to destination so data is never lost on refresh or restart
+  const destSlug = (tripData?.destinationName || itinerary?.tripTitle || 'default')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '_');
+  const storageKey = `bharatdarshan_livetrip_${destSlug}`;
+
   const [completed, setCompleted] = useState(() => {
-    // completed[dayIdx][slotKey] = true/false
+    try {
+      const saved = localStorage.getItem(`${storageKey}_completed`);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Error reading saved completed state:', e);
+    }
     const init = {};
     (days || []).forEach((_, di) => { init[di] = {}; });
     return init;
   });
+
+  const [notes, setNotes] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storageKey}_notes`);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Error reading saved notes:', e);
+    }
+    return {};
+  });
+
+  const [expenses, setExpenses] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storageKey}_expenses`);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Error reading saved expenses:', e);
+    }
+    return {};
+  });
+
   const [showCelebration, setShowCelebration] = useState(false);
   const [confetti, setConfetti] = useState([]);
   const [expandedSlot, setExpandedSlot] = useState(null);
+  const [activeTab, setActiveTab] = useState('checklist'); // 'checklist' | 'expenses' | 'sos'
+  const [showNoteFor, setShowNoteFor] = useState(null); // `${dayIdx}-${slotKey}`
+  const [noteInput, setNoteInput] = useState('');
+  const [expInput, setExpInput] = useState('');
+  const [showExpFor, setShowExpFor] = useState(null);
+  const [showSOS, setShowSOS] = useState(false);
+  const [liveTime, setLiveTime] = useState(new Date());
 
-  const totalActivities = (days || []).reduce((acc, day, di) => {
-    const slots = getSlotsForDay(day, di, tripData);
-    return acc + slots.length;
-  }, 0);
+  // Auto-sync completed, notes, and expenses to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${storageKey}_completed`, JSON.stringify(completed));
+    } catch (e) {}
+  }, [completed, storageKey]);
 
-  const completedCount = Object.values(completed).reduce((acc, dayMap) => {
-    return acc + Object.values(dayMap).filter(Boolean).length;
-  }, 0);
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${storageKey}_notes`, JSON.stringify(notes));
+    } catch (e) {}
+  }, [notes, storageKey]);
 
-  const progressPct = totalActivities > 0 ? Math.round((completedCount / totalActivities) * 100) : 0;
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${storageKey}_expenses`, JSON.stringify(expenses));
+    } catch (e) {}
+  }, [expenses, storageKey]);
+
+  // Live clock — tick every second
+  useEffect(() => {
+    const t = setInterval(() => setLiveTime(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const timeStr = liveTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+  const currentHour = liveTime.getHours();
+
+  // Determine currently active period based on real time
+  const getAutoActivePeriod = () => {
+    if (currentHour >= 5 && currentHour < 12) return 'morning';
+    if (currentHour >= 12 && currentHour < 17) return 'afternoon';
+    if (currentHour >= 17 && currentHour < 21) return 'evening';
+    return 'night';
+  };
+  const autoActivePeriod = getAutoActivePeriod();
 
   function getSlotsForDay(day, dayIdx, tripData) {
     const dest = tripData?.destinationName || '';
@@ -642,72 +709,36 @@ function LiveTripMode({ itinerary, tripData, onExit }) {
     const afternoonItem = day.afternoon || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('afternoon')) || (day.activities || [])[1];
     const eveningItem = day.evening || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('evening')) || (day.activities || [])[2];
     const nightItem = day.night || (day.activities || []).find(a => (a.timeOfDay || '').toLowerCase().includes('night')) || (day.activities || [])[3];
-
     return [
-      morningItem && {
-        key: 'morning', label: 'Morning', icon: '🌅', color: '#f97316', bg: 'rgba(251,146,60,0.10)',
-        time: morningItem.time || '09:00 AM',
-        title: morningItem.title || morningItem.locationName || morningItem.activity || 'Morning Exploration',
-        desc: morningItem.description || morningItem.desc || 'Explore the morning sights.',
-        tip: morningItem.insiderTip || morningItem.insider_tip || null,
-        mapsLink: morningItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((morningItem.title || morningItem.locationName || 'Morning') + ' ' + dest)}`
-      },
-      afternoonItem && {
-        key: 'afternoon', label: 'Afternoon', icon: '☀️', color: '#d97706', bg: 'rgba(234,179,8,0.10)',
-        time: afternoonItem.time || '01:00 PM',
-        title: afternoonItem.title || afternoonItem.locationName || afternoonItem.activity || 'Afternoon Landmark',
-        desc: afternoonItem.description || afternoonItem.desc || 'Visit iconic landmarks.',
-        tip: afternoonItem.insiderTip || afternoonItem.insider_tip || null,
-        mapsLink: afternoonItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((afternoonItem.title || afternoonItem.locationName || 'Afternoon') + ' ' + dest)}`
-      },
-      eveningItem && {
-        key: 'evening', label: 'Evening', icon: '🌆', color: '#7c3aed', bg: 'rgba(124,58,237,0.10)',
-        time: eveningItem.time || '06:00 PM',
-        title: eveningItem.title || eveningItem.locationName || eveningItem.activity || 'Evening Stroll',
-        desc: eveningItem.description || eveningItem.desc || 'Stroll through the bazaars.',
-        tip: eveningItem.insiderTip || eveningItem.insider_tip || null,
-        mapsLink: eveningItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((eveningItem.title || eveningItem.locationName || 'Evening') + ' ' + dest)}`
-      },
-      nightItem && {
-        key: 'night', label: 'Night', icon: '🌙', color: '#1d4ed8', bg: 'rgba(29,78,216,0.10)',
-        time: nightItem.time || '09:00 PM',
-        title: nightItem.title || nightItem.locationName || nightItem.activity || 'Night Experience',
-        desc: nightItem.description || nightItem.desc || 'Enjoy the evening atmosphere.',
-        tip: nightItem.insiderTip || nightItem.insider_tip || null,
-        mapsLink: nightItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((nightItem.title || nightItem.locationName || 'Night') + ' ' + dest)}`
-      }
+      morningItem && { key: 'morning', label: 'Morning', icon: '🌅', color: '#f97316', bg: 'rgba(251,146,60,0.12)', time: morningItem.time || '09:00 AM', title: morningItem.title || morningItem.locationName || morningItem.activity || 'Morning Exploration', desc: morningItem.description || morningItem.desc || '', tip: morningItem.insiderTip || morningItem.insider_tip || null, mapsLink: morningItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((morningItem.title || morningItem.locationName || 'Morning Activity') + ' ' + dest)}`, directionsLink: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((morningItem.title || morningItem.locationName || '') + ' ' + dest)}` },
+      afternoonItem && { key: 'afternoon', label: 'Afternoon', icon: '☀️', color: '#d97706', bg: 'rgba(234,179,8,0.12)', time: afternoonItem.time || '01:00 PM', title: afternoonItem.title || afternoonItem.locationName || afternoonItem.activity || 'Afternoon Landmark', desc: afternoonItem.description || afternoonItem.desc || '', tip: afternoonItem.insiderTip || afternoonItem.insider_tip || null, mapsLink: afternoonItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((afternoonItem.title || afternoonItem.locationName || 'Afternoon Activity') + ' ' + dest)}`, directionsLink: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((afternoonItem.title || afternoonItem.locationName || '') + ' ' + dest)}` },
+      eveningItem && { key: 'evening', label: 'Evening', icon: '🌆', color: '#7c3aed', bg: 'rgba(124,58,237,0.12)', time: eveningItem.time || '06:00 PM', title: eveningItem.title || eveningItem.locationName || eveningItem.activity || 'Evening Stroll', desc: eveningItem.description || eveningItem.desc || '', tip: eveningItem.insiderTip || eveningItem.insider_tip || null, mapsLink: eveningItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((eveningItem.title || eveningItem.locationName || 'Evening Activity') + ' ' + dest)}`, directionsLink: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((eveningItem.title || eveningItem.locationName || '') + ' ' + dest)}` },
+      nightItem && { key: 'night', label: 'Night', icon: '🌙', color: '#1d4ed8', bg: 'rgba(29,78,216,0.12)', time: nightItem.time || '09:00 PM', title: nightItem.title || nightItem.locationName || nightItem.activity || 'Night Experience', desc: nightItem.description || nightItem.desc || '', tip: nightItem.insiderTip || nightItem.insider_tip || null, mapsLink: nightItem.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((nightItem.title || nightItem.locationName || 'Night Activity') + ' ' + dest)}`, directionsLink: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((nightItem.title || nightItem.locationName || '') + ' ' + dest)}` }
     ].filter(Boolean);
   }
 
+  const totalActivities = (days || []).reduce((acc, day, di) => acc + getSlotsForDay(day, di, tripData).length, 0);
+  const completedCount = Object.values(completed).reduce((acc, dayMap) => acc + Object.values(dayMap).filter(Boolean).length, 0);
+  const progressPct = totalActivities > 0 ? Math.round((completedCount / totalActivities) * 100) : 0;
+
+  const totalSpent = Object.values(expenses).reduce((a, v) => a + (parseFloat(v) || 0), 0);
+  const budgetNum = parseFloat((itinerary?.budgetSummary?.estimatedTotal || '').replace(/[^0-9.]/g, '')) || 0;
+
   const toggleActivity = useCallback((dayIdx, slotKey) => {
     setCompleted(prev => {
-      const updated = {
-        ...prev,
-        [dayIdx]: { ...prev[dayIdx], [slotKey]: !prev[dayIdx]?.[slotKey] }
-      };
-      // Check if ALL activities completed
+      const updated = { ...prev, [dayIdx]: { ...prev[dayIdx], [slotKey]: !prev[dayIdx]?.[slotKey] } };
       const total = (days || []).reduce((acc, day, di) => acc + getSlotsForDay(day, di, tripData).length, 0);
       const done = Object.values(updated).reduce((acc, dayMap) => acc + Object.values(dayMap).filter(Boolean).length, 0);
-      if (done === total && total > 0) {
-        setTimeout(() => triggerCelebration(), 300);
-      }
+      if (done === total && total > 0) setTimeout(() => triggerCelebration(), 300);
       return updated;
     });
   }, [days, tripData]);
 
   const triggerCelebration = () => {
-    const pieces = Array.from({ length: 60 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      color: ['#f97316','#eab308','#10b981','#3b82f6','#a855f7','#ef4444','#06b6d4'][i % 7],
-      size: Math.random() * 10 + 6,
-      delay: Math.random() * 1.2,
-      duration: Math.random() * 2 + 2,
-      rotate: Math.random() * 360
-    }));
+    const pieces = Array.from({ length: 70 }, (_, i) => ({ id: i, x: Math.random() * 100, color: ['#f97316','#eab308','#10b981','#3b82f6','#a855f7','#ef4444','#06b6d4','#f43f5e'][i % 8], size: Math.random() * 12 + 5, delay: Math.random() * 1.4, duration: Math.random() * 2.5 + 2, rotate: Math.random() * 360 }));
     setConfetti(pieces);
     setShowCelebration(true);
-    setTimeout(() => setConfetti([]), 4000);
+    setTimeout(() => setConfetti([]), 5000);
   };
 
   const currentDay = days?.[currentDayIdx];
@@ -717,427 +748,538 @@ function LiveTripMode({ itinerary, tripData, onExit }) {
   const dayPct = dayTotal > 0 ? Math.round((dayCompletedCount / dayTotal) * 100) : 0;
   const isDayComplete = dayCompletedCount === dayTotal && dayTotal > 0;
 
-  // Escape to exit
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onExit(); };
+    const onKey = (e) => { if (e.key === 'Escape') { if (showNoteFor) { setShowNoteFor(null); } else if (showExpFor) { setShowExpFor(null); } else if (showSOS) { setShowSOS(false); } else { onExit(); } } };
     window.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
-    };
-  }, [onExit]);
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+  }, [onExit, showNoteFor, showExpFor, showSOS]);
 
   const accentColors = [
-    { from: '#c2410c', to: '#ea580c' },
-    { from: '#b45309', to: '#d97706' },
-    { from: '#5b21b6', to: '#7c3aed' },
-    { from: '#0e7490', to: '#0891b2' },
-    { from: '#15803d', to: '#16a34a' },
-    { from: '#b91c1c', to: '#dc2626' },
+    { from: '#c2410c', to: '#ea580c' }, { from: '#b45309', to: '#d97706' },
+    { from: '#5b21b6', to: '#7c3aed' }, { from: '#0e7490', to: '#0891b2' },
+    { from: '#15803d', to: '#16a34a' }, { from: '#b91c1c', to: '#dc2626' },
     { from: '#be185d', to: '#db2777' },
   ];
   const ac = accentColors[currentDayIdx % accentColors.length];
 
+  const periodIcon = { morning: '🌅', afternoon: '☀️', evening: '🌆', night: '🌙' };
+
   return (
     <div className="fixed inset-0 z-[4000] flex flex-col bg-slate-950 text-white overflow-hidden">
       <style>{`
-        @keyframes livetrip-confetti {
-          0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-          100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-        @keyframes livetrip-pop {
-          0% { transform: scale(0.8); opacity: 0; }
-          60% { transform: scale(1.06); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes livetrip-check {
-          0% { transform: scale(0) rotate(-45deg); }
-          70% { transform: scale(1.2) rotate(5deg); }
-          100% { transform: scale(1) rotate(0deg); }
-        }
-        @keyframes livetrip-progress {
-          from { width: 0%; }
-        }
-        @keyframes livetrip-pulse-ring {
-          0% { transform: scale(1); opacity: 0.7; }
-          100% { transform: scale(1.6); opacity: 0; }
-        }
-        @keyframes livetrip-slide-up {
-          from { transform: translateY(18px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes livetrip-celebrate {
-          0% { transform: scale(0.6); opacity: 0; }
-          50% { transform: scale(1.08); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .livetrip-slot { animation: livetrip-slide-up 0.28s cubic-bezier(0.16,1,0.3,1) both; }
-        .livetrip-slot:nth-child(1) { animation-delay: 0ms; }
-        .livetrip-slot:nth-child(2) { animation-delay: 60ms; }
-        .livetrip-slot:nth-child(3) { animation-delay: 120ms; }
-        .livetrip-slot:nth-child(4) { animation-delay: 180ms; }
-        .livetrip-check-anim { animation: livetrip-check 0.32s cubic-bezier(0.34,1.56,0.64,1) both; }
-        .livetrip-pop { animation: livetrip-pop 0.3s cubic-bezier(0.16,1,0.3,1) both; }
+        @keyframes livetrip-confetti { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+        @keyframes livetrip-pop { 0% { transform: scale(0.82); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes livetrip-check { 0% { transform: scale(0) rotate(-45deg); } 70% { transform: scale(1.25) rotate(5deg); } 100% { transform: scale(1) rotate(0deg); } }
+        @keyframes livetrip-pulse-ring { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2); opacity: 0; } }
+        @keyframes livetrip-slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes livetrip-celebrate { 0% { transform: scale(0.5); opacity: 0; } 55% { transform: scale(1.07); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes livetrip-now-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } 50% { box-shadow: 0 0 0 6px rgba(16,185,129,0.2); } }
+        @keyframes livetrip-modal-in { from { transform: translateY(40px) scale(0.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        .livetrip-slot { animation: livetrip-slide-up 0.26s cubic-bezier(0.16,1,0.3,1) both; }
+        .livetrip-slot:nth-child(1){animation-delay:0ms} .livetrip-slot:nth-child(2){animation-delay:55ms} .livetrip-slot:nth-child(3){animation-delay:110ms} .livetrip-slot:nth-child(4){animation-delay:165ms}
+        .livetrip-check-anim { animation: livetrip-check 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .livetrip-pop { animation: livetrip-pop 0.28s cubic-bezier(0.16,1,0.3,1) both; }
         .livetrip-celebrate { animation: livetrip-celebrate 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .livetrip-now { animation: livetrip-now-pulse 2s ease-in-out infinite; }
+        .livetrip-modal { animation: livetrip-modal-in 0.28s cubic-bezier(0.16,1,0.3,1) both; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
       `}</style>
 
-      {/* Confetti particles */}
+      {/* ── Confetti ── */}
       {confetti.map(p => (
-        <div
-          key={p.id}
-          style={{
-            position: 'fixed',
-            left: `${p.x}%`,
-            top: '-30px',
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-            borderRadius: p.id % 3 === 0 ? '50%' : '2px',
-            background: p.color,
-            animation: `livetrip-confetti ${p.duration}s ease-in ${p.delay}s both`,
-            zIndex: 9999,
-            transform: `rotate(${p.rotate}deg)`,
-            pointerEvents: 'none'
-          }}
-        />
+        <div key={p.id} style={{ position:'fixed', left:`${p.x}%`, top:'-30px', width:`${p.size}px`, height:`${p.size}px`, borderRadius: p.id%3===0?'50%':'3px', background:p.color, animation:`livetrip-confetti ${p.duration}s ease-in ${p.delay}s both`, zIndex:9999, transform:`rotate(${p.rotate}deg)`, pointerEvents:'none' }} />
       ))}
 
-      {/* ── TOP HEADER BAR ── */}
-      <div
-        className="shrink-0 px-4 pt-4 pb-3 flex items-center justify-between border-b border-white/10"
-        style={{ background: `linear-gradient(135deg, ${ac.from}ee 0%, ${ac.to}dd 100%)` }}
-      >
-        {/* Left: Live badge + title */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="relative shrink-0">
+      {/* ── TOP HEADER ── */}
+      <div className="shrink-0 flex items-center justify-between gap-3 px-4 pt-safe pt-3 pb-3 border-b border-white/10" style={{ background: `linear-gradient(135deg, ${ac.from}f0 0%, ${ac.to}d0 100%)` }}>
+        {/* Left: Live dot + destination + time */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="relative shrink-0 w-3 h-3">
             <div className="w-3 h-3 rounded-full bg-white" />
-            <div className="absolute inset-0 rounded-full bg-white" style={{ animation: 'livetrip-pulse-ring 1.4s ease-out infinite' }} />
+            <div className="absolute inset-0 rounded-full bg-white/60" style={{ animation: 'livetrip-pulse-ring 1.4s ease-out infinite' }} />
           </div>
           <div className="min-w-0">
-            <div className="text-[9px] font-black uppercase tracking-widest text-white/70">LIVE TRIP MODE</div>
-            <div className="font-black text-sm text-white truncate">{tripData?.destinationName || 'My Yatra'}</div>
+            <div className="text-[8px] font-black uppercase tracking-widest text-white/60 flex items-center gap-1">
+              <span>●</span> LIVE TRIP MODE
+            </div>
+            <div className="font-black text-sm text-white truncate leading-tight">{tripData?.destinationName || 'My Yatra'}</div>
           </div>
         </div>
 
-        {/* Center: Overall progress */}
-        <div className="hidden sm:flex items-center gap-2">
-          <div className="text-center">
-            <div className="text-xs font-black text-white">{completedCount}/{totalActivities}</div>
-            <div className="text-[9px] text-white/60 uppercase tracking-wider">Done</div>
+        {/* Center: Live clock + current period */}
+        <div className="hidden sm:flex flex-col items-center">
+          <div className="text-lg font-black text-white tabular-nums leading-none">{timeStr}</div>
+          <div className="text-[9px] text-white/60 font-bold mt-0.5 flex items-center gap-1">
+            {periodIcon[autoActivePeriod]} {autoActivePeriod.charAt(0).toUpperCase() + autoActivePeriod.slice(1)} time
           </div>
-          <div className="w-24 h-1.5 rounded-full bg-white/20 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-white transition-all duration-700"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          <div className="text-xs font-black text-white">{progressPct}%</div>
         </div>
 
-        {/* Right: Exit */}
-        <button
-          onClick={onExit}
-          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/25 hover:bg-black/40 text-white text-xs font-bold transition active:scale-95 cursor-pointer border border-white/15"
-        >
-          <X size={13} /> Exit
-        </button>
+        {/* Right: progress + exit */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5 bg-black/25 rounded-xl px-2.5 py-1.5 border border-white/10">
+            <div className="w-16 h-1.5 rounded-full bg-white/20 overflow-hidden">
+              <div className="h-full rounded-full bg-white transition-all duration-700" style={{ width: `${progressPct}%` }} />
+            </div>
+            <span className="text-xs font-black text-white">{progressPct}%</span>
+          </div>
+          <button onClick={onExit} className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-black/30 hover:bg-black/50 text-white text-xs font-bold transition active:scale-95 cursor-pointer border border-white/15">
+            <X size={12} /> Exit
+          </button>
+        </div>
       </div>
 
-      {/* ── DAY SELECTOR TABS ── */}
-      <div className="shrink-0 px-4 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-white/10 bg-slate-900">
+      {/* ── DAY TABS ── */}
+      <div className="shrink-0 flex items-center gap-2 px-4 py-2 overflow-x-auto no-scrollbar border-b border-white/8 bg-slate-900/80">
         {(days || []).map((day, idx) => {
           const dSlots = getSlotsForDay(day, idx, tripData);
           const dDone = Object.values(completed[idx] || {}).filter(Boolean).length;
           const dComplete = dSlots.length > 0 && dDone === dSlots.length;
           const isActive = idx === currentDayIdx;
           return (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => { setCurrentDayIdx(idx); setExpandedSlot(null); }}
+            <button key={idx} type="button" onClick={() => { setCurrentDayIdx(idx); setExpandedSlot(null); }}
               className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all duration-200 border cursor-pointer ${
-                isActive
-                  ? 'bg-white text-slate-900 border-white shadow-lg shadow-white/10'
-                  : dComplete
-                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                  : 'bg-white/8 text-white/60 border-white/10 hover:bg-white/15 hover:text-white'
-              }`}
-            >
-              {dComplete && <CheckCircle size={10} className="text-emerald-400" />}
+                isActive ? 'bg-white text-slate-900 border-white' : dComplete ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-white/6 text-white/55 border-white/10 hover:bg-white/12 hover:text-white'
+              }`}>
+              {dComplete && <CheckCircle size={9} className="text-emerald-400" />}
               <span>Day {day.dayNumber || day.day || idx + 1}</span>
-              {dSlots.length > 0 && (
-                <span className={`text-[9px] px-1 py-0.5 rounded-full font-black ${
-                  isActive ? 'bg-slate-200 text-slate-700' : dComplete ? 'bg-emerald-500/30 text-emerald-300' : 'bg-white/10 text-white/50'
-                }`}>{dDone}/{dSlots.length}</span>
-              )}
+              {dSlots.length > 0 && <span className={`text-[8px] px-1 py-0.5 rounded-full font-black ${isActive ? 'bg-slate-200 text-slate-700' : dComplete ? 'bg-emerald-500/30 text-emerald-300' : 'bg-white/10 text-white/40'}`}>{dDone}/{dSlots.length}</span>}
             </button>
           );
         })}
       </div>
 
-      {/* ── MAIN SCROLL AREA ── */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Day header */}
-        {currentDay && (
-          <div
-            className="px-4 py-5"
-            style={{
-              background: `linear-gradient(160deg, ${ac.from}22 0%, transparent 60%)`,
-              borderBottom: '1px solid rgba(255,255,255,0.06)'
-            }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div>
-                <span className="text-[9px] font-black uppercase tracking-widest text-white/40">DAY {currentDayIdx + 1} OF {days.length}</span>
-                <h2 className="text-xl font-serif font-black text-white leading-tight mt-0.5">
-                  {currentDay.dayTheme || currentDay.theme || `Day ${currentDayIdx + 1}`}
-                </h2>
-                {currentDay.date && (
-                  <p className="text-xs text-white/50 font-medium mt-0.5">{currentDay.date}</p>
-                )}
-              </div>
-              {/* Day progress circle */}
-              <div className="relative w-14 h-14 shrink-0">
-                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
-                  <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
-                  <circle
-                    cx="28" cy="28" r="22" fill="none"
-                    stroke={isDayComplete ? '#10b981' : 'white'}
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeDasharray={`${2 * Math.PI * 22}`}
-                    strokeDashoffset={`${2 * Math.PI * 22 * (1 - dayPct / 100)}`}
-                    style={{ transition: 'stroke-dashoffset 0.6s ease, stroke 0.4s ease' }}
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  {isDayComplete
-                    ? <CheckCircle size={18} className="text-emerald-400" />
-                    : <span className="text-xs font-black text-white leading-none">{dayPct}%</span>
-                  }
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile overall progress */}
-            <div className="sm:hidden flex items-center gap-2 mt-1">
-              <div className="flex-1 h-1 rounded-full bg-white/15 overflow-hidden">
-                <div className="h-full rounded-full bg-white/70 transition-all duration-700" style={{ width: `${progressPct}%` }} />
-              </div>
-              <span className="text-[10px] font-black text-white/50">{completedCount}/{totalActivities} total</span>
-            </div>
-          </div>
-        )}
-
-        {/* Activity Checklist */}
-        <div className="px-4 py-4 space-y-3">
-          {slots.map((slot, si) => {
-            const isDone = !!completed[currentDayIdx]?.[slot.key];
-            const isExpanded = expandedSlot === `${currentDayIdx}-${slot.key}`;
-            return (
-              <div
-                key={slot.key}
-                className={`livetrip-slot rounded-2xl border transition-all duration-300 overflow-hidden ${
-                  isDone
-                    ? 'bg-emerald-950/60 border-emerald-500/30'
-                    : 'bg-white/5 border-white/10 hover:border-white/20'
-                }`}
-              >
-                {/* Main row */}
-                <div className="flex items-center gap-3 p-4">
-                  {/* Check button */}
-                  <button
-                    type="button"
-                    onClick={() => toggleActivity(currentDayIdx, slot.key)}
-                    className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center transition-all duration-200 cursor-pointer border-2 ${
-                      isDone
-                        ? 'bg-emerald-500 border-emerald-500'
-                        : 'bg-transparent border-white/25 hover:border-white/60'
-                    }`}
-                    aria-label={isDone ? 'Mark incomplete' : 'Mark complete'}
-                  >
-                    {isDone && <Check size={14} className="text-white livetrip-check-anim" strokeWidth={3} />}
-                  </button>
-
-                  {/* Icon badge */}
-                  <div
-                    className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center text-lg"
-                    style={{ background: slot.bg }}
-                  >
-                    {slot.icon}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span
-                        className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full"
-                        style={{ color: slot.color, background: slot.bg }}
-                      >
-                        {slot.time}
-                      </span>
-                      <span className="text-[9px] font-bold text-white/35 uppercase tracking-wider">{slot.label}</span>
-                    </div>
-                    <h4 className={`font-black text-sm leading-tight ${ isDone ? 'line-through text-white/35' : 'text-white' }`}>
-                      {slot.title}
-                    </h4>
-                  </div>
-
-                  {/* Expand + Maps */}
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <a
-                      href={slot.mapsLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={e => e.stopPropagation()}
-                      className="w-8 h-8 rounded-xl bg-white/8 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 flex items-center justify-center text-sm transition-all cursor-pointer"
-                      title="Open in Google Maps"
-                    >
-                      📍
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => setExpandedSlot(isExpanded ? null : `${currentDayIdx}-${slot.key}`)}
-                      className="w-8 h-8 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 flex items-center justify-center transition-all cursor-pointer"
-                    >
-                      <ChevronDown size={14} className={`text-white/50 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Expanded detail */}
-                {isExpanded && (
-                  <div className="px-4 pb-4 pt-0 livetrip-pop">
-                    <div className="ml-[calc(2rem+2.25rem+0.75rem)] space-y-2.5">
-                      <p className="text-xs text-white/60 leading-relaxed">{slot.desc}</p>
-                      {slot.tip && (
-                        <div className="flex items-start gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                          <span className="text-base shrink-0 mt-0.5">💡</span>
-                          <div>
-                            <div className="text-[9px] font-black uppercase tracking-wider text-amber-400 mb-0.5">Local Insider Tip</div>
-                            <p className="text-xs text-amber-200/80 leading-relaxed">{slot.tip}</p>
-                          </div>
-                        </div>
-                      )}
-                      <a
-                        href={slot.mapsLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/25 text-emerald-300 text-xs font-bold transition cursor-pointer"
-                      >
-                        📍 Open in Google Maps ↗
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Day Complete Banner */}
-        {isDayComplete && (
-          <div className="mx-4 mb-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-900/70 to-teal-900/70 border border-emerald-500/30 livetrip-pop">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/25 flex items-center justify-center text-xl">🎉</div>
-              <div>
-                <div className="font-black text-emerald-300 text-sm">Day {currentDayIdx + 1} Complete!</div>
-                <div className="text-xs text-emerald-400/70">All activities checked off. Incredible!</div>
-              </div>
-            </div>
-            {currentDayIdx < days.length - 1 && (
-              <button
-                type="button"
-                onClick={() => { setCurrentDayIdx(currentDayIdx + 1); setExpandedSlot(null); }}
-                className="mt-3 w-full py-2.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-emerald-200 text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer border border-emerald-500/30"
-              >
-                Next Day: {days[currentDayIdx + 1]?.dayTheme || days[currentDayIdx + 1]?.theme || `Day ${currentDayIdx + 2}`} <ChevronRight size={13} />
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Bottom spacing */}
-        <div className="h-6" />
+      {/* ── TAB BAR: Checklist / Expenses / SOS ── */}
+      <div className="shrink-0 flex items-center border-b border-white/8 bg-slate-900/60">
+        {[
+          { id: 'checklist', label: '✅ Today', emoji: null },
+          { id: 'expenses', label: `💸 ₹${Math.round(totalSpent).toLocaleString('en-IN')}`, emoji: null },
+          { id: 'sos', label: '🆘 SOS', emoji: null },
+        ].map(tab => (
+          <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)}
+            className={`flex-1 py-2.5 text-xs font-black transition-all duration-200 cursor-pointer border-b-2 ${
+              activeTab === tab.id ? 'border-white text-white bg-white/5' : 'border-transparent text-white/35 hover:text-white/60'
+            }`}>
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* ── DAY NAVIGATION FOOTER ── */}
-      <div className="shrink-0 px-4 py-3 border-t border-white/10 bg-slate-900 flex items-center justify-between gap-3">
-        <button
-          type="button"
-          disabled={currentDayIdx === 0}
-          onClick={() => { setCurrentDayIdx(d => d - 1); setExpandedSlot(null); }}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 text-white text-xs font-bold transition disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-        >
-          <ChevronLeft size={14} /> Prev Day
-        </button>
+      {/* ── MAIN SCROLL ── */}
+      <div className="flex-1 overflow-y-auto">
 
-        {/* Center overall stats */}
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1.5">
-            <Target size={12} className="text-white/40" />
-            <span className="text-[10px] font-black text-white/50">{completedCount}/{totalActivities} Activities</span>
-          </div>
-          <div className="flex items-center justify-center gap-1 mt-1">
-            {(days || []).map((_, di) => {
-              const dSlots = getSlotsForDay(days[di], di, tripData);
-              const dDone = Object.values(completed[di] || {}).filter(Boolean).length;
-              const dComplete = dSlots.length > 0 && dDone === dSlots.length;
+        {/* ════ TAB: CHECKLIST ════ */}
+        {activeTab === 'checklist' && (
+          <>
+            {/* Day header with live time */}
+            {currentDay && (
+              <div className="px-4 pt-4 pb-3" style={{ background: `linear-gradient(160deg, ${ac.from}18 0%, transparent 55%)`, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-[8px] font-black uppercase tracking-widest text-white/35 mb-0.5">
+                      DAY {currentDayIdx + 1} OF {days.length} &nbsp;·&nbsp; {timeStr}
+                    </div>
+                    <h2 className="text-lg font-serif font-black text-white leading-tight">
+                      {currentDay.dayTheme || currentDay.theme || `Day ${currentDayIdx + 1}`}
+                    </h2>
+                  </div>
+                  {/* Circle progress */}
+                  <div className="relative w-12 h-12 shrink-0">
+                    <svg className="w-12 h-12 -rotate-90" viewBox="0 0 48 48">
+                      <circle cx="24" cy="24" r="19" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3.5" />
+                      <circle cx="24" cy="24" r="19" fill="none" stroke={isDayComplete ? '#10b981' : 'white'} strokeWidth="3.5" strokeLinecap="round"
+                        strokeDasharray={`${2 * Math.PI * 19}`} strokeDashoffset={`${2 * Math.PI * 19 * (1 - dayPct / 100)}`}
+                        style={{ transition: 'stroke-dashoffset 0.6s ease, stroke 0.4s ease' }} />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {isDayComplete ? <CheckCircle size={15} className="text-emerald-400" /> : <span className="text-[10px] font-black text-white">{dayPct}%</span>}
+                    </div>
+                  </div>
+                </div>
+                {/* Mobile progress */}
+                <div className="sm:hidden flex items-center gap-2 mt-2">
+                  <div className="flex-1 h-1 rounded-full bg-white/12 overflow-hidden">
+                    <div className="h-full rounded-full bg-white/60 transition-all duration-700" style={{ width: `${progressPct}%` }} />
+                  </div>
+                  <span className="text-[9px] font-black text-white/40">{completedCount}/{totalActivities} total</span>
+                </div>
+              </div>
+            )}
+
+            {/* Activity Cards */}
+            <div className="px-4 py-3 space-y-2.5">
+              {slots.map((slot) => {
+                const isDone = !!completed[currentDayIdx]?.[slot.key];
+                const isExpanded = expandedSlot === `${currentDayIdx}-${slot.key}`;
+                const slotNote = notes[`${currentDayIdx}-${slot.key}`];
+                const slotExp = expenses[`${currentDayIdx}-${slot.key}`];
+                const isNow = slot.key === autoActivePeriod && !isDone;
+
+                return (
+                  <div key={slot.key} className={`livetrip-slot rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    isDone ? 'bg-emerald-950/50 border-emerald-500/25' :
+                    isNow ? 'bg-white/7 border-emerald-400/50 livetrip-now' :
+                    'bg-white/4 border-white/8 hover:border-white/18'
+                  }`}>
+                    {/* NOW badge */}
+                    {isNow && (
+                      <div className="px-3 pt-2 pb-0 flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400">You should be here NOW · {timeStr}</span>
+                      </div>
+                    )}
+
+                    {/* Main row */}
+                    <div className="flex items-center gap-3 p-3">
+                      {/* Checkbox */}
+                      <button type="button" onClick={() => toggleActivity(currentDayIdx, slot.key)}
+                        className={`w-7 h-7 rounded-xl shrink-0 flex items-center justify-center transition-all duration-200 cursor-pointer border-2 ${isDone ? 'bg-emerald-500 border-emerald-500' : 'bg-transparent border-white/20 hover:border-white/55'}`}
+                        aria-label={isDone ? 'Unmark' : 'Mark done'}>
+                        {isDone && <Check size={12} className="text-white livetrip-check-anim" strokeWidth={3} />}
+                      </button>
+
+                      {/* Icon */}
+                      <div className="w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-base" style={{ background: slot.bg }}>
+                        {slot.icon}
+                      </div>
+
+                      {/* Text */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ color: slot.color, background: slot.bg }}>{slot.time}</span>
+                          {slotExp > 0 && <span className="text-[8px] font-black text-emerald-400 bg-emerald-500/15 px-1.5 py-0.5 rounded-full">₹{slotExp}</span>}
+                          {slotNote && <span className="text-[8px] text-amber-400 bg-amber-500/12 px-1.5 py-0.5 rounded-full">📝 Note</span>}
+                        </div>
+                        <h4 className={`font-black text-sm leading-tight ${isDone ? 'line-through text-white/30' : 'text-white'}`}>{slot.title}</h4>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        {/* Navigate Now */}
+                        <a href={slot.directionsLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                          title="Navigate to this place"
+                          className="w-7 h-7 rounded-lg bg-blue-500/20 hover:bg-blue-500/35 border border-blue-500/30 flex items-center justify-center text-xs transition-all cursor-pointer"
+                        >🗺️</a>
+                        {/* Expense */}
+                        <button type="button" onClick={() => { setShowExpFor(`${currentDayIdx}-${slot.key}`); setExpInput(expenses[`${currentDayIdx}-${slot.key}`] || ''); }}
+                          title="Add expense"
+                          className="w-7 h-7 rounded-lg bg-emerald-500/12 hover:bg-emerald-500/25 border border-emerald-500/20 flex items-center justify-center text-xs transition-all cursor-pointer">
+                          💸
+                        </button>
+                        {/* Note */}
+                        <button type="button" onClick={() => { setShowNoteFor(`${currentDayIdx}-${slot.key}`); setNoteInput(notes[`${currentDayIdx}-${slot.key}`] || ''); }}
+                          title="Add note"
+                          className="w-7 h-7 rounded-lg bg-amber-500/12 hover:bg-amber-500/25 border border-amber-500/20 flex items-center justify-center text-xs transition-all cursor-pointer">
+                          📝
+                        </button>
+                        {/* Expand */}
+                        <button type="button" onClick={() => setExpandedSlot(isExpanded ? null : `${currentDayIdx}-${slot.key}`)}
+                          className="w-7 h-7 rounded-lg bg-white/6 hover:bg-white/12 border border-white/8 flex items-center justify-center transition-all cursor-pointer">
+                          <ChevronDown size={12} className={`text-white/40 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Saved note display */}
+                    {slotNote && !isExpanded && (
+                      <div className="mx-3 mb-2.5 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/80 flex items-start gap-1.5">
+                        <span>📝</span> <span className="leading-relaxed">{slotNote}</span>
+                      </div>
+                    )}
+
+                    {/* Expanded */}
+                    {isExpanded && (
+                      <div className="px-3 pb-3 pt-0 livetrip-pop space-y-2 ml-[calc(1.75rem+2rem+0.75rem)]">
+                        {slot.desc && <p className="text-xs text-white/55 leading-relaxed">{slot.desc}</p>}
+                        {slot.tip && (
+                          <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <span className="text-sm shrink-0">💡</span>
+                            <div>
+                              <div className="text-[8px] font-black uppercase tracking-wider text-amber-400 mb-0.5">Insider Tip</div>
+                              <p className="text-xs text-amber-200/80 leading-relaxed">{slot.tip}</p>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex gap-2">
+                          <a href={slot.directionsLink} target="_blank" rel="noopener noreferrer"
+                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 text-xs font-black transition cursor-pointer">
+                            🗺️ Navigate Now ↗
+                          </a>
+                          <a href={slot.mapsLink} target="_blank" rel="noopener noreferrer"
+                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/25 text-emerald-300 text-xs font-black transition cursor-pointer">
+                            📍 View on Map ↗
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Day Complete Banner */}
+            {isDayComplete && (
+              <div className="mx-4 mb-4 p-4 rounded-2xl bg-gradient-to-r from-emerald-900/70 to-teal-900/60 border border-emerald-500/30 livetrip-pop">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/25 flex items-center justify-center text-lg">🎉</div>
+                  <div>
+                    <div className="font-black text-emerald-300 text-sm">Day {currentDayIdx + 1} Crushed!</div>
+                    <div className="text-xs text-emerald-400/60">All checked off. What a day!</div>
+                  </div>
+                </div>
+                {currentDayIdx < days.length - 1 && (
+                  <button type="button" onClick={() => { setCurrentDayIdx(currentDayIdx + 1); setExpandedSlot(null); }}
+                    className="w-full py-2.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-emerald-200 text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer border border-emerald-500/30">
+                    Next: {days[currentDayIdx + 1]?.dayTheme || days[currentDayIdx + 1]?.theme || `Day ${currentDayIdx + 2}`} <ChevronRight size={12} />
+                  </button>
+                )}
+              </div>
+            )}
+            <div className="h-4" />
+          </>
+        )}
+
+        {/* ════ TAB: EXPENSES ════ */}
+        {activeTab === 'expenses' && (
+          <div className="px-4 py-4 space-y-4">
+            {/* Budget vs Spent hero */}
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-emerald-900/50 to-slate-900/80 border border-emerald-500/25">
+              <div className="text-[9px] font-black uppercase tracking-widest text-emerald-400 mb-1">Trip Expense Summary</div>
+              <div className="flex items-end justify-between mb-3">
+                <div>
+                  <div className="text-3xl font-black text-white">₹{Math.round(totalSpent).toLocaleString('en-IN')}</div>
+                  <div className="text-xs text-white/45 font-medium mt-0.5">Total Spent</div>
+                </div>
+                {budgetNum > 0 && (
+                  <div className="text-right">
+                    <div className="text-lg font-black text-white/60">₹{budgetNum.toLocaleString('en-IN')}</div>
+                    <div className="text-[9px] text-white/35 font-medium">Estimated Budget</div>
+                  </div>
+                )}
+              </div>
+              {budgetNum > 0 && (
+                <>
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden mb-1.5">
+                    <div className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${Math.min(100, (totalSpent / budgetNum) * 100)}%`, background: totalSpent > budgetNum ? '#ef4444' : '#10b981' }} />
+                  </div>
+                  <div className={`text-xs font-black ${totalSpent > budgetNum ? 'text-red-400' : 'text-emerald-400'}`}>
+                    {totalSpent > budgetNum ? `⚠️ ₹${Math.round(totalSpent - budgetNum).toLocaleString('en-IN')} over budget` : `✅ ₹${Math.round(budgetNum - totalSpent).toLocaleString('en-IN')} remaining`}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Per-day breakdown */}
+            {(days || []).map((day, di) => {
+              const dSlots = getSlotsForDay(day, di, tripData);
+              const dayExpense = dSlots.reduce((acc, s) => acc + (parseFloat(expenses[`${di}-${s.key}`]) || 0), 0);
+              if (dSlots.length === 0) return null;
               return (
-                <div
-                  key={di}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: di === currentDayIdx ? '16px' : '6px',
-                    height: '4px',
-                    background: dComplete ? '#10b981' : di === currentDayIdx ? 'white' : 'rgba(255,255,255,0.2)'
-                  }}
-                />
+                <div key={di} className="rounded-2xl border border-white/8 bg-white/4 overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/6">
+                    <span className="text-xs font-black text-white">Day {di + 1}: {day.dayTheme || day.theme || `Day ${di + 1}`}</span>
+                    <span className="text-xs font-black text-emerald-400">₹{Math.round(dayExpense).toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="p-3 space-y-2">
+                    {dSlots.map(slot => {
+                      const exp = expenses[`${di}-${slot.key}`];
+                      return (
+                        <div key={slot.key} className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-sm">{slot.icon}</span>
+                            <span className="text-xs text-white/60 truncate">{slot.title}</span>
+                          </div>
+                          <button type="button" onClick={() => { setShowExpFor(`${di}-${slot.key}`); setExpInput(expenses[`${di}-${slot.key}`] || ''); setActiveTab('checklist'); setCurrentDayIdx(di); setTimeout(() => setActiveTab('expenses'), 0); }}
+                            className={`text-xs font-black px-2.5 py-1 rounded-lg border transition cursor-pointer shrink-0 ${exp ? 'text-emerald-300 bg-emerald-500/15 border-emerald-500/25' : 'text-white/30 bg-white/5 border-white/10 hover:text-white hover:border-white/25'}`}>
+                            {exp ? `₹${exp}` : '+ Add'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
+            <div className="h-4" />
           </div>
-        </div>
+        )}
 
-        <button
-          type="button"
-          disabled={currentDayIdx === days.length - 1}
-          onClick={() => { setCurrentDayIdx(d => d + 1); setExpandedSlot(null); }}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 text-white text-xs font-bold transition disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-        >
-          Next Day <ChevronRight size={14} />
+        {/* ════ TAB: SOS ════ */}
+        {activeTab === 'sos' && (
+          <div className="px-4 py-4 space-y-3">
+            <div className="rounded-2xl p-4 bg-red-950/50 border border-red-500/30">
+              <div className="text-[9px] font-black uppercase tracking-widest text-red-400 mb-1">Emergency & Quick Help</div>
+              <p className="text-xs text-white/50 leading-relaxed">Agar koi emergency ho — in numbers pe call karo. Screen brightness badhao, phone charge rakhein.</p>
+            </div>
+            {[
+              { icon: '🚨', label: 'Tourist Helpline (24x7)', number: '1800-103-3500', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)' },
+              { icon: '👮', label: 'Police Emergency', number: '100', color: '#f97316', bg: 'rgba(249,115,22,0.12)', border: 'rgba(249,115,22,0.25)' },
+              { icon: '🚑', label: 'Ambulance', number: '108', color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)' },
+              { icon: '🔥', label: 'Fire Brigade', number: '101', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.25)' },
+              { icon: '🏥', label: 'National Emergency', number: '112', color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.25)' },
+              { icon: '✈️', label: 'Women Helpline', number: '1091', color: '#a855f7', bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.25)' },
+            ].map(item => (
+              <a key={item.number} href={`tel:${item.number}`}
+                className="flex items-center justify-between gap-3 p-4 rounded-2xl border transition-all cursor-pointer active:scale-[0.98]"
+                style={{ background: item.bg, borderColor: item.border }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: `${item.bg}`, border: `1px solid ${item.border}` }}>{item.icon}</div>
+                  <div>
+                    <div className="font-black text-white text-sm">{item.number}</div>
+                    <div className="text-xs font-medium" style={{ color: item.color }}>{item.label}</div>
+                  </div>
+                </div>
+                <div className="text-white/40 text-xs font-bold flex items-center gap-1">
+                  📞 <span>Call</span> <ChevronRight size={12} />
+                </div>
+              </a>
+            ))}
+
+            {/* Find nearest hospital */}
+            <a href={`https://www.google.com/maps/search/?api=1&query=nearest+hospital+${encodeURIComponent(tripData?.destinationName || '')}`}
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-3 p-4 rounded-2xl bg-slate-800/80 border border-white/10 hover:border-white/25 transition cursor-pointer">
+              <div className="w-10 h-10 rounded-xl bg-white/8 flex items-center justify-center text-xl">🏥</div>
+              <div>
+                <div className="font-black text-white text-sm">Find Nearest Hospital</div>
+                <div className="text-xs text-white/45">Opens Google Maps near {tripData?.destinationName}</div>
+              </div>
+              <ChevronRight size={14} className="text-white/30 ml-auto" />
+            </a>
+            <div className="h-4" />
+          </div>
+        )}
+      </div>
+
+      {/* ── FOOTER: Prev/Next Day ── */}
+      <div className="shrink-0 px-4 py-2.5 border-t border-white/8 bg-slate-900/80 flex items-center justify-between gap-3">
+        <button type="button" disabled={currentDayIdx === 0} onClick={() => { setCurrentDayIdx(d => d - 1); setExpandedSlot(null); }}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/6 hover:bg-white/12 border border-white/8 text-white text-xs font-bold transition disabled:opacity-25 disabled:pointer-events-none cursor-pointer">
+          <ChevronLeft size={13} /> Prev
+        </button>
+        <div className="flex items-center gap-1">
+          {(days || []).map((_, di) => {
+            const dSlots = getSlotsForDay(days[di], di, tripData);
+            const dDone = Object.values(completed[di] || {}).filter(Boolean).length;
+            const dComplete = dSlots.length > 0 && dDone === dSlots.length;
+            return <div key={di} className="rounded-full transition-all duration-300" style={{ width: di === currentDayIdx ? '14px' : '5px', height: '4px', background: dComplete ? '#10b981' : di === currentDayIdx ? 'white' : 'rgba(255,255,255,0.18)' }} />;
+          })}
+        </div>
+        <button type="button" disabled={currentDayIdx === days.length - 1} onClick={() => { setCurrentDayIdx(d => d + 1); setExpandedSlot(null); }}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/6 hover:bg-white/12 border border-white/8 text-white text-xs font-bold transition disabled:opacity-25 disabled:pointer-events-none cursor-pointer">
+          Next <ChevronRight size={13} />
         </button>
       </div>
 
-      {/* ── FULL TRIP CELEBRATION OVERLAY ── */}
+      {/* ── EXPENSE INPUT MODAL ── */}
+      {showExpFor && (
+        <div className="fixed inset-0 z-[5500] flex items-end sm:items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
+          <div className="w-full max-w-sm bg-slate-800 rounded-3xl border border-white/15 p-6 livetrip-modal shadow-2xl">
+            <h3 className="font-black text-white text-lg mb-1">💸 Add Expense</h3>
+            <p className="text-xs text-white/45 mb-4">
+              {slots.find(s => `${currentDayIdx}-${s.key}` === showExpFor)?.title || 'Activity'}
+            </p>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-white/60 font-black text-lg">₹</span>
+              <input
+                type="number"
+                autoFocus
+                value={expInput}
+                onChange={e => setExpInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') { setExpenses(prev => ({ ...prev, [showExpFor]: parseFloat(expInput) || 0 })); setShowExpFor(null); } }}
+                placeholder="0"
+                className="flex-1 bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white text-xl font-black focus:outline-none focus:border-emerald-400/50 transition"
+              />
+            </div>
+            <div className="flex gap-2">
+              {expenses[showExpFor] > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExpenses(prev => {
+                      const updated = { ...prev };
+                      delete updated[showExpFor];
+                      return updated;
+                    });
+                    setShowExpFor(null);
+                  }}
+                  className="px-3 py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 text-xs font-black transition cursor-pointer border border-red-500/20"
+                >
+                  Remove
+                </button>
+              )}
+              <button onClick={() => setShowExpFor(null)} className="flex-1 py-2.5 rounded-xl bg-white/6 hover:bg-white/12 text-white/60 text-xs font-black transition cursor-pointer border border-white/10">Cancel</button>
+              <button onClick={() => { setExpenses(prev => ({ ...prev, [showExpFor]: parseFloat(expInput) || 0 })); setShowExpFor(null); }}
+                className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-black transition cursor-pointer shadow-lg shadow-emerald-500/25">
+                Save ₹{expInput || 0}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── NOTE INPUT MODAL ── */}
+      {showNoteFor && (
+        <div className="fixed inset-0 z-[5500] flex items-end sm:items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
+          <div className="w-full max-w-sm bg-slate-800 rounded-3xl border border-white/15 p-6 livetrip-modal shadow-2xl">
+            <h3 className="font-black text-white text-lg mb-1">📝 Quick Note</h3>
+            <p className="text-xs text-white/45 mb-4">
+              {slots.find(s => `${currentDayIdx}-${s.key}` === showNoteFor)?.title || 'Activity'}
+            </p>
+            <textarea
+              autoFocus
+              value={noteInput}
+              onChange={e => setNoteInput(e.target.value)}
+              placeholder="Kuch yaad rakhna hai? Tips, observations, memories..."
+              rows={4}
+              className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-400/50 transition resize-none mb-4 placeholder:text-white/25"
+            />
+            <div className="flex gap-2">
+              {notes[showNoteFor] && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNotes(prev => {
+                      const updated = { ...prev };
+                      delete updated[showNoteFor];
+                      return updated;
+                    });
+                    setShowNoteFor(null);
+                  }}
+                  className="px-3 py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 text-xs font-black transition cursor-pointer border border-red-500/20"
+                >
+                  Delete
+                </button>
+              )}
+              <button onClick={() => setShowNoteFor(null)} className="flex-1 py-2.5 rounded-xl bg-white/6 hover:bg-white/12 text-white/60 text-xs font-black transition cursor-pointer border border-white/10">Cancel</button>
+              <button onClick={() => { setNotes(prev => ({ ...prev, [showNoteFor]: noteInput })); setShowNoteFor(null); }}
+                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-white text-xs font-black transition cursor-pointer shadow-lg shadow-amber-500/25">
+                Save Note
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CELEBRATION OVERLAY ── */}
       {showCelebration && (
-        <div className="fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-slate-950/92 backdrop-blur-md">
+        <div className="fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-slate-950/93 backdrop-blur-md">
           <div className="text-center px-8 livetrip-celebrate">
             <div className="text-8xl mb-4">🏆</div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-amber-500/20 border border-amber-500/30">
               <Trophy size={13} className="text-amber-400" />
               <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">Yatra Complete!</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-serif font-black text-white mb-3">
-              You did it, Yatri! 🇮🇳
-            </h2>
-            <p className="text-white/60 text-sm mb-2 font-medium max-w-xs mx-auto">
-              All {totalActivities} activities completed across {days.length} days in{' '}
-              <strong className="text-white">{tripData?.destinationName}</strong>.
+            <h2 className="text-3xl md:text-4xl font-serif font-black text-white mb-2">You did it, Yatri! 🇮🇳</h2>
+            <p className="text-white/55 text-sm mb-1 font-medium max-w-xs mx-auto">
+              All {totalActivities} activities · {days.length} days · <strong className="text-white">{tripData?.destinationName}</strong>
             </p>
-            <p className="text-white/40 text-xs mb-8">What a journey. BharatDarshan is proud of you!</p>
+            {totalSpent > 0 && <p className="text-emerald-400 text-xs mb-6 font-black">₹{Math.round(totalSpent).toLocaleString('en-IN')} spent on this trip</p>}
+            <p className="text-white/30 text-xs mb-8">BharatDarshan is proud of you. Incredible journey!</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button
-                onClick={() => setShowCelebration(false)}
-                className="px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-sm font-bold border border-white/20 transition cursor-pointer"
-              >
-                View Itinerary
-              </button>
-              <button
-                onClick={onExit}
-                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-black transition shadow-lg shadow-orange-500/30 cursor-pointer"
-              >
-                🎊 Back to Planner
-              </button>
+              <button onClick={() => setShowCelebration(false)} className="px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/18 text-white text-sm font-bold border border-white/18 transition cursor-pointer">View Summary</button>
+              <button onClick={onExit} className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-black transition shadow-lg shadow-orange-500/30 cursor-pointer">🎊 Back to Planner</button>
             </div>
           </div>
         </div>
@@ -1145,7 +1287,6 @@ function LiveTripMode({ itinerary, tripData, onExit }) {
     </div>
   );
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
 function ItineraryResult({ itinerary, tripData, onReset }) {
   if (!itinerary) return null;
@@ -1155,7 +1296,27 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [activeDayIdx, setActiveDayIdx] = useState(0);
   const [showHostTipsDrawer, setShowHostTipsDrawer] = useState(false);
-  const [showLiveTripMode, setShowLiveTripMode] = useState(false);
+  const [showLiveTripMode, setShowLiveTripMode] = useState(() => {
+    try {
+      return localStorage.getItem('bharatdarshan_active_livemode') === 'true';
+    } catch (e) {
+      return false;
+    }
+  });
+
+  const handleOpenLiveTrip = () => {
+    try {
+      localStorage.setItem('bharatdarshan_active_livemode', 'true');
+    } catch (e) {}
+    setShowLiveTripMode(true);
+  };
+
+  const handleExitLiveTrip = () => {
+    try {
+      localStorage.removeItem('bharatdarshan_active_livemode');
+    } catch (e) {}
+    setShowLiveTripMode(false);
+  };
 
   // Reset active tab if itinerary changes
   useEffect(() => {
@@ -1306,7 +1467,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         <LiveTripMode
           itinerary={itinerary}
           tripData={tripData}
-          onExit={() => setShowLiveTripMode(false)}
+          onExit={handleExitLiveTrip}
         />
       )}
 
@@ -1326,7 +1487,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
           <button
             type="button"
             id="start-live-trip-btn"
-            onClick={() => setShowLiveTripMode(true)}
+            onClick={handleOpenLiveTrip}
             className="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider text-white overflow-hidden cursor-pointer shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 active:scale-95 hover:scale-[1.03]"
             style={{ background: 'linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #f97316 100%)' }}
           >
@@ -1979,7 +2140,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.15)'}}>🏨</div>
               <div className="flex-1 min-w-0">
                 <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                <p className="text-[11px] text-slate-400 font-medium">Hotels · {p.commission} commission</p>
+                <p className="text-[11px] text-slate-400 font-medium">Hotels & Stays</p>
               </div>
               <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(234,88,12,0.08)',border:'1px solid rgba(234,88,12,0.2)'}}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -1993,7 +2154,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.15)'}}><Plane size={18} className="text-blue-600" /></div>
               <div className="flex-1 min-w-0">
                 <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                <p className="text-[11px] text-slate-400 font-medium">Flights · {p.commission} commission</p>
+                <p className="text-[11px] text-slate-400 font-medium">Flights & Airfare</p>
               </div>
               <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.2)'}}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -2007,7 +2168,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.15)'}}><Navigation size={18} className="text-violet-600" /></div>
               <div className="flex-1 min-w-0">
                 <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                <p className="text-[11px] text-slate-400 font-medium">Tours & Activities · {p.commission} commission</p>
+                <p className="text-[11px] text-slate-400 font-medium">Tours & Experiences</p>
               </div>
               <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.2)'}}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -2021,7 +2182,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(16,185,129,0.08)',border:'1px solid rgba(16,185,129,0.15)'}}><Car size={18} className="text-emerald-600" /></div>
               <div className="flex-1 min-w-0">
                 <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                <p className="text-[11px] text-slate-400 font-medium">Transport · {p.commission} commission</p>
+                <p className="text-[11px] text-slate-400 font-medium">Cabs & Rentals</p>
               </div>
               <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(16,185,129,0.08)',border:'1px solid rgba(16,185,129,0.2)'}}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -2090,9 +2251,30 @@ export default function PlanMyYatra() {
   const [loginError, setLoginError] = useState("");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
-  const [stage, setStage] = useState("form");
-  const [itinerary, setItinerary] = useState(null);
-  const [tripData, setTripData] = useState(null);
+  const [itinerary, setItinerary] = useState(() => {
+    try {
+      const saved = localStorage.getItem('bharatdarshan_active_itinerary');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+  const [tripData, setTripData] = useState(() => {
+    try {
+      const saved = localStorage.getItem('bharatdarshan_active_tripData');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+  const [stage, setStage] = useState(() => {
+    try {
+      const saved = localStorage.getItem('bharatdarshan_active_itinerary');
+      return saved ? 'result' : 'form';
+    } catch (e) {
+      return 'form';
+    }
+  });
   const [errorMsg, setErrorMsg] = useState("");
   const [isDemoMode, setIsDemoMode] = useState(false);
 
@@ -2150,6 +2332,12 @@ export default function PlanMyYatra() {
       setItinerary(result.data);
       setIsDemoMode(result.isDemoMode || false);
       setStage("result");
+      try {
+        localStorage.setItem('bharatdarshan_active_itinerary', JSON.stringify(result.data));
+        localStorage.setItem('bharatdarshan_active_tripData', JSON.stringify(formData));
+      } catch (e) {
+        console.warn('Could not save trip to localStorage:', e);
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setErrorMsg(result.error || "AI generation failed.");
@@ -2165,6 +2353,10 @@ export default function PlanMyYatra() {
       setItinerary(result.data);
       setIsDemoMode(result.isDemoMode || false);
       setStage("result");
+      try {
+        localStorage.setItem('bharatdarshan_active_itinerary', JSON.stringify(result.data));
+        localStorage.setItem('bharatdarshan_active_tripData', JSON.stringify(tripData));
+      } catch (e) {}
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setErrorMsg(result.error || "AI generation failed.");
@@ -2173,7 +2365,15 @@ export default function PlanMyYatra() {
   };
 
   const handleReset = () => {
-    setStage("form"); setItinerary(null); setTripData(null); setErrorMsg("");
+    try {
+      localStorage.removeItem('bharatdarshan_active_itinerary');
+      localStorage.removeItem('bharatdarshan_active_tripData');
+      localStorage.removeItem('bharatdarshan_active_livemode');
+    } catch (e) {}
+    setStage("form");
+    setItinerary(null);
+    setTripData(null);
+    setErrorMsg("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
