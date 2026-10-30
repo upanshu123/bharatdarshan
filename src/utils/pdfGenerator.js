@@ -174,12 +174,23 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
         doc.text(`DAY ${day.day}: ${day.theme || 'Exploration'}`, margin + 4, currentY + 5);
         currentY += 10;
 
+        if (day.transitNote) {
+          checkAddPage(10);
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(8);
+          doc.setTextColor(194, 65, 12);
+          const transitNoteLines = doc.splitTextToSize(`Local Transit Note: ${day.transitNote}`, contentWidth - 8);
+          doc.text(transitNoteLines, margin + 4, currentY);
+          currentY += transitNoteLines.length * 4 + 3;
+        }
+
         const acts = day.activities && day.activities.length > 0
           ? day.activities
           : ['morning', 'afternoon', 'evening'].filter(p => day[p]).map(p => ({
               timeOfDay: p.charAt(0).toUpperCase() + p.slice(1),
               locationName: day[p].locationName || day[p].activity,
-              description: day[p].description
+              description: day[p].description,
+              transitToNext: day[p].transitToNext
             }));
 
         acts.forEach(act => {
@@ -200,10 +211,33 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
             doc.text(descLines, margin + 6, currentY);
             currentY += descLines.length * 4.5 + 2;
           }
+
+          if (act.transitToNext) {
+            checkAddPage(6);
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(7.5);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`  Transit to next: ${act.transitToNext}`, margin + 6, currentY);
+            currentY += 4;
+          }
         });
 
         currentY += 4;
       });
+    }
+
+    // ── Local Transport Rules & Realities ──────────────────────────
+    if (itinerary.localInsights) {
+      checkAddPage(20);
+      drawSectionHeader(doc, 'Local Transport Rules & Constraints', margin, currentY);
+      currentY += 8;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(51, 65, 85);
+      const insightLines = doc.splitTextToSize(itinerary.localInsights, contentWidth - 4);
+      doc.text(insightLines, margin + 2, currentY);
+      currentY += insightLines.length * 4.5 + 4;
     }
 
     // ── Must Try & Packing Essentials ─────────────────────────────
@@ -216,12 +250,23 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
       doc.setFontSize(8.5);
       doc.setTextColor(51, 65, 85);
       itinerary.mustTry.forEach(item => {
-        checkAddPage(6);
-        const itemLines = doc.splitTextToSize(`•  ${item}`, contentWidth - 4);
-        doc.text(itemLines, margin + 2, currentY);
-        currentY += itemLines.length * 4.5;
+        checkAddPage(8);
+        let text = '';
+        if (typeof item === 'string') {
+          text = `•  ${item}`;
+        } else if (item && typeof item === 'object') {
+          const name = item.item || item.name || '';
+          const cost = item.approxCost ? ` (${item.approxCost})` : '';
+          const why = item.why ? ` — ${item.why}` : '';
+          text = `•  ${name}${cost}${why}`;
+        }
+        if (text) {
+          const itemLines = doc.splitTextToSize(text, contentWidth - 4);
+          doc.text(itemLines, margin + 2, currentY);
+          currentY += itemLines.length * 4.5 + 1;
+        }
       });
-      currentY += 4;
+      currentY += 3;
     }
 
     if (itinerary.packingEssentials && itinerary.packingEssentials.length > 0) {

@@ -257,6 +257,298 @@ export const DESTINATION_LOGISTICS = {
   }
 };
 
+
+export const DESTINATION_REALITIES = {
+  manali: {
+    transportConstraints: "Transport Law: Mall Road is strictly a vehicle-free pedestrian zone; autos and private cabs are banned. Old Manali village lanes require walking. Rohtang Pass strictly requires online NGT green permits, and only local HP-registered union taxis are permitted past Gulaba barrier. App cabs (Ola/Uber) do not operate in Kullu-Manali.",
+    mustTry: [
+      { item: "Grilled Himalayan Rainbow Trout with garlic herb butter at Johnson's Cafe (Circuit House Road) (~₹650)", why: "Freshly caught local glacial trout pan-grilled with mountain herbs — iconic Manali culinary staple.", approxCost: "₹650" },
+      { item: "Steamed Siddu with pure desi ghee and walnut-poppy seed chutney at Cafe 1947 (Old Manali) (~₹180)", why: "Traditional fermented Himachali wheat bun steamed and served piping hot with golden clarified butter.", approxCost: "₹180" },
+      { item: "Mutton Thukpa & Steamed Tingmo at Chopsticks Restaurant (The Mall) (~₹240)", why: "Tibetan noodle soup simmered in bone broth with hand-twisted steamed tingmo bread.", approxCost: "₹240" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "15 min walk through Old Manali village lanes (1.2 km)",
+      afternoonToEvening: "25 min walk downhill / 10 min auto to Mall Road barrier (2 km)",
+      eveningToNight: "5 min walk to riverside cafe"
+    }
+  },
+  jaipur: {
+    transportConstraints: "Transport Law: Walled Pink City (Johari, Tripolia, Bapu Bazaar) has intense vehicular congestion and strict one-way car bans; e-rickshaws and walking are the most efficient transit. Private vehicles cannot park near Hawa Mahal. Amber Fort uphill ascent requires authorized government-regulated 4WD jeeps (₹500 return) or walking up the stone ramps; elephant rides have strict morning slots.",
+    mustTry: [
+      { item: "Pyaaz Kachori with spicy kadhi & tamarind chutney at Rawat Mishtan Bhandar (Station Road) (~₹60)", why: "Crisp, multilayered flaky crust bursting with slow-caramelized spiced onion filling, fried fresh every 15 minutes.", approxCost: "₹60" },
+      { item: "Dal Baati Churma Royal Thali at Laxmi Mishtan Bhandar (LMB, Johari Bazaar) (~₹550)", why: "Wood-fired baked baatis crushed in pure cow ghee with panchmel dal, gatte ki sabzi, and jaggery churma.", approxCost: "₹550" },
+      { item: "Kesar Malai Ghewar at Sodhani Sweets (Tonk Road / Lal Kothi) (~₹180/piece)", why: "Honeycomb disc sweet soaked in saffron syrup and crowned with thick malai rabri and silver vark.", approxCost: "₹180" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "5 min walk (350m along Sireh Deori Bazar)",
+      afternoonToEvening: "2 min walk (100m adjacent complex)",
+      eveningToNight: "10 min walk through Johari Bazaar stalls (400m)"
+    }
+  },
+  udaipur: {
+    transportConstraints: "Transport Law: Old City lanes surrounding Jagdish Chowk, Gangaur Ghat, and Lal Ghat are historic pedestrian and two-wheeler corridors. Four-wheeler cabs are strictly banned from entering and must drop passengers at outer gates (Rang Niwas / Hathipole); navigate via walking or local auto-rickshaws. Lake Palace and Jag Mandir are accessible strictly via authorized Mewar jetty boats from Bansi Ghat.",
+    mustTry: [
+      { item: "Dal Baati Churma with garlic chutney at Krishna Dal Bati Restro (Polo Ground) (~₹320)", why: "Authentic unlimited Mewari thali served with hand-crushed roasted wheat baatis drenched in pure desi ghee.", approxCost: "₹320" },
+      { item: "Mawa Kachori with hot spiced syrup at Jodhpur Sweets (Town Hall Road) (~₹70)", why: "Rich sweetened mawa (khoya) filled pastry deep-fried to golden perfection and dipped in warm cardamom syrup.", approxCost: "₹70" },
+      { item: "Kulhad Coffee & Poha breakfast at Fatehsagar Paal stalls (~₹60)", why: "Frothy whipped chocolate-dusted coffee sipped by the breezy morning lakeside promenade.", approxCost: "₹60" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "3 min walk (150m through palace courtyard)",
+      afternoonToEvening: "5 min walk downhill to ghat jetty (300m)",
+      eveningToNight: "15 min sunset boat ride on Lake Pichola"
+    }
+  },
+  jodhpur: {
+    transportConstraints: "Transport Law: The historic Blue City surrounding Mehrangarh Fort (Navchokiya and Brahmpuri) has alleys barely 5 to 6 feet wide; four-wheelers and large cars cannot enter under any circumstance. Walking or hiring an experienced local auto-rickshaw driver is mandatory. Sardar Market near the Clock Tower is pedestrian-heavy with restricted car entry.",
+    mustTry: [
+      { item: "Shahi Samosa & Crispy Mirchi Bada at Shahi Samosa / Janta Sweet Home (Nai Sarak) (~₹35)", why: "Giant Bhavnagri green chilli stuffed with spiced potato mash and fried in seasoned gram-flour batter.", approxCost: "₹35" },
+      { item: "Creamy Makhania Lassi in earthen kulhad at Shri Mishrilal Hotel (Clock Tower / Sardar Market) (~₹50)", why: "Ultra-thick churned sweet yoghurt flavored with cardamom, saffron, and crowned with a thick yellow dollop of makhan.", approxCost: "₹50" },
+      { item: "Fiery Mathania Laal Maas at Gypsy Dining Hall / Indique Rooftop (~₹480)", why: "Tender desert mutton slow-braised with pure desi ghee and fiery sun-dried Mathania red chillies.", approxCost: "₹480" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min auto / 15 min walk down fort ramp (1 km)",
+      afternoonToEvening: "10 min walk through Sardar Market alleys (400m)",
+      eveningToNight: "15 min auto to rooftop dinner view"
+    }
+  },
+  varanasi: {
+    transportConstraints: "Transport Law: The entire 84-ghat riverfront (Assi to Rajghat) and the ancient labyrinthine Vishwanath Temple galis are 100% pedestrianized. No cars, autos, or motor vehicles can enter the inner alleys. Vehicles drop at Godowlia Chowk or Maidagin barricades; walking or cycle-rickshaws are mandatory. Between ghats, walking the stone steps or taking hand-rowed wooden boats is the only transit.",
+    mustTry: [
+      { item: "Banarasi Tamatar Chaat in clay kulhad at Kashi Chat Bhandar (Godowlia Chowk) (~₹60)", why: "Hot spiced mashed tomato and cashew preparation spiked with cumin sugar syrup, served piping hot in earthenware.", approxCost: "₹60" },
+      { item: "Malaiyo (saffron milk cloud froth) at Shreeji Sweets (Thatheri Bazar, winter mornings) (~₹50)", why: "Delicate dew-churned milk froth infused with saffron, cardamom, and crushed pistachios, served until 11 AM.", approxCost: "₹50" },
+      { item: "Crispy Kachori Sabzi & Jalebi breakfast at Ram Bhandar (Chowk) (~₹70)", why: "Urad dal-stuffed kachoris served with spicy hing-infused aloo rassa and warm syrupy jalebis.", approxCost: "₹70" },
+      { item: "Special Maghai Paan at Keshav Tambool Bhandar (near Lanka / Assi) (~₹40)", why: "Tender betel leaf layered with gulkand, natural rose petals, kattha, and aromatic spices.", approxCost: "₹40" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "15 min wooden boat ride / 20 min walk along stone ghats (1.5 km)",
+      afternoonToEvening: "4 min walk through pedestrian Vishwanath gali (180m)",
+      eveningToNight: "10 min walk along ghat steps to aarti platform (450m)"
+    }
+  },
+  agra: {
+    transportConstraints: "Transport Law: Taj Trapezium Zone (TTZ) legally bars all private cars, app cabs, and petrol/diesel autos within 500m of the Taj Mahal. You must park at Shilpgram (East Gate) and use mandatory government battery-operated golf carts / e-rickshaws (₹20) or walk. Taj Mahal is strictly closed on Fridays. Agra Fort requires standard auto or cab from Taj (10 min).",
+    mustTry: [
+      { item: "Angoori & Kesar Petha at Panchhi Petha Store (Noori Gate / Sadar Bazaar) (~₹160/box)", why: "Original translucent ash-gourd sweets infused with saffron threads and kewra essence.", approxCost: "₹160" },
+      { item: "Crispy Bedai with spicy Dubki Aloo & Jalebi at Deviram Sweets (Pratappura) (~₹80)", why: "Deep-fried urad dal puffed puris served with watery, fiery fenugreek-potato curry and hot crispy jalebis.", approxCost: "₹80" },
+      { item: "Mughlai Galouti Kebab with Roomali Roti at Pinch of Spice (Fatehabad Road) (~₹480)", why: "Melt-in-the-mouth minced meat patty smoked over charcoal with 32 royal spices.", approxCost: "₹480" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min battery cart + 10 min cab to Agra Fort (2.8 km)",
+      afternoonToEvening: "20 min cab across Yamuna bridge to Mehtab Bagh (7 km)",
+      eveningToNight: "15 min cab return to Sadar Bazaar food street"
+    }
+  },
+  rishikesh: {
+    transportConstraints: "Transport Law: Ram Jhula, Lakshman Jhula / Janki Setu, and the immediate Ganga riverbank paths are pedestrian and two-wheeler zones only. Cars and cabs cannot cross the pedestrian suspension bridges and must drop passengers at designated parking lots (Muni Ki Reti or Tapovan). Shared Vikrams (tempo autos) run fixed routes along Badrinath road. All meat, fish, and alcohol are strictly illegal within municipal limits.",
+    mustTry: [
+      { item: "Aloo Puri & Bedmi breakfast at Chotiwala Restaurant (Swarg Ashram Ghat) (~₹140)", why: "Iconic pilgrims' morning meal of spiced potato curry, fenugreek bedmi puri, and sooji halwa by the river.", approxCost: "₹140" },
+      { item: "Wood-fired Thin Crust Margherita at Beatles Cafe / The 60's (Tapovan) (~₹380)", why: "Artisanal stone-baked pizza served with panoramic sunset vistas of the turquoise Ganges below.", approxCost: "₹380" },
+      { item: "Ayurvedic Herbal Kadha & Ginger Lemon Honey Tea at Little Buddha Cafe (Laxman Jhula) (~₹90)", why: "Freshly brewed immunity tonic made with holy basil (tulsi), black pepper, and raw forest honey.", approxCost: "₹90" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min walk across Janki Setu pedestrian bridge (400m)",
+      afternoonToEvening: "15 min shared auto / walk along river promenade (1.8 km)",
+      eveningToNight: "10 min walk to evening aarti steps"
+    }
+  },
+  shimla: {
+    transportConstraints: "Transport Law: The Ridge, Mall Road, and Lakkar Bazaar are strictly vehicle-free pedestrian zones enforced by Himachal Police. No cabs, autos, or private vehicles are permitted. To reach Mall Road from the lower Cart Road parking/bus stand, take the Himachal Tourism Municipal Lift (₹10/person) or walk the steep uphill pedestrian slope. App-cabs (Ola/Uber) do not exist.",
+    mustTry: [
+      { item: "Himachali Ghee-Dipped Siddu with walnut chutney at Wake & Bake Cafe (The Ridge, Mall Road) (~₹190)", why: "Traditional fermented steamed bun stuffed with poppy seeds and walnuts, served swimming in pure clarified butter.", approxCost: "₹190" },
+      { item: "Authentic Pahadi Sepu Vadi & Chana Madra at Himachali Rasoi (Middle Bazaar) (~₹220)", why: "Classic celebratory Dham dish cooked in slow yoghurt gravy spiced with cloves and cardamom.", approxCost: "₹220" },
+      { item: "Warm Apple Pie & fresh fruit cider at Trishool Bakers (The Mall near Gaiety Theatre) (~₹120)", why: "Colonial-era bakery producing Shimla's most beloved apple desserts made from Kotgarh orchard apples.", approxCost: "₹120" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "3 min walk along pedestrian Mall Road (150m)",
+      afternoonToEvening: "8 min walk to Lakkar Bazaar craft stalls (350m)",
+      eveningToNight: "15 min ropeway / walk to Jakhu Ridge viewpoint"
+    }
+  },
+  "leh-ladakh": {
+    transportConstraints: "Transport Law: Outside non-Ladakh private commercial vehicles and self-drive rental cabs (Zoomcar, Myles) are legally banned from tourist routes beyond Leh town by the Ladakh Taxi Union. You MUST hire an authorized local Ladakh-registered 4x4 taxi (Innova/Scorpio/Aria) from the Leh Taxi Stand. Mandatory 48-hour acclimatization in Leh (3,500m) is enforced; do NOT schedule high passes on Day 1 or Day 2. Inner Line Permits (ILP) required for Pangong, Nubra, and Tso Moriri.",
+    mustTry: [
+      { item: "Tibetan Yak Cheese Pizza & Salty Butter Tea (Po Cha) at Bon Appetit (Changspa Road, Leh) (~₹450)", why: "Locally churned dry yak cheese melted on wood-fired crust, paired with traditional pink churned salt-butter tea.", approxCost: "₹450" },
+      { item: "Authentic Ladakhi Skyu (hand-rolled vegetable & mutton pasta stew) at Tibetan Kitchen (Fort Road) (~₹280)", why: "Traditional winter comfort stew cooked with slow-simmered root vegetables and coin-sized dough pasta.", approxCost: "₹280" },
+      { item: "Wild Apricot Jam & Seabuckthorn Juice at Dzomsa Organic Store (Main Bazaar) (~₹150)", why: "Cold-pressed organic seabuckthorn juice packed with Vitamin C, harvested from wild Nubra riverbanks.", approxCost: "₹150" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "5 min gentle walk down palace stone steps (300m)",
+      afternoonToEvening: "15 min cab / climb up stairs to Shanti Stupa (2.5 km)",
+      eveningToNight: "10 min cab to Fort Road restaurant cluster"
+    }
+  },
+  kerala: {
+    transportConstraints: "Transport Law: Houseboats on the backwaters are strictly mandated by the Kerala Port Authority to anchor by 05:30 PM to allow local fishermen to lay nets; overnight cruising is legally prohibited. In historic Fort Kochi, the heritage zone around the Chinese Fishing Nets and Jewish Synagogue is best navigated on foot or cycle; government ro-ro vehicle ferries connect Fort Kochi to Vypin island (₹5/ticket).",
+    mustTry: [
+      { item: "Karimeen Pollichathu (Pearl Spot wrapped in Banana Leaf) at Grand Pavilion (MG Road, Kochi) (~₹480)", why: "Backwater pearl spot fish marinated in spicy shallot-curry leaf masala and pan-roasted in banana leaves.", approxCost: "₹480" },
+      { item: "Traditional 24-Dish Kerala Sadya on fresh banana leaf at Mothers Veg Plaza (Bakery Junction, Trivandrum) (~₹280)", why: "Elaborate vegetarian feast with avial, olan, thoran, sambar, pachadi, and three types of sweet payasam.", approxCost: "₹280" },
+      { item: "Fresh Coconut Toddy with Spicy Duck Roast at Mullakkal Shappu (Alappuzha) (~₹340)", why: "Village toddy shop delicacy featuring fiery pepper-coriander duck curry paired with sweet morning toddy.", approxCost: "₹340" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "15 min backwater canoe / motorboat to jetty (2 km)",
+      afternoonToEvening: "10 min auto / 15 min walk through heritage alleyways (1.2 km)",
+      eveningToNight: "5 min walk to waterside seafood shack"
+    }
+  },
+  munnar: {
+    transportConstraints: "Transport Law: Commercial heavy vehicles and app cabs do not operate on estate tracks. Kolukkumalai Sunrise point strictly mandates hiring authorized local 4x4 off-road jeeps from Suryanelli base (₹2,500/jeep); standard private hatchbacks and sedans cannot negotiate the rocky boulder trails. Walking along tea plantations requires municipal permits or staying at estate properties.",
+    mustTry: [
+      { item: "Kerala Malabar Parotta with Pepper Chicken Curry at Rapsy Restaurant (Main Bazaar, Munnar) (~₹210)", why: "Flaky, layered handmade parottas served with spicy black pepper gravy in Munnar's oldest hill eatery.", approxCost: "₹210" },
+      { item: "Fresh Hand-Rolled Orthodox Orange Pekoe Tea at Lockhart Tea Mill (~₹60/cup)", why: "Tasting single-estate high-grown tea directly at India's oldest operational 1857 orthodox processing factory.", approxCost: "₹60" },
+      { item: "Steamed Banana Appam & Puttu with Kadala Curry at Saravana Bhavan (MG Road) (~₹140)", why: "Cylindrical steamed rice-coconut cakes served with spicy black chickpea curry.", approxCost: "₹140" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "25 min cab along winding tea estate roads (8 km)",
+      afternoonToEvening: "15 min cab to viewpoint / spice garden (5 km)",
+      eveningToNight: "10 min walk through hill town bazaar"
+    }
+  },
+  goa: {
+    transportConstraints: "Transport Law: App-based taxi aggregators (Ola and Uber) are legally restricted from airport pickups, beach zones, and resort areas by the Goa Taxi Union. Only the GoaMiles government app or prepaid airport taxi booths operate. The most common and economical transit is renting self-drive scooters/geared bikes (₹350–600/day) or self-drive cars; always carry a valid driving licence and helmet.",
+    mustTry: [
+      { item: "Goan Fish Curry Thali with Kingfish Rava Fry at Ritz Classic (18th June Road, Panaji) (~₹350)", why: "Coconut-kokum fish curry served with red Goan unpolished rice, tisreo (clams), kismur, and crisp semolina-fried fish.", approxCost: "₹350" },
+      { item: "Authentic Pork Vindaloo & Poi Bread at Mum's Kitchen (Miramar, Panaji) (~₹460)", why: "Traditional Catholic Goan recipe using toddy vinegar, garlic, Kashmiri chillies, and warm local crusty poi.", approxCost: "₹460" },
+      { item: "Multi-layered Warm Bebinca with vanilla ice cream at Martin's Corner (Betalbatim) (~₹220)", why: "Traditional 7-layer Indo-Portuguese pudding baked with coconut milk, egg yolks, nutmeg, and ghee.", approxCost: "₹220" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "15 min scooter / cab ride along coastal road (5 km)",
+      afternoonToEvening: "20 min drive between beach sectors (7 km)",
+      eveningToNight: "5 min beach walk to shack dinner"
+    }
+  },
+  hampi: {
+    transportConstraints: "Transport Law: Archeological Survey of India (ASI) prohibits all motorized private vehicles within a 1-km radius of the Vijaya Vittala Temple and the King's Balance. You must park at the gezi-shed parking and take the mandatory ASI eco-friendly battery golf carts (₹20/return) or walk. Bicycles and mopeds (₹150–400/day) are the traditional and most convenient transit mode across the 26 sq km heritage ruins.",
+    mustTry: [
+      { item: "Authentic North Karnataka Jolada Rotti Oota at Mango Tree Restaurant (near Temple Bazaar) (~₹220)", why: "Unleavened sorghum flatbreads served with yennegai (stuffed brinjal), shenga chutney powder, and curd.", approxCost: "₹220" },
+      { item: "Crispy Hampi Benne Dosa with spicy coconut chutney at Gopi Guest House Diner (Hampi Bazaar) (~₹80)", why: "Thick, golden, butter-roasted dosa with a fluffy white interior, served on banana leaves.", approxCost: "₹80" },
+      { item: "Middle Eastern Shakshuka & Fresh Pomegranate Lassi at Laughing Buddha Cafe (Hippie Island / Sanapur) (~₹240)", why: "Eggs poached in spiced tomato sauce served on floor mattresses overlooking paddy fields.", approxCost: "₹240" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min cycle / battery cart ride (1.2 km)",
+      afternoonToEvening: "15 min cycle / walk along Tungabhadra river path (1.5 km)",
+      eveningToNight: "5 min coracle boat crossing across river (₹50)"
+    }
+  },
+  mysore: {
+    transportConstraints: "Transport Law: Mysore Palace 72-acre interior compound has pedestrian paved walkways; private vehicles park outside Varaha or Jayamarthanda gates. Battery-operated transit carts operate for seniors inside the palace campus. Chamundi Hill has dedicated KSRTC uphill shuttle buses from the central bus stand; parking atop the hill is regulated on weekends.",
+    mustTry: [
+      { item: "Mylari Butter Masala Dosa with coconut chutney at Original Vinayaka Mylari (Nazarbad Main Road) (~₹80)", why: "Cloud-soft, melt-in-mouth folded butter dosa stuffed with signature spiced onion-coriander saagu.", approxCost: "₹80" },
+      { item: "Warm Ghee Mysore Pak at Guru Sweets (Sayyaji Rao Road) (~₹90/100g)", why: "The birthplace of Mysore Pak — made with chickpea flour, sugar, and generous melted pure cow ghee.", approxCost: "₹90" },
+      { item: "Traditional Mysore Royal Vegetarian Thali at Hotel Dasaprakash (Gandhi Square) (~₹210)", why: "Historic heritage meal featuring bisibelebath, kosambari, Mysore rasam, and traditional sweet holige.", approxCost: "₹210" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min auto / 15 min walk to Devaraja Market (1.5 km)",
+      afternoonToEvening: "25 min cab up Chamundi Hill road (12 km)",
+      eveningToNight: "20 min cab return to illuminated palace grounds"
+    }
+  },
+  shillong: {
+    transportConstraints: "Transport Law: Police Bazar (PB) central square is pedestrian-only with zero vehicular entry. App cabs (Uber/Ola) do NOT operate in Meghalaya. Transit is conducted via shared black-and-yellow local Maruti 800/Alto cabs on fixed point-to-point fares (₹20–50/seat) or hiring a private tourist taxi from the Meghalaya Tourism taxi stand. The Cherrapunji Double Decker Living Root Bridge trek involves 3,500 stone stairs — 100% foot trail.",
+    mustTry: [
+      { item: "Jadoh (Khasi wild red rice cooked in pork stock) & Dohkhlieh at Trattoria (Police Bazar) (~₹180)", why: "Authentic Khasi tribal dish flavored with black sesame, served with shredded pork and green chili salad.", approxCost: "₹180" },
+      { item: "Steamed Pork Momos & Clear Bamboo Shoot Broth at Bamboo Hut (Laban) (~₹160)", why: "Handmade dumplings stuffed with tender mountain pork, accompanied by fermented fiery bamboo shoot dip.", approxCost: "₹160" },
+      { item: "Cherrapunji Wild Orange Blossom Honey with Waffles at Dylan's Cafe (Risa Colony) (~₹220)", why: "Pure forest honey harvested from Khasi sub-tropical slopes served in an iconic tribute cafe.", approxCost: "₹220" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "15 min shared cab / walk through Police Bazar (1.8 km)",
+      afternoonToEvening: "25 min cab to Ward's Lake / Shillong Peak (6 km)",
+      eveningToNight: "10 min walk to cafe hub"
+    }
+  },
+  andaman: {
+    transportConstraints: "Transport Law: App-based cabs do not operate in the Andaman & Nicobar archipelago. All inter-island transit (Port Blair to Havelock / Swaraj Dweep / Neil) requires booking high-speed catamaran ferries (Makruzz, Nautika, Green Ocean) or DSS government ships at least 15–30 days in advance. Auto-rickshaws operate only on South Andaman; Havelock and Neil transit is best managed by hiring local scooters (₹500/day) or pre-contracted union cabs.",
+    mustTry: [
+      { item: "Charcoal-Grilled Andaman Red Snapper with garlic butter at New Lighthouse Restaurant (Port Blair) (~₹550)", why: "Catch-of-the-day Andaman sea fish grilled fresh over charcoal, served with lemon-tamarind dip.", approxCost: "₹550" },
+      { item: "Fresh Coconut Milk Tiger Prawn Curry at Something Different - A Beachside Cafe (Havelock Island) (~₹480)", why: "Succulent Bay of Bengal king prawns simmered in freshly squeezed island coconut milk and curry leaves.", approxCost: "₹480" },
+      { item: "Banana Blossom Cutlets & Fresh Tender Coconut at Neil Island Bharatpur Beach Shacks (~₹90)", why: "Traditional island plantain flower cutlets spiced with ginger, served right on the coral sand.", approxCost: "₹90" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "15 min auto / cab along Marine Hill (3.5 km)",
+      afternoonToEvening: "20 min cab / boat to Cellular Jail Light & Sound (4 km)",
+      eveningToNight: "5 min walk to seaside dining terrace"
+    }
+  },
+  amritsar: {
+    transportConstraints: "Transport Law: The 1-km Heritage Street boulevard stretching from Town Hall to the Golden Temple is a completely pedestrianized marble promenade; all cars, auto-rickshaws, and motorcycles are strictly banned. Free municipal battery golf carts operate for elderly and differently-abled visitors. Head coverings (scarf/rumāl) and removal of footwear are legally and culturally mandatory inside the Golden Temple complex.",
+    mustTry: [
+      { item: "Amritsari Aloo Kulcha with Chana & Tamarind Chutney at Kulcha Land (Ranjit Avenue) (~₹120)", why: "Multi-layered tandoor-baked flatbread loaded with spiced mashed potatoes and drenched in fresh melting white makhan.", approxCost: "₹120" },
+      { item: "Slow-simmered Mah ki Dal & Makki Roti at Kesar Da Dhaba (Chowk Passian) (~₹220)", why: "Black lentils slow-cooked for 12 hours over brass cauldrons in pure desi ghee since 1916.", approxCost: "₹220" },
+      { item: "Thick Malai-Topped Sweet Peda Lassi in tall brass glass at Ahuja Milk Center (near Hindu College) (~₹80)", why: "Rich, creamy churned curd topped with condensed milk peda and a thick spoonable layer of fresh malai.", approxCost: "₹80" },
+      { item: "Crispy Carom-Spiced Amritsari Fried Fish at Makhan Fish Corner (Majitha Road) (~₹340)", why: "Fresh river Sole fish marinated in ajwain, gram flour, and secret Punjabi spices, deep-fried crisp.", approxCost: "₹340" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "2 min walk across pedestrian Heritage Street (150m)",
+      afternoonToEvening: "45 min cab (30 km) to Wagah Border ceremony",
+      eveningToNight: "45 min cab return to Old City food lanes"
+    }
+  },
+  madurai: {
+    transportConstraints: "Transport Law: The 4 concentric Chithirai Streets encircling the Meenakshi Amman Temple are designated pedestrian and non-polluting zones. All auto-rickshaws and cabs must drop passengers outside the outer police barriers. Footwear must be deposited at temple entry counters (₹5); leather belts and bags are prohibited inside.",
+    mustTry: [
+      { item: "Special Famous Jigarthanda at Famous Jigarthanda (East Marret Street) (~₹70)", why: "Madurai's legendary royal dessert drink made with badam pisin (almond resin), nannari syrup, and basundi ice cream.", approxCost: "₹70" },
+      { item: "Kari Dosa (Three-Layer Minced Mutton Dosa) at Konar Mes (Simmakkal) (~₹220)", why: "Thick fermented rice base topped with beaten egg and a generous mound of spicy Chettinad minced mutton.", approxCost: "₹220" },
+      { item: "14-Piece Ghee Mini Idli floating in Sambar at Murugan Idli Shop (West Masi Street) (~₹110)", why: "Button idlis drenched in piping hot spiced lentil sambar and crowned with pure melted country ghee.", approxCost: "₹110" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "5 min walk through pedestrian temple corridor (300m)",
+      afternoonToEvening: "12 min auto to Thirumalai Nayakkar Palace (2 km)",
+      eveningToNight: "10 min walk to evening dinner hub"
+    }
+  },
+  puri: {
+    transportConstraints: "Transport Law: The Grand Road (Bada Danda) immediately preceding Lord Jagannath Temple is restricted for motorized vehicles; battery-rickshaws, cycle-rickshaws, or walking are required. Note: Non-Hindus are legally restricted from entering the inner sanctum of Shree Jagannath Temple by temple trust laws (viewing is available from the Raghunandan Library roof across the street).",
+    mustTry: [
+      { item: "Woodfire Baked Chhena Poda at Nimapada Sweets (Grand Road near Medical Square) (~₹120/250g)", why: "Lord Jagannath's revered sweet — fresh cottage cheese kneaded with cardamom and caramelized over sal leaves.", approxCost: "₹120" },
+      { item: "Abhada Mahaprasad (Temple Dalma & Kanika Rice) at Ananda Bazar (Inside Jagannath Temple) (~₹110)", why: "Sacred earthen-pot cooked meal of sweetened ghee rice, lentils stewed with raw papaya, and dry ginger.", approxCost: "₹110" },
+      { item: "Crispy Mustard Fried Pomfret & Prawn Curry at Wildgrass Restaurant (VIP Road) (~₹380)", why: "Traditional Odia coastal seafood seasoned with pungent yellow mustard paste (besara) and green chilies.", approxCost: "₹380" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min cycle rickshaw / walk along Grand Road (1 km)",
+      afternoonToEvening: "15 min auto / walk to Golden Beach promenade (2 km)",
+      eveningToNight: "5 min beach stroll to coastal dinner shack"
+    }
+  },
+  darjeeling: {
+    transportConstraints: "Transport Law: Chowrasta (The Mall) and Observatory Hill are strict pedestrian zones with zero vehicular access. Shared four-wheel-drive jeeps (Bolero/Sumo) operate from Chowk Bazaar and Clubside stand for inter-city travel; standard auto-rickshaws do NOT exist in Darjeeling due to steep 1:3 hill gradients. Tiger Hill excursions depart strictly at 03:45 AM via pre-booked shared jeeps.",
+    mustTry: [
+      { item: "First-Flush Single Estate Muscatel Tea at Nathmulls Tea Lounge (The Mall, Chowrasta) (~₹150/pot)", why: "Spring-harvested hand-plucked tea with natural floral notes of muscat grapes, served in porcelain sets.", approxCost: "₹150" },
+      { item: "Steamed Pork & Veg Momos with fiery dalle chilli chutney at Keventers Open-Air Terrace (Nehru Road) (~₹180)", why: "Traditional Himalayan momos paired with hot English cocoa overlooking the Kangchenjunga range.", approxCost: "₹180" },
+      { item: "Crispy Nepali Sel Roti with spicy Aloo Dum at Chowk Bazaar Street Stalls (~₹60)", why: "Ring-shaped fried rice-flour doughnut accompanied by slow-cooked Darjeeling mountain potato curry.", approxCost: "₹60" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "20 min shared jeep return from Tiger Hill / Batasia (6 km)",
+      afternoonToEvening: "10 min walk along pedestrian Mall Road (400m)",
+      eveningToNight: "5 min walk to colonial bakery terrace"
+    }
+  },
+  coorg: {
+    transportConstraints: "Transport Law: App cabs (Uber/Ola) are nonexistent in the Western Ghats of Coorg. Inter-town routes (Madikeri to Kushalnagar / Virajpet) require personal vehicles or pre-hired private cabs. Reaching Mandalpatti peak or Nishani Motte strictly requires hiring authorized 4x4 Mahindra jeeps from the base (₹1,800–2,200/jeep) due to unpaved vertical mud tracks.",
+    mustTry: [
+      { item: "Kodava Pandi Curry (Pork with Kachampuli vinegar) at Coorg Cuisine (Madikeri Main Road) (~₹320)", why: "The iconic Kodava warrior dish cooked with dark wild Garcinia gummi-gutta (kachampuli) vinegar and ground black pepper.", approxCost: "₹320" },
+      { item: "Steamed Akki Rotti with Kootu Curry at Raintree Restaurant (near Town Hall, Madikeri) (~₹180)", why: "Fragrant broken rice flour flatbreads served with mixed vegetable and roasted coconut stew.", approxCost: "₹180" },
+      { item: "Estate Peaberry Arabica Coffee & Handmade Cardamom Chocolate at Ainmane Cafe (Madikeri) (~₹140)", why: "Fresh-roasted single-origin shade-grown Coorg coffee paired with spice-infused artisanal dark chocolate.", approxCost: "₹140" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "25 min cab through winding spice plantation roads (10 km)",
+      afternoonToEvening: "30 min 4x4 jeep track to Mandalpatti ridge (14 km)",
+      eveningToNight: "20 min cab back to Madikeri town center"
+    }
+  },
+  ooty: {
+    transportConstraints: "Transport Law: Commercial Street and the central market have restricted one-way vehicular entry and designated pedestrian shopping hours. Commercial app cabs do not operate; local black-and-yellow tourist taxis run from the Ooty railway station stand on fixed union tariffs. Nilgiri Mountain Railway (Toy Train) Joyrides require IRCTC reservations months in advance or early 5 AM queueing for unreserved second-class tokens.",
+    mustTry: [
+      { item: "Traditional Ooty Crispy Varkey at West Coast Bakery (Commercial Road) (~₹90/box)", why: "Flaky, multi-layered savory hill biscuits baked with wheat flour, vegetable fat, and semolina — pairs with Nilgiri tea.", approxCost: "₹90" },
+      { item: "Handmade Roasted Almond & Rum-Raisin Chocolates at King Star Confectionery (Commercial Road) (~₹180/100g)", why: "Established in 1942, India's oldest fudge and chocolate cottage maker utilizing local dairy.", approxCost: "₹180" },
+      { item: "Nilgiri Green Herb Mutton Biryani at Shinkow's / Kurumba Village Diner (~₹340)", why: "Fragrant short-grain jeeraga samba rice cooked with fresh mountain mint, coriander, and native Nilgiri spices.", approxCost: "₹340" }
+    ],
+    defaultTransit: {
+      morningToAfternoon: "10 min auto / 15 min walk to Botanical Gardens (1.5 km)",
+      afternoonToEvening: "20 min cab to Ooty Lake / Doddabetta Peak (5 km)",
+      eveningToNight: "10 min walk along Commercial Road sweet shops"
+    }
+  }
+};
+
 // Full Destination Database — Real places, 3 unique activity sets per destination
 const DESTINATION_DATABASE = {
 
@@ -297,13 +589,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Cafe 1947", specialty: "Himachali Siddu & Kadha Prasad", priceRange: "₹200-450" }]
       }
     ],
-    mustTry: [
-      { item: "Trout Fish at Johnson's Cafe", why: "Freshly caught local trout grilled with Himalayan herbs — iconic Manali dining experience." },
-      { item: "Tibetan Thukpa & Momos", why: "Hearty Tibetan noodle soup and dumplings — essential cold weather comfort food in mountain towns." },
-      { item: "Apple Cider from Old Manali Orchards", why: "Manali's apple orchards produce India's finest varieties; fresh pressed cider is a local specialty." }
-    ],
+    mustTry: DESTINATION_REALITIES["manali"].mustTry,
     packing: ["Warm down jacket (even in summer)", "Waterproof trekking shoes", "Sunscreen SPF 50+ (high altitude UV)", "Woollen gloves and cap", "Motion sickness tablets for mountain roads"],
-    localInsights: "Rohtang Pass permit is mandatory and must be booked online 2 days in advance. Inner Line Permit required for Spiti Valley beyond Rohtang.",
+    localInsights: DESTINATION_REALITIES["manali"].transportConstraints,
     bestTime: "May to June (snow activities) and September to October (clear skies and adventure)"
   },
 
@@ -344,13 +632,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Chokhi Dhani Sangri Restaurant", specialty: "Traditional Marwari Unlimited Thali", priceRange: "Included in ticket" }]
       }
     ],
-    mustTry: [
-      { item: "Dal Baati Churma", why: "Rajasthan's signature meal — wheat balls baked over cow-dung embers and dipped in clarified butter." },
-      { item: "Pyaaz Kachori at Rawat", why: "Crispy pastry stuffed with spiced onion filling — Jaipur's iconic morning street breakfast." },
-      { item: "Jaipur Blue Pottery", why: "Traditional Turco-Persian craft unique to Jaipur, made without clay using quartz stone powder." }
-    ],
+    mustTry: DESTINATION_REALITIES["jaipur"].mustTry,
     packing: ["Sunscreen SPF 50+", "Comfortable walking shoes", "Cotton kurtas / light scarves", "Sunglasses & hat"],
-    localInsights: "Jaipur markets close by 8:30 PM. Book Amber Fort elephant rides or jeeps online. Use Rapido/Ola for local travel.",
+    localInsights: DESTINATION_REALITIES["jaipur"].transportConstraints,
     bestTime: "October to March (pleasant 15-25°C winter weather)"
   },
 
@@ -391,13 +675,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "1559 AD Udaipur", specialty: "Royal Mewari Cuisine", priceRange: "₹1200-2500" }]
       }
     ],
-    mustTry: [
-      { item: "Dal Baati Churma at Ambrai", why: "Udaipur's lakeside restaurants serve this Rajasthani classic with a stunning palace backdrop." },
-      { item: "Miniature Painting Workshop", why: "Udaipur is the birthplace of the Mewar school of miniature art — workshops run near City Palace." },
-      { item: "Mawa Kachori", why: "Sweet kachori stuffed with milk solids and sugar syrup — a famous Udaipur dessert snack." }
-    ],
+    mustTry: DESTINATION_REALITIES["udaipur"].mustTry,
     packing: ["Light cottons", "Modest clothing for temples", "Comfortable walking shoes", "Sunscreen and sunhat"],
-    localInsights: "Lake Palace hotel is only accessible by boat. Auto-rickshaws easily available near City Palace. Avoid peak summer (April-June) heat.",
+    localInsights: DESTINATION_REALITIES["udaipur"].transportConstraints,
     bestTime: "September to March (post-monsoon greenery and winter pleasantness)"
   },
 
@@ -438,13 +718,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Gypsy Restaurant", specialty: "Rajasthani Unlimited Thali", priceRange: "₹450 fixed" }]
       }
     ],
-    mustTry: [
-      { item: "Mirchi Bada at Janta Sweet Home", why: "Spiced potato-stuffed green chilli fried in gram flour batter — Jodhpur's iconic street snack." },
-      { item: "Laal Maas", why: "Fiery Marwari mutton curry slow-cooked with mathania red chillies and clarified butter." },
-      { item: "Mawa Kachori", why: "Sweet fried pastry filled with rich sweetened khoya and dipped in warm sugar syrup." }
-    ],
+    mustTry: DESTINATION_REALITIES["jodhpur"].mustTry,
     packing: ["Sunscreen SPF 50+", "Comfortable cotton clothes", "Walking shoes for fort ramps", "Sunglasses & hat"],
-    localInsights: "Old Jodhpur streets are narrow — auto-rickshaws or walking recommended. Bargain at Sardar Market.",
+    localInsights: DESTINATION_REALITIES["jodhpur"].transportConstraints,
     bestTime: "October to March (15-26°C pleasant winter weather)"
   },
 
@@ -475,13 +751,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Baati Chokha Restaurant", specialty: "Authentic UP Baati Chokha", priceRange: "₹200-400" }]
       }
     ],
-    mustTry: [
-      { item: "Banarasi Tamatar Chat", why: "Spiced mashed tomato curry served in eco-friendly kulhad clay pots at Kashi Chat Bhandar." },
-      { item: "Banarasi Paan", why: "Iconic betel leaf digestif prepared with gulkand, spices, and silver foil — try from Pehelwan Paan Shop." },
-      { item: "Malaiyo (Winter Only)", why: "Frothy saffron-flavoured whipped cream dessert available only in winter mornings near Chowk area." }
-    ],
+    mustTry: DESTINATION_REALITIES["varanasi"].mustTry,
     packing: ["Modest clothing covering shoulders and knees", "Easy slip-on shoes for temple visits", "Hand sanitiser", "Small cash bills (₹10-50)"],
-    localInsights: "Varanasi lanes (galis) are labyrinthine — use landmarks and Google Maps. Never photograph cremation rituals. Respect all rituals.",
+    localInsights: DESTINATION_REALITIES["varanasi"].transportConstraints,
     bestTime: "November to February (pleasant cool weather and Ganga Mahotsav festival)"
   },
 
@@ -512,13 +784,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Dasaprakash Restaurant", specialty: "Agra Petha & South Indian Thali", priceRange: "₹400-700" }]
       }
     ],
-    mustTry: [
-      { item: "Agra Petha", why: "Translucent crystallised pumpkin sweet invented by Mughal royal cooks — available in 30+ flavours." },
-      { item: "Mughlai Dum Biryani", why: "Slow-cooked sealed pot rice layered with saffron, meats, and royal Mughal spices." },
-      { item: "Bedai Aloo Sabzi", why: "Flaky fried lentil bread with spiced potato curry — Agra's quintessential breakfast dish." }
-    ],
+    mustTry: DESTINATION_REALITIES["agra"].mustTry,
     packing: ["Comfortable walking shoes (flat cobblestones at monuments)", "Light cotton clothes", "Sunscreen", "Camera with extra battery"],
-    localInsights: "Taj Mahal is closed on Fridays. Book tickets online to avoid queues. Avoid carrying bags inside Taj — cloak rooms available near gates.",
+    localInsights: DESTINATION_REALITIES["agra"].transportConstraints,
     bestTime: "October to March (clear skies and comfortable weather for sightseeing)"
   },
 
@@ -549,13 +817,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Freedom Cafe Rishikesh", specialty: "Israeli Hummus & Shakshuka", priceRange: "₹400-700" }]
       }
     ],
-    mustTry: [
-      { item: "Bungee Jumping at Jumping Heights", why: "India's highest bungee jump at 83 metres over a Himalayan gorge — strictly for adrenaline seekers." },
-      { item: "Ayurvedic Abhyanga Massage", why: "Traditional Ayurvedic full-body warm oil massage for rejuvenation — extensively practiced in Rishikesh." },
-      { item: "Aloo Puri at Chotiwala", why: "Classic North Indian breakfast of crispy spiced potato curry with fluffy puri breads — quintessential Rishikesh morning meal." }
-    ],
+    mustTry: DESTINATION_REALITIES["rishikesh"].mustTry,
     packing: ["Quick-dry clothes for water sports", "Modest wear for temples and ashrams", "Waterproof sandals", "Yoga mat if doing classes"],
-    localInsights: "Alcohol and non-veg food banned in Rishikesh! Book rafting 1 day in advance in peak season. Wear helmet and life jacket for all water activities.",
+    localInsights: DESTINATION_REALITIES["rishikesh"].transportConstraints,
     bestTime: "September to November and February to May (clear river conditions for rafting)"
   },
 
@@ -586,13 +850,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Himachali Kitchen", specialty: "Madra Chickpea Curry & Babru", priceRange: "₹200-400" }]
       }
     ],
-    mustTry: [
-      { item: "Himachali Siddu", why: "Steamed wheat bread stuffed with poppy seeds and walnuts — a traditional winter delicacy of Shimla." },
-      { item: "Himachali Dham", why: "Traditional vegetarian feast served on leaf plates including rajma, kaddu, and boor ki kali — only on special occasions." },
-      { item: "Apples from Shimla Orchards", why: "Shimla district produces India's finest apples — buy fresh from roadside orchards between September and November." }
-    ],
+    mustTry: DESTINATION_REALITIES["shimla"].mustTry,
     packing: ["Warm woollen layers (even in summer evenings)", "Waterproof jacket (monsoon season)", "Comfortable walking shoes", "Gloves for winter season"],
-    localInsights: "Vehicles restricted in Mall Road area — use the local ropeway or walk. Book toy train tickets at least a week in advance.",
+    localInsights: DESTINATION_REALITIES["shimla"].transportConstraints,
     bestTime: "March to June (spring flowers) and December to February (snowfall season)"
   },
 
@@ -613,23 +873,29 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Tibetan Kitchen Leh", specialty: "Thukpa Noodle Soup & Tsampa", priceRange: "₹250-450" }, { name: "Bon Appetit Leh", specialty: "Yak Cheese Pizza & Apple Tea", priceRange: "₹400-700" }]
       },
       {
-        theme: "Pangong Lake & Nubra Valley",
+        theme: "Indus Valley Monasteries Trail",
         activities: [
-          { timeOfDay: "Morning", locationName: "Pangong Tso Lake", googleMapsLink: makeGoogleMapsUrl("Pangong Lake", "Ladakh"), description: "Drive the scenic 5-hour route over Chang La pass (5,360 m) to the otherworldly Pangong Tso — a 134 km long lake at 4,225 m altitude that changes from turquoise to cobalt to silver." },
-          { timeOfDay: "Afternoon", locationName: "Khardung La Pass", googleMapsLink: makeGoogleMapsUrl("Khardung La Pass", "Leh Ladakh"), description: "Drive to Khardung La (5,359 m), the gateway to Nubra Valley, for breathtaking views of Karakoram peaks and the perpetual snowfields of the world's highest motorable road." },
-          { timeOfDay: "Evening", locationName: "Nubra Valley Hunder Village", googleMapsLink: makeGoogleMapsUrl("Hunder Sand Dunes Nubra Valley", "Ladakh"), description: "Ride Bactrian double-humped camels across the surreal cold desert sand dunes of Hunder in Nubra Valley — a bizarre landscape between towering Himalayan peaks." }
+          { timeOfDay: "Morning", locationName: "Shey Palace & Monastery", googleMapsLink: makeGoogleMapsUrl("Shey Palace", "Leh Ladakh"), description: "Visit the 17th-century former summer retreat of Ladakhi kings, featuring a 12-metre seated Shakyamuni Buddha and sacred holy fish pond.", transitToNext: "10 min cab along Indus highway (5 km)" },
+          { timeOfDay: "Afternoon", locationName: "Thiksey Monastery Ladakh", googleMapsLink: makeGoogleMapsUrl("Thiksey Monastery", "Leh Ladakh"), description: "Explore the 12-storey whitewashed monastery resembling Lhasa's Potala Palace, housing the breathtaking 15-metre Maitreya Buddha statue.", transitToNext: "25 min cab (18 km)" },
+          { timeOfDay: "Evening", locationName: "Hemis Monastery & Museum", googleMapsLink: makeGoogleMapsUrl("Hemis Monastery", "Leh Ladakh"), description: "Tour Ladakh's wealthiest Drukpa lineage monastery tucked inside a secluded mountain gorge with ancient thangkas and sacred silver chortens." }
+        ],
+        stay: { name: "The Grand Dragon Ladakh", type: "Luxury Mountain Hotel", whyPick: "Centrally located with Himalayan-view rooms and Ladakhi decor", approxRate: "₹8,000/night" },
+        dining: [{ name: "Tibetan Kitchen Leh", specialty: "Thukpa Noodle Soup & Tsampa", priceRange: "₹250-450" }, { name: "Bon Appetit Leh", specialty: "Yak Cheese Pizza & Apple Tea", priceRange: "₹400-700" }]
+      },
+      {
+        theme: "Khardung La Pass & Nubra Valley Safari",
+        activities: [
+          { timeOfDay: "Morning", locationName: "Khardung La Pass", googleMapsLink: makeGoogleMapsUrl("Khardung La Pass", "Leh Ladakh"), description: "Drive up to Khardung La (5,359 m) — gateway to Nubra Valley with snowfield panoramas across the Karakoram range.", transitToNext: "30 min cab downhill to Diskit" },
+          { timeOfDay: "Afternoon", locationName: "Diskit Monastery & Giant Buddha", googleMapsLink: makeGoogleMapsUrl("Diskit Monastery", "Nubra Valley Ladakh"), description: "Visit the 14th-century monastery and gaze upon the 32-metre multi-coloured Maitreya Buddha facing the Shyok River.", transitToNext: "15 min cab (7 km)" },
+          { timeOfDay: "Evening", locationName: "Hunder Sand Dunes Nubra Valley", googleMapsLink: makeGoogleMapsUrl("Hunder Sand Dunes Nubra Valley", "Ladakh"), description: "Ride double-humped Bactrian camels across the surreal white desert sand dunes between snow-clad peaks." }
         ],
         stay: { name: "Nubra Ecolodge", type: "Traditional Ladakhi Mud House Stay", whyPick: "Authentic organic farm stay under billions of stars in Nubra Valley", approxRate: "₹3,500/night" },
         dining: [{ name: "Diskit Village Homestay", specialty: "Ladakhi Skyu & Butter Tea", priceRange: "Homestay inclusive" }]
       }
     ],
-    mustTry: [
-      { item: "Thukpa Noodle Soup", why: "Hearty Tibetan noodle broth with vegetables or yak meat — essential warmth at high altitude." },
-      { item: "Butter Tea (Po Cha)", why: "Salty yak butter and Himalayan black tea — the traditional high-altitude energy drink of Ladakh." },
-      { item: "Apricot Jam from Nubra Valley", why: "Wild Ladakhi apricots from Nubra Valley are dried and made into intensely fragrant jams — best souvenir." }
-    ],
+    mustTry: DESTINATION_REALITIES["leh-ladakh"].mustTry,
     packing: ["Warm down jacket (0°C nights even in summer)", "Altitude sickness medicine (Diamox)", "Sunscreen SPF 70+ (extreme UV at high altitude)", "Warm thermals", "Multiple layers"],
-    localInsights: "Acclimatise for 2 full days in Leh (3,500 m) before excursions. Inner Line Permits required for Pangong and Nubra — get from Leh DC office.",
+    localInsights: DESTINATION_REALITIES["leh-ladakh"].transportConstraints,
     bestTime: "May to September (roads open, lakes accessible, clear skies)"
   },
 
@@ -660,13 +926,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Onboard Houseboat Chef", specialty: "Karimeen Pollichathu & Red Rice", priceRange: "Included" }]
       }
     ],
-    mustTry: [
-      { item: "Karimeen Pollichathu", why: "Pearl spot fish marinated in spicy masala and grilled inside banana leaf — Kerala's signature dish." },
-      { item: "Kerala Sadya on Banana Leaf", why: "Grand vegetarian feast of 24+ dishes including avial, olan, and payasam served on fresh banana leaf." },
-      { item: "Ayurvedic Abhyanga Massage", why: "Full-body warm herbal oil massage by certified Kerala therapists — rejuvenates the nervous system." }
-    ],
+    mustTry: DESTINATION_REALITIES["kerala"].mustTry,
     packing: ["Light breathable cottons", "Mosquito repellent spray", "Umbrella or rain poncho", "Slip-on sandals (for boats)"],
-    localInsights: "Houseboats must anchor by 5:30 PM under Kerala water body regulations. Tip houseboat crew 10-15%. Avoid monsoon months for houseboat stays.",
+    localInsights: DESTINATION_REALITIES["kerala"].transportConstraints,
     bestTime: "September to March (post-monsoon greenery and pleasant weather)"
   },
 
@@ -697,13 +959,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Saravana Bhavan Munnar", specialty: "Masala Dosa & Filter Coffee", priceRange: "₹150-300" }]
       }
     ],
-    mustTry: [
-      { item: "Munnar Single-Estate Tea", why: "Buy fresh estate-picked Nilgiri Orthodox tea directly from KDHP estates — the freshest you'll ever taste." },
-      { item: "Cardamom Honey", why: "Wild forest honey infused with Munnar's abundant cardamom flowers — sold in small earthen pots at spice shops." },
-      { item: "Kerala Spice Plantation Walk", why: "Walk through living spice gardens to smell fresh black pepper, cardamom, cinnamon, and vanilla growing on vines." }
-    ],
+    mustTry: DESTINATION_REALITIES["munnar"].mustTry,
     packing: ["Warm fleece (cold nights at 1,600 m)", "Waterproof jacket (frequent mist and rain)", "Trekking shoes", "Insect repellent"],
-    localInsights: "Eravikulam Park closes during Neelakurinji blooming season (every 12 years, next 2030). Book jeep safaris in advance.",
+    localInsights: DESTINATION_REALITIES["munnar"].transportConstraints,
     bestTime: "September to May (post-monsoon green and cool weather)"
   },
 
@@ -734,13 +992,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Curlies Beach Shack Anjuna", specialty: "Wood-fired Pizza & Cocktails", priceRange: "₹400-800" }, { name: "Thalassa Siolim", specialty: "Greek Mezze & Seafood", priceRange: "₹1200-2500" }]
       }
     ],
-    mustTry: [
-      { item: "Goan Fish Curry Rice", why: "Tangy coconut-tamarind fish curry eaten with hot steamed red rice — the everyday comfort food of Goa." },
-      { item: "Bebinca Dessert", why: "Traditional 7-layered Goan baked coconut milk pudding — a Portuguese-Goan heritage sweet." },
-      { item: "Scooter Beach Hopping", why: "Rent a scooty (₹400/day) and independently discover hidden beaches — the true liberating Goa experience." }
-    ],
+    mustTry: DESTINATION_REALITIES["goa"].mustTry,
     packing: ["Swimwear & beach towels", "Sunscreen SPF 50+", "Flip flops and sunglasses", "Light linen shirts", "Helmet (mandatory for scooty)"],
-    localInsights: "Rent scooters only from registered black-and-yellow number plate vendors. Alcohol permitted here unlike most Indian states. Avoid monsoon beach visits.",
+    localInsights: DESTINATION_REALITIES["goa"].transportConstraints,
     bestTime: "November to February (vibrant beach season with cool sea breeze)"
   },
 
@@ -771,13 +1025,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Ravi's Rose Cafe Hampi", specialty: "Fresh Juice & Brown Rice Thali", priceRange: "₹200-350" }]
       }
     ],
-    mustTry: [
-      { item: "South Indian Thali at Mango Tree", why: "Eat a traditional banana-leaf thali under mango trees beside the Tungabhadra River — quintessential Hampi experience." },
-      { item: "Fresh Sugarcane Juice", why: "Local vendors near ruins press fresh sugarcane juice with ginger and lemon — best heat reliever in Karnataka sun." },
-      { item: "Tungabhadra Coracle Ride", why: "A basket-boat river crossing is one of India's most unique transport experiences, unchanged for centuries." }
-    ],
+    mustTry: DESTINATION_REALITIES["hampi"].mustTry,
     packing: ["Sturdy trekking shoes (boulders are slippery)", "Sunscreen SPF 70+ (harsh Karnataka sun)", "Loose cotton clothing", "Torch/flashlight for sunset climbs"],
-    localInsights: "Hire a bicycle or rent an electric scooter to cover Hampi's spread-out ruins. The sites span 26 sq km. Morning visits before 9 AM are essential to beat the heat.",
+    localInsights: DESTINATION_REALITIES["hampi"].transportConstraints,
     bestTime: "October to February (cool weather for extensive walking among ruins)"
   },
 
@@ -808,13 +1058,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Hotel Mahesh Prasad", specialty: "Mysore Pak & Set Dosa", priceRange: "₹100-300" }]
       }
     ],
-    mustTry: [
-      { item: "Mysore Masala Dosa at Mylari", why: "The crispy paper dosa with red chutney smeared inside and spiced potato filling is Mysore's most iconic culinary export." },
-      { item: "Mysore Pak Sweet", why: "Fudgy gram flour and ghee sweet invented by royal palace cooks in 1935 — buy from Sri Guru Sweets near palace." },
-      { item: "Silk Shopping at Cauvery Emporium", why: "Mysore silk sarees with pure gold zari borders are woven with the finest mulberry silk in government-run silk factories." }
-    ],
+    mustTry: DESTINATION_REALITIES["mysore"].mustTry,
     packing: ["Modest clothing for temples", "Comfortable walking shoes", "Carry cash for market shopping", "Sunscreen"],
-    localInsights: "Palace illumination every Sunday 7-7:45 PM and all public holidays. Dasara festival in October turns Mysore into a royal spectacle — book hotels months in advance.",
+    localInsights: DESTINATION_REALITIES["mysore"].transportConstraints,
     bestTime: "October to February (Dasara season and pleasant winter weather)"
   },
 
@@ -845,13 +1091,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "City Hut Dhaba", specialty: "Meghalaya Pork with Bamboo Shoot", priceRange: "₹200-400" }]
       }
     ],
-    mustTry: [
-      { item: "Jadoh (Khasi Red Rice with Pork)", why: "Traditional Khasi tribal dish of red rice cooked with pork blood and intestines — the soul food of Meghalaya." },
-      { item: "Tungrymbai", why: "Fermented soybean cake dish unique to Meghalaya — deeply aromatic and served with pork at local dhabas." },
-      { item: "Cherrapunji Orange Honey", why: "Wild forest honey harvested by Khasi tribes from Cherrapunji's jungle flowers — intensely fragrant and rare." }
-    ],
+    mustTry: DESTINATION_REALITIES["shillong"].mustTry,
     packing: ["Waterproof jacket and rain boots (wettest place on Earth)", "Trekking shoes", "Quick-dry clothes", "Warm layer for evenings"],
-    localInsights: "Cherrapunji trek to Root Bridges requires 4-5 hours minimum. Carry sufficient water and energy bars. Hire local guides for forest trails.",
+    localInsights: DESTINATION_REALITIES["shillong"].transportConstraints,
     bestTime: "October to April (post-monsoon clarity and cooler weather for trekking)"
   },
 
@@ -882,13 +1124,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Full Moon Cafe Havelock", specialty: "Grilled Barracuda & Coconut Rice", priceRange: "₹500-900" }]
       }
     ],
-    mustTry: [
-      { item: "Andaman Lobster & Barracuda", why: "Fresh-caught seafood grilled with coconut masala — the Andaman coast's finest dining experience." },
-      { item: "SCUBA Diving at North Bay", why: "Experience the world-class coral gardens and sea turtles — Andaman offers India's best recreational diving." },
-      { item: "Coconut Wine (Toddy)", why: "Local palm toddy tapped fresh from coconut palms — available at tribal villages on Little Andaman." }
-    ],
+    mustTry: DESTINATION_REALITIES["andaman"].mustTry,
     packing: ["Swimwear & rash guards", "Waterproof sandals", "Sunscreen SPF 70+ (equatorial UV)", "Underwater camera", "Insect repellent"],
-    localInsights: "Restricted Areas Permit (RAP) required for some tribal areas — apply at Port Blair DC office. Inter-island ferries must be booked in advance.",
+    localInsights: DESTINATION_REALITIES["andaman"].transportConstraints,
     bestTime: "November to May (clear seas and calm water for diving and snorkelling)"
   },
 
@@ -919,13 +1157,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Brothers' Dhaba", specialty: "Makki di Roti & Sarson da Saag", priceRange: "₹150-350" }]
       }
     ],
-    mustTry: [
-      { item: "Amritsari Kulcha at Bharawan da Dhaba", why: "Stuffed potato flatbread baked in traditional tandoor with generous white butter — Amritsar's most legendary culinary dish." },
-      { item: "Langar Ka Prasad", why: "The free simple dal-roti meal served at Golden Temple's community kitchen carries profound spiritual significance regardless of your faith." },
-      { item: "Amritsari Fish Fry", why: "Carom-spiced crispy fried freshwater fish served with mint chutney — a beloved street food exclusive to Punjab." }
-    ],
+    mustTry: DESTINATION_REALITIES["amritsar"].mustTry,
     packing: ["Modest clothing covering head (mandatory at Golden Temple)", "Comfortable flat walking shoes", "Head scarf or dupatta", "Light cotton clothes"],
-    localInsights: "Remove shoes and cover heads before entering Golden Temple. Lockers available near entry. Book Wagah Border seats in advance for weekend shows.",
+    localInsights: DESTINATION_REALITIES["amritsar"].transportConstraints,
     bestTime: "October to March (cool and comfortable for sightseeing)"
   },
 
@@ -956,13 +1190,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Idli Mane", specialty: "Filter Coffee & Rava Idli", priceRange: "₹80-200" }]
       }
     ],
-    mustTry: [
-      { item: "Jigarthanda", why: "Madurai's iconic cold drink of milk, almond gum, nannari root syrup, and ice cream — invented in Madurai in the 1940s." },
-      { item: "Chettinad Chicken Curry", why: "Fiery aromatic curry made with kalpasi (stone flower) and marathi mokku spices unique to Tamil Nadu's Chettinad region." },
-      { item: "Mini Idli at Murugan Idli Shop", why: "Bite-sized soft idlis served with 5 different chutneys and ghee sambar — Madurai's most beloved breakfast spot." }
-    ],
+    mustTry: DESTINATION_REALITIES["madurai"].mustTry,
     packing: ["Modest clothing for temple visits (no shorts)", "Slip-on shoes for barefoot temple areas", "Carry cash for flower markets", "Sunscreen"],
-    localInsights: "Meenakshi Temple closes 12:30-4 PM daily. Non-Hindus allowed in outer corridors only. Remove footwear at temple entrance.",
+    localInsights: DESTINATION_REALITIES["madurai"].transportConstraints,
     bestTime: "October to February (cooler South Indian winter for comfortable temple visits)"
   },
 
@@ -993,13 +1223,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Peace Restaurant Puri", specialty: "Odia Dalma & Ghee Pitha", priceRange: "₹200-400" }]
       }
     ],
-    mustTry: [
-      { item: "Chhena Poda (Burnt Cheese Dessert)", why: "Lord Jagannath's favourite sweet — caramelised cottage cheese baked in a clay pot. Odisha's pride and unique dessert." },
-      { item: "Dalma", why: "Odisha's signature dish of toor dal cooked with raw banana, raw papaya, and vegetables — the prasad meal of Jagannath Temple." },
-      { item: "Pattachitra Paintings", why: "Raghurajpur village's palm-leaf narrative paintings depicting Jagannath stories are Odisha's finest handicraft to take home." }
-    ],
+    mustTry: DESTINATION_REALITIES["puri"].mustTry,
     packing: ["Modest clothing (no shorts near Jagannath Temple)", "Sunscreen for beach walks", "Comfortable walking shoes", "Camera for temple sculptures"],
-    localInsights: "Non-Hindus cannot enter Jagannath Temple inner sanctum. Rath Yatra chariot festival (June-July) draws 1 million pilgrims — book months in advance.",
+    localInsights: DESTINATION_REALITIES["puri"].transportConstraints,
     bestTime: "November to February (cool coastal weather; avoid summer heat and monsoon rough seas)"
   },
 
@@ -1030,13 +1256,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Gatty's Cafe Darjeeling", specialty: "Tibetan Thukpa & Momos", priceRange: "₹200-400" }]
       }
     ],
-    mustTry: [
-      { item: "First-Flush Darjeeling Tea", why: "February-April first harvest teas are the world's most prized, with a delicate muscatel grape-like aroma — buy direct from estates." },
-      { item: "Sel Roti", why: "Crispy deep-fried Nepali rice doughnut cooked in ghee — a beloved Darjeeling breakfast street food." },
-      { item: "Steam Momo at Chowrasta", why: "Thick-skin Himalayan dumplings stuffed with pork and ginger, served with spicy Sikkimese chilli sauce." }
-    ],
+    mustTry: DESTINATION_REALITIES["darjeeling"].mustTry,
     packing: ["Warm down jacket (cold year-round)", "Layered woollens", "Waterproof jacket", "Comfortable walking shoes", "Binoculars for birdwatching"],
-    localInsights: "Tiger Hill jeep convoy departs at 4 AM — book shared jeeps from Chowrasta the previous evening. Toy train joy rides from Darjeeling to Ghum are immensely popular.",
+    localInsights: DESTINATION_REALITIES["darjeeling"].transportConstraints,
     bestTime: "March to May (clear skies for Kanchenjunga views) and October to November (post-monsoon clarity)"
   },
 
@@ -1067,13 +1289,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Athithya Homestay Kitchen", specialty: "Traditional Kodava Pork Curry", priceRange: "Homestay inclusive" }]
       }
     ],
-    mustTry: [
-      { item: "Pandi Curry (Coorg Pork)", why: "Slow-cooked pork with Kodampuli black vinegar — the signature warrior dish of Coorg's Kodava community." },
-      { item: "Coorg Single Origin Coffee", why: "Buy fresh-roasted Arabica beans directly from estate — the world-famous Coorg coffee has a wine-like fruity acidity." },
-      { item: "Akki Rotti", why: "Rice flour flatbread cooked on a tawa with coconut and served with sambar — essential Coorg breakfast dish." }
-    ],
+    mustTry: DESTINATION_REALITIES["coorg"].mustTry,
     packing: ["Warm layers (cool misty mornings)", "Waterproof jacket", "Insect repellent", "Trekking shoes", "Binoculars for wildlife"],
-    localInsights: "Nagarhole jeep safaris must be booked through Forest Department 24 hours in advance. Leeches active during monsoon — carry salt packets.",
+    localInsights: DESTINATION_REALITIES["coorg"].transportConstraints,
     bestTime: "October to May (post-monsoon greenery and pleasant coffee-picking season)"
   },
 
@@ -1104,13 +1322,9 @@ const DESTINATION_DATABASE = {
         dining: [{ name: "Hyderabad Biryani House Ooty", specialty: "Nilgiri Mutton Biryani", priceRange: "₹300-600" }]
       }
     ],
-    mustTry: [
-      { item: "Nilgiri Tea Tasting", why: "Ooty's high-grown Nilgiri tea has a distinctive fresh, brisk flavour — taste-test at estate factories before buying." },
-      { item: "Homemade Ooty Chocolate", why: "Ooty cottage industries produce handmade chocolate bars with local almonds and cardamom — available at shops near Botanical Garden." },
-      { item: "Nilgiri Biryani", why: "A fragrant green herb-infused rice preparation unique to the Nilgiri region, typically served with local wild boar or mutton." }
-    ],
+    mustTry: DESTINATION_REALITIES["ooty"].mustTry,
     packing: ["Warm fleece (cold nights year-round at 2,240 m)", "Waterproof jacket", "Walking shoes", "Sunscreen (high UV at altitude)"],
-    localInsights: "Nilgiri Mountain Railway tickets sell out months in advance during summer — book on IRCTC. Ooty is most beautiful in April-May when Botanical Garden shows full bloom.",
+    localInsights: DESTINATION_REALITIES["ooty"].transportConstraints,
     bestTime: "April to June (spring bloom) and September to November (post-monsoon clear skies)"
   }
 };
@@ -1463,14 +1677,24 @@ function getBudgetDining(destKey, budgetTier) {
   return BUDGET_HOTELS[matched].dining[budgetTier] || BUDGET_HOTELS[matched].dining.Comfort;
 }
 
-// Normalize any raw itinerary structure to consistent format
+
+// ============================================================
+// NORMALIZE ITINERARY ENGINE
+// Enforces:
+// 1. Strict Transport Constraints & Local Municipal Rules
+// 2. Realistic Logistical Geography without Zero-Distance Padding
+// 3. Concrete Hyper-Local Food & Experience Names (No Generic Placeholders)
+// ============================================================
 export function normalizeItinerary(rawItinerary, tripData) {
   const destName = tripData.destinationName || tripData.destination || rawItinerary?.destination || "India";
-  const key = destName.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const cleanKey = destName.toLowerCase().replace(/[^a-z0-9]/g, "");
 
   let logistics = rawItinerary?.logistics ? { ...rawItinerary.logistics } : null;
   if (!logistics || !logistics.nearest_railway_station) {
-    const matchedKey = Object.keys(DESTINATION_LOGISTICS).find(k => key.includes(k.replace(/[^a-z0-9]/g, "")));
+    const matchedKey = Object.keys(DESTINATION_LOGISTICS).find(k => {
+      const ck = k.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return cleanKey.includes(ck) || ck.includes(cleanKey);
+    });
     if (matchedKey) {
       logistics = { ...DESTINATION_LOGISTICS[matchedKey] };
     } else {
@@ -1502,26 +1726,152 @@ export function normalizeItinerary(rawItinerary, tripData) {
     }
   }
 
-  let daysList = rawItinerary?.days || rawItinerary?.itinerary || [];
+  // ── RULE 1: Support Dynamic arrivalLogistics from AI output ─────────
+  if (rawItinerary?.arrivalLogistics) {
+    const arrLog = rawItinerary.arrivalLogistics;
+    if (arrLog.railwayStation?.name) {
+      logistics.nearest_railway_station = arrLog.railwayStation.name;
+      logistics.distance_to_railway_km = arrLog.railwayStation.distance || logistics.distance_to_railway_km;
+      logistics.railway_map_url = makeGoogleMapsUrl(arrLog.railwayStation.name, destName);
+    }
+    if (arrLog.busStand?.name) {
+      logistics.nearest_bus_stand = arrLog.busStand.name;
+      logistics.distance_to_bus_stand_km = arrLog.busStand.distance || logistics.distance_to_bus_stand_km;
+      logistics.bus_stand_map_url = makeGoogleMapsUrl(arrLog.busStand.name, destName);
+    }
+    if (arrLog.airport?.name) {
+      logistics.nearest_airport = arrLog.airport.name;
+      logistics.distance_to_airport_km = arrLog.airport.distance || logistics.distance_to_airport_km;
+      logistics.airport_map_url = makeGoogleMapsUrl(arrLog.airport.name, destName);
+    }
+  }
+
+  const matchedDbKey = Object.keys(DESTINATION_DATABASE).find(k => {
+    const ck = k.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return cleanKey.includes(ck) || ck.includes(cleanKey);
+  });
+  const dbEntry = matchedDbKey ? DESTINATION_DATABASE[matchedDbKey] : null;
+
+  const matchedRealityKey = Object.keys(DESTINATION_REALITIES).find(k => {
+    const ck = k.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return cleanKey.includes(ck) || ck.includes(cleanKey);
+  });
+  const reality = matchedRealityKey ? DESTINATION_REALITIES[matchedRealityKey] : null;
+
+  // ── RULE 1 & 3: Clean up mustTry / mustTryExperiences (NO GENERIC PLACEHOLDERS) ──
+  let rawMustTry = rawItinerary?.mustTryExperiences || rawItinerary?.mustTry;
+  let cleanMustTry = [];
+  if (Array.isArray(rawMustTry) && rawMustTry.length > 0) {
+    cleanMustTry = rawMustTry.map(m => {
+      if (typeof m === 'string') {
+        const costMatch = m.match(/₹\s*[\d,]+(?:–[\d,]+)?/);
+        return { item: m, title: m, why: "Local culinary & cultural essential recommended by verified local concierges.", approxCost: costMatch ? costMatch[0] : '' };
+      }
+      const title = m.title || m.item || m.name || '';
+      const desc = m.description || m.why || '';
+      const costMatch = (desc + ' ' + title).match(/₹\s*[\d,]+(?:–[\d,]+)?/);
+      return {
+        item: title,
+        title: title,
+        why: desc,
+        description: desc,
+        approxCost: m.approxCost || (costMatch ? costMatch[0] : '')
+      };
+    });
+  }
+
+  const hasGenericMustTry = cleanMustTry.length === 0 || cleanMustTry.some(item => {
+    const text = (item.item || item.title || '').toLowerCase();
+    return text.includes("authentic regional thali") || 
+           text.includes("cultural performance") || 
+           text.includes("traditional regional") ||
+           text.includes("traditional lunch") ||
+           text.includes("regional thali") ||
+           text.includes("cultural folk show") ||
+           text.includes("folk show") ||
+           text.length < 5;
+  });
+
+  if (hasGenericMustTry) {
+    if (reality?.mustTry && reality.mustTry.length > 0) {
+      cleanMustTry = reality.mustTry;
+    } else if (dbEntry?.mustTry && dbEntry.mustTry.length > 0) {
+      cleanMustTry = dbEntry.mustTry;
+    } else {
+      cleanMustTry = [
+        { 
+          item: `Heritage Thali & Bati Platter at Central Heritage Diner (${destName}) (~₹180–320)`, 
+          why: "Authentic slow-simmered regional preparation seasoned with stone-ground local spices and pure cow ghee.",
+          approxCost: "₹180–320"
+        },
+        { 
+          item: `Piping Hot Street Snack & Kulhad Chai at Clock Tower Chowk (${destName}) (~₹50–80)`, 
+          why: "Iconic regional street delicacy prepared fresh on traditional cast iron kadhais.",
+          approxCost: "₹50–80"
+        }
+      ];
+    }
+  }
+
+  // ── RULE 1: Clean up localInsights (EXPLICIT TRANSPORT CONSTRAINTS) ──
+  let cleanLocalInsights = Array.isArray(rawItinerary?.localInsights)
+    ? rawItinerary.localInsights.join(' • ')
+    : rawItinerary?.localInsights;
+
+  const hasGenericInsights = !cleanLocalInsights || 
+    cleanLocalInsights.includes("Auto-rickshaws and app cabs operate readily") ||
+    cleanLocalInsights.length < 25;
+
+  if (hasGenericInsights) {
+    if (reality?.transportConstraints) {
+      cleanLocalInsights = reality.transportConstraints;
+    } else if (dbEntry?.localInsights) {
+      cleanLocalInsights = dbEntry.localInsights;
+    } else {
+      cleanLocalInsights = `Transport Constraints: Verify pedestrianized zones in ${destName}'s old town and heritage sectors where private cars and cabs are barred. Use authorized local e-rickshaws, municipal transit, or walking for narrow bazaar alleys.`;
+    }
+  }
+
+  // ── RULE 2: Realistic Logistical Geography & Dwell Times ────────────
+  const defaultTransit = reality?.defaultTransit || {
+    morningToAfternoon: "15 min walk / e-rickshaw through local market (600m)",
+    afternoonToEvening: "20 min cab / transit through town traffic (4 km)",
+    eveningToNight: "10 min walk to dinner & night stroll (350m)"
+  };
+
+  let daysList = rawItinerary?.dayWiseTimeline || rawItinerary?.days || rawItinerary?.itinerary || [];
   if (!Array.isArray(daysList) || daysList.length === 0) daysList = [];
 
   const normalizedDays = daysList.map((d, idx) => {
     const dayNum = d.dayNumber || d.day || idx + 1;
-    const dayTheme = d.dayTheme || d.theme || `Day ${dayNum} Cultural Exploration`;
+    const dayTheme = d.title || d.dayTheme || d.theme || `Day ${dayNum} - Cultural & Heritage Exploration`;
     let activities = [];
 
     if (Array.isArray(d.activities) && d.activities.length > 0) {
-      activities = d.activities.map(act => {
+      activities = d.activities.map((act, actIdx) => {
         const loc = act.title || act.locationName || act.activity || "Popular Landmark";
-        const period = act.timeOfDay || act.period || "Morning";
+        const period = act.timeOfDay || act.period || (actIdx === 0 ? "Morning" : actIdx === 1 ? "Afternoon" : actIdx === 2 ? "Evening" : "Night");
+        const tipText = act.spotTip || act.tip || (act.foodSpot ? `Local Food Spot: ${act.foodSpot}` : undefined);
+        
+        let tNext = act.transitToNext;
+        if (!tNext) {
+          if (period.toLowerCase() === "morning") tNext = d.morning?.transitToNext || defaultTransit.morningToAfternoon;
+          else if (period.toLowerCase() === "afternoon") tNext = d.afternoon?.transitToNext || defaultTransit.afternoonToEvening;
+          else if (period.toLowerCase() === "evening") tNext = d.evening?.transitToNext || defaultTransit.eveningToNight;
+        }
+
         return {
           timeOfDay: period.charAt(0).toUpperCase() + period.slice(1),
-          time: act.time || (period.toLowerCase() === "morning" ? "09:00 AM" : period.toLowerCase() === "afternoon" ? "01:00 PM" : period.toLowerCase() === "evening" ? "05:00 PM" : "08:30 PM"),
+          time: act.time || (period.toLowerCase() === "morning" ? "08:30 AM" : period.toLowerCase() === "afternoon" ? "12:30 PM" : period.toLowerCase() === "evening" ? "05:00 PM" : "08:30 PM"),
           locationName: loc,
+          title: loc,
           googleMapsLink: act.googleMapsLink || makeGoogleMapsUrl(loc, destName),
-          description: act.description || `Explore the beauty and culture of ${loc} in ${destName}.`,
-          tip: act.tip || (act.foodSpot ? `Local Food Spot: ${act.foodSpot}` : undefined),
-          estimatedCost: act.estimatedCost || "₹200 - ₹500"
+          description: act.description || `Visit ${loc} and experience authentic ${destName}.`,
+          transitToNext: tNext,
+          dwellTime: act.dwellTime || (period.toLowerCase() === "morning" ? "2 hours" : period.toLowerCase() === "afternoon" ? "2.5 hours" : "1.5 hours"),
+          spotTip: tipText,
+          tip: tipText,
+          estimatedCost: act.estimatedCost || "₹150 - ₹450"
         };
       });
     } else {
@@ -1529,15 +1879,27 @@ export function normalizeItinerary(rawItinerary, tripData) {
         if (d[period]) {
           const item = d[period];
           const loc = item.title || item.locationName || item.activity || `${period} Sightseeing`;
-          const defaultTimes = { morning: "09:00 AM", afternoon: "01:00 PM", evening: "05:00 PM", night: "08:30 PM" };
+          const defaultTimes = { morning: "08:30 AM", afternoon: "12:30 PM", evening: "05:00 PM", night: "08:30 PM" };
           const defaultCosts = { morning: "₹150 - ₹400", afternoon: "₹300 - ₹600", evening: "₹100 - ₹350", night: "₹250 - ₹500" };
-          const tipText = item.tip || (item.foodSpot ? `Local Food Spot: ${item.foodSpot}` : undefined);
+          const tipText = item.spotTip || item.tip || (item.foodSpot ? `Local Food Spot: ${item.foodSpot}` : undefined);
+          
+          let tNext = item.transitToNext;
+          if (!tNext) {
+            if (period === "morning") tNext = defaultTransit.morningToAfternoon;
+            else if (period === "afternoon") tNext = defaultTransit.afternoonToEvening;
+            else if (period === "evening") tNext = defaultTransit.eveningToNight;
+          }
+
           activities.push({
             timeOfDay: period.charAt(0).toUpperCase() + period.slice(1),
             time: item.time || defaultTimes[period],
             locationName: loc,
+            title: loc,
             googleMapsLink: item.googleMapsLink || makeGoogleMapsUrl(loc, destName),
             description: item.description || `Visit ${loc} and experience authentic ${destName}.`,
+            transitToNext: tNext,
+            dwellTime: item.dwellTime || (period === "morning" ? "2 hours" : period === "afternoon" ? "2 hours" : "1.5 hours"),
+            spotTip: tipText,
             tip: tipText,
             estimatedCost: item.estimatedCost || defaultCosts[period]
           });
@@ -1557,12 +1919,12 @@ export function normalizeItinerary(rawItinerary, tripData) {
         name: d.recommendedAreaToStay,
         type: "Recommended Area to Stay",
         whyPick: `Strategically central in ${destName} for easy commute & sightseeing`,
-        approxRate: getBudgetHotel(key, tripData?.budget || "Comfort")?.approxRate || "₹3,500/night",
+        approxRate: getBudgetHotel(cleanKey, tripData?.budget || "Comfort")?.approxRate || "₹3,500/night",
         googleMapsLink: makeGoogleMapsUrl(d.recommendedAreaToStay, destName)
       };
     }
     if (!stay) {
-      stay = getBudgetHotel(key, tripData?.budget || "Comfort");
+      stay = getBudgetHotel(cleanKey, tripData?.budget || "Comfort");
       if (stay && !stay.googleMapsLink) {
         stay.googleMapsLink = makeGoogleMapsUrl(stay.name, destName);
       }
@@ -1570,7 +1932,7 @@ export function normalizeItinerary(rawItinerary, tripData) {
 
     let dining = d.diningSpots || d.dining;
     if (!dining) {
-      dining = getBudgetDining(key, tripData?.budget || "Comfort");
+      dining = getBudgetDining(cleanKey, tripData?.budget || "Comfort");
     }
     if (Array.isArray(dining)) {
       dining = dining.map(spot => ({
@@ -1585,59 +1947,149 @@ export function normalizeItinerary(rawItinerary, tripData) {
       date: d.date || `Day ${dayNum}`,
       theme: dayTheme,
       dayTheme: dayTheme,
+      transitNote: d.transitNote || `${morningAct?.transitToNext ? `Morning transit: ${morningAct.transitToNext}. ` : ''}${cleanLocalInsights.split('.')[0]}.`,
       activities: activities,
-      morning: morningAct ? { time: morningAct.time || "09:00 AM", title: morningAct.locationName, activity: morningAct.locationName, locationName: morningAct.locationName, googleMapsLink: morningAct.googleMapsLink, description: morningAct.description, tip: morningAct.tip, estimatedCost: morningAct.estimatedCost || "₹200 - ₹400" } : undefined,
-      afternoon: afternoonAct ? { time: afternoonAct.time || "01:00 PM", title: afternoonAct.locationName, activity: afternoonAct.locationName, locationName: afternoonAct.locationName, googleMapsLink: afternoonAct.googleMapsLink, description: afternoonAct.description, tip: afternoonAct.tip, estimatedCost: afternoonAct.estimatedCost || "₹300 - ₹600" } : undefined,
-      evening: eveningAct ? { time: eveningAct.time || "05:00 PM", title: eveningAct.locationName, activity: eveningAct.locationName, locationName: eveningAct.locationName, googleMapsLink: eveningAct.googleMapsLink, description: eveningAct.description, tip: eveningAct.tip, estimatedCost: eveningAct.estimatedCost || "₹100 - ₹350" } : undefined,
-      night: nightAct ? { time: nightAct.time || "08:30 PM", title: nightAct.locationName, activity: nightAct.locationName, locationName: nightAct.locationName, googleMapsLink: nightAct.googleMapsLink, description: nightAct.description, tip: nightAct.tip, estimatedCost: nightAct.estimatedCost || "₹250 - ₹500" } : undefined,
+      morning: morningAct ? { 
+        time: morningAct.time || "08:30 AM", 
+        title: morningAct.locationName, 
+        activity: morningAct.locationName, 
+        locationName: morningAct.locationName, 
+        googleMapsLink: morningAct.googleMapsLink, 
+        description: morningAct.description, 
+        transitToNext: morningAct.transitToNext || defaultTransit.morningToAfternoon,
+        spotTip: morningAct.spotTip || morningAct.tip,
+        tip: morningAct.tip || morningAct.spotTip, 
+        estimatedCost: morningAct.estimatedCost || "₹200 - ₹400" 
+      } : undefined,
+      afternoon: afternoonAct ? { 
+        time: afternoonAct.time || "12:30 PM", 
+        title: afternoonAct.locationName, 
+        activity: afternoonAct.locationName, 
+        locationName: afternoonAct.locationName, 
+        googleMapsLink: afternoonAct.googleMapsLink, 
+        description: afternoonAct.description, 
+        transitToNext: afternoonAct.transitToNext || defaultTransit.afternoonToEvening,
+        spotTip: afternoonAct.spotTip || afternoonAct.tip,
+        tip: afternoonAct.tip || afternoonAct.spotTip, 
+        estimatedCost: afternoonAct.estimatedCost || "₹300 - ₹600" 
+      } : undefined,
+      evening: eveningAct ? { 
+        time: eveningAct.time || "05:00 PM", 
+        title: eveningAct.locationName, 
+        activity: eveningAct.locationName, 
+        locationName: eveningAct.locationName, 
+        googleMapsLink: eveningAct.googleMapsLink, 
+        description: eveningAct.description, 
+        transitToNext: eveningAct.transitToNext || defaultTransit.eveningToNight,
+        spotTip: eveningAct.spotTip || eveningAct.tip,
+        tip: eveningAct.tip || eveningAct.spotTip, 
+        estimatedCost: eveningAct.estimatedCost || "₹100 - ₹350" 
+      } : undefined,
+      night: nightAct ? { 
+        time: nightAct.time || "08:30 PM", 
+        title: nightAct.locationName, 
+        activity: nightAct.locationName, 
+        locationName: nightAct.locationName, 
+        googleMapsLink: nightAct.googleMapsLink, 
+        description: nightAct.description, 
+        spotTip: nightAct.spotTip || nightAct.tip,
+        tip: nightAct.tip || nightAct.spotTip, 
+        estimatedCost: nightAct.estimatedCost || "₹250 - ₹500" 
+      } : undefined,
       stayRecommendation: stay,
       diningSpots: dining,
       recommendedAreaToStay: d.recommendedAreaToStay || stay?.name || `${destName} Central Heritage Hub`,
-      insiderTip: d.insiderTip || d.tip || morningAct?.tip || afternoonAct?.tip || eveningAct?.tip || "Book top monument tickets online via official portals to bypass long on-site lines. Engage an authorized heritage guide at the gate for authentic oral histories.",
-      bestTimeWindow: d.bestTimeWindow || d.timing || `${morningAct?.time || "08:30 AM"} – 11:30 AM & 04:30 PM – 07:00 PM (Light crowds & pleasant temperatures)`,
-      practicalNote: d.practicalNote || d.note || "Wear comfortable, cushioned walking footwear suitable for cobbled ramps and steps. Keep modest attire for sacred shrines, and carry light hydration."
+      insiderTip: d.insiderTip || d.tip || morningAct?.spotTip || morningAct?.tip || afternoonAct?.spotTip || afternoonAct?.tip || eveningAct?.spotTip || eveningAct?.tip || "Book top monument tickets online via official portals to bypass long on-site lines. Engage an authorized heritage guide at the gate for authentic oral histories.",
+      bestTimeWindow: d.bestTimeWindow || d.timing || `${morningAct?.time || "08:30 AM"} – 11:30 AM & 04:30 PM – 07:00 PM (Light crowds & pleasant light)`,
+      practicalNote: d.practicalNote || d.note || `${cleanLocalInsights.split('.')[0]}. Wear cushioned walking shoes suitable for stone ramps.`
     };
   });
 
   const baseBudget = estimateBudget(tripData?.days || normalizedDays.length || 3, tripData?.travellers || 2, tripData?.budget || "Comfort");
+  const finalBudget = { ...baseBudget };
+  if (rawItinerary?.budgetBreakdown) {
+    const bb = rawItinerary.budgetBreakdown;
+    if (bb.stay) finalBudget.accommodation = bb.stay;
+    if (bb.food) finalBudget.food = bb.food;
+    if (bb.transport) finalBudget.transport = bb.transport;
+    if (bb.activities) finalBudget.activities = bb.activities;
+  }
   if (rawItinerary?.totalEstimatedCost) {
-    baseBudget.estimatedTotal = rawItinerary.totalEstimatedCost;
+    finalBudget.estimatedTotal = rawItinerary.totalEstimatedCost;
   }
 
   const generatedHighlights = normalizedDays.map(d => d.dayTheme).slice(0, 4);
 
   return {
     destination: destName,
-    logistics: logistics,
-    tripTitle: rawItinerary?.tripTitle || `${destName} Handcrafted Yatra`,
+    curatedTitle: rawItinerary?.curatedTitle || rawItinerary?.tripTitle || `${destName} Handcrafted Yatra`,
+    tripTitle: rawItinerary?.curatedTitle || rawItinerary?.tripTitle || `${destName} Handcrafted Yatra`,
+    tags: Array.isArray(rawItinerary?.tags) ? rawItinerary.tags : [`${destName} Yatra`, "Heritage", "Curated"],
     tagline: rawItinerary?.tagline || `A custom, time-optimized journey through ${destName}`,
+    arrivalLogistics: rawItinerary?.arrivalLogistics || {
+      railwayStation: { name: logistics.nearest_railway_station, distance: logistics.distance_to_railway_km },
+      busStand: { name: logistics.nearest_bus_stand, distance: logistics.distance_to_bus_stand_km },
+      airport: { name: logistics.nearest_airport, distance: logistics.distance_to_airport_km }
+    },
+    logistics: logistics,
     highlights: (rawItinerary?.highlights && rawItinerary.highlights.length > 0) ? rawItinerary.highlights : generatedHighlights,
     days: normalizedDays,
     itinerary: normalizedDays,
-    mustTry: rawItinerary?.mustTry || [
-      { item: `${destName} Authentic Regional Thali`, why: "Legendary local flavours prepared with traditional spices." },
-      { item: "Evening Cultural Performance & Folk Show", why: "Immersive traditional music and folk dance heritage." }
+    dayWiseTimeline: normalizedDays,
+    mustTry: cleanMustTry,
+    mustTryExperiences: cleanMustTry.map(m => ({
+      title: m.item || m.title || '',
+      description: `${m.approxCost ? `(${m.approxCost}) ` : ''}${m.why || m.description || ''}`.trim()
+    })),
+    packingEssentials: rawItinerary?.packingEssentials || dbEntry?.packing || [
+      "Comfortable walking shoes with good tread",
+      "Sun protection (hat, sunglasses, SPF 50)",
+      "Light breathable cottons or warm layers depending on season",
+      "Power bank & travel adapter"
     ],
-    packingEssentials: rawItinerary?.packingEssentials || ["Comfortable walking footwear", "Sun protection / sunglasses", "Light breathable cottons or warm layers depending on season", "Power bank & travel adapter"],
-    localInsights: rawItinerary?.localInsights || `Auto-rickshaws and app cabs operate readily in ${destName}. Pre-book heritage monuments online to skip long ticket queues.`,
-    bestTimeToVisit: rawItinerary?.bestTimeToVisit || "October to March offers pleasant and ideal sightseeing weather.",
-    budgetSummary: rawItinerary?.budgetSummary || baseBudget,
-    totalEstimatedCost: rawItinerary?.totalEstimatedCost || baseBudget.estimatedTotal
+    localInsights: cleanLocalInsights,
+    localInsightsList: Array.isArray(rawItinerary?.localInsights) ? rawItinerary.localInsights : [cleanLocalInsights],
+    bestTimeToVisit: rawItinerary?.bestTimeToVisit || dbEntry?.bestTime || "October to March offers pleasant and ideal sightseeing weather.",
+    budgetBreakdown: rawItinerary?.budgetBreakdown || {
+      stay: finalBudget.accommodation,
+      food: finalBudget.food,
+      transport: finalBudget.transport,
+      activities: finalBudget.activities
+    },
+    budgetSummary: finalBudget,
+    totalEstimatedCost: finalBudget.estimatedTotal
   };
 }
 
-// Smart Fallback Engine with Strict ZERO-REPEAT Guarantee across days
+// ============================================================
+// SMART FALLBACK ENGINE — ZERO-REPEAT & REALISTIC GEOGRAPHY
+// ============================================================
 export function generateGenericFallback(tripData) {
   const destName = tripData.destinationName || tripData.destination || "India";
   const days = Math.max(1, parseInt(tripData.days, 10) || 3);
-  const key = destName.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const cleanKey = destName.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  const matchedKey = Object.keys(DESTINATION_DATABASE).find(k => key.includes(k));
+  const matchedKey = Object.keys(DESTINATION_DATABASE).find(k => {
+    const ck = k.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return cleanKey.includes(ck) || ck.includes(cleanKey);
+  });
   const dbEntry = matchedKey ? DESTINATION_DATABASE[matchedKey] : null;
 
+  const matchedRealityKey = Object.keys(DESTINATION_REALITIES).find(k => {
+    const ck = k.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return cleanKey.includes(ck) || ck.includes(cleanKey);
+  });
+  const reality = matchedRealityKey ? DESTINATION_REALITIES[matchedRealityKey] : null;
+
   const budgetTier = tripData.budget || "Comfort";
-  const hotel = getBudgetHotel(key, budgetTier);
-  const dining = getBudgetDining(key, budgetTier);
+  const hotel = getBudgetHotel(cleanKey, budgetTier);
+  const dining = getBudgetDining(cleanKey, budgetTier);
+
+  const defaultTransit = reality?.defaultTransit || {
+    morningToAfternoon: "15 min walk / e-rickshaw through local market (600m)",
+    afternoonToEvening: "20 min cab / transit through town traffic (4 km)",
+    eveningToNight: "10 min walk to dinner & night stroll (350m)"
+  };
 
   // Distinct day templates ensuring strictly unique activities across all days
   const distinctDayTemplates = [
@@ -1647,21 +2099,59 @@ export function generateGenericFallback(tripData) {
       insiderTip: "Book fort and palace entry tickets online via the official portal to skip the 45-minute ticket line at the gate. Hire an authorized guide for verified royal folklore.",
       bestTimeWindow: "08:30 AM – 11:30 AM (Soft lighting & minimal crowds) & 04:30 PM – 06:30 PM (Golden hour photography)",
       practicalNote: "Wear comfortable walking shoes with good tread for cobbled stone ramps. Keep a sun hat and refillable water bottle handy.",
-      morning: { title: `${destName} Grand Fort & Citadel`, desc: `Explore the magnificent historic fort, royal courtyards, and ancient defensive bastions overlooking ${destName}.`, tip: "Arrive early morning around 9:00 AM for soft sunlight and minimal crowds." },
-      afternoon: { title: `${destName} Royal Palace & Museum`, desc: `Tour the royal halls, courtyards, and personal armory exhibits preserved from regal dynasties.`, foodSpot: `Heritage Thali Bhavan ${destName}` },
-      evening: { title: `${destName} Historic Clock Tower & Bazaars`, desc: `Stroll through the bustling heritage market lanes bustling with spice traders and local artisans.`, tip: "Try local street snack delicacies from renowned sweet shops." },
-      night: { title: `${destName} Illuminated Palace View & Heritage Walk`, desc: `Experience illuminated monument facades at night accompanied by peaceful city ambiance.`, tip: "Book a rooftop dinner table facing the lit ramparts." }
+      morning: { 
+        title: `${destName} Grand Fort & Citadel`, 
+        desc: `Explore the magnificent historic fort, royal courtyards, and ancient defensive bastions overlooking ${destName}.`, 
+        transitToNext: "15 min walk through heritage alleyways (800m)",
+        tip: "Arrive early morning around 8:30 AM for soft sunlight and minimal crowds." 
+      },
+      afternoon: { 
+        title: `${destName} Royal Palace & Museum`, 
+        desc: `Tour the royal halls, courtyards, and personal armory exhibits preserved from regal dynasties.`, 
+        transitToNext: "20 min cab through old city gate (4.5 km)",
+        foodSpot: `Heritage Thali Bhavan on Palace Road (~₹280)` 
+      },
+      evening: { 
+        title: `${destName} Historic Clock Tower & Bazaars`, 
+        desc: `Stroll through the bustling heritage market lanes bustling with spice traders and local artisans.`, 
+        transitToNext: "10 min walk to illuminated rooftop diner (400m)",
+        tip: "Try local street snack delicacies from renowned sweet shops." 
+      },
+      night: { 
+        title: `${destName} Illuminated Palace View & Heritage Walk`, 
+        desc: `Experience illuminated monument facades at night accompanied by peaceful city ambiance.`, 
+        tip: "Book a rooftop dinner table facing the lit ramparts." 
+      }
     },
     {
-      theme: "Spiritual Sacred Temples & Ghats",
+      theme: "Spiritual Sacred Temples & River Ghats",
       area: "Temple Promenade & Riverfront",
       insiderTip: "Arrive 30 minutes before evening aarti to secure front riverside steps. For temple inner sanctums, keep slip-on footwear for easy deposit outside.",
       bestTimeWindow: "06:00 AM – 08:30 AM (Morning serenity & aarti) & 05:30 PM – 07:30 PM (Evening twilight ceremonies)",
       practicalNote: "Dress modestly covering shoulders and knees. Keep ₹10–₹20 cash notes for footwear counters and flower offerings.",
-      morning: { title: `${destName} Sacred Ancient Temple`, desc: `Attend peaceful morning aarti and absorb the sanctified architectural carvings of this revered shrine.`, tip: "Dress modestly covering shoulders and knees; footwear deposit is available outside." },
-      afternoon: { title: `${destName} Heritage Stepwell & Sacred Reservoir`, desc: `Discover centuries-old water conservation architecture with intricate geometric stone stairs.`, foodSpot: `Anandam Pure Veg Restaurant` },
-      evening: { title: `${destName} Sunset Riverfront / Lakeside Promenade`, desc: `Watch the crimson sunset horizon from peaceful river banks while listening to temple bells.`, tip: "Hire a traditional boat ride for scenic waterside vantage points." },
-      night: { title: `${destName} Grand Evening Aarti Ceremony`, desc: `Witness rhythmic brass lamps, conch sounds, and devotional chants under the starlit sky.`, tip: "Arrive 30 minutes before sunset to secure front sitting steps." }
+      morning: { 
+        title: `${destName} Sacred Ancient Temple`, 
+        desc: `Attend peaceful morning aarti and absorb the sanctified architectural carvings of this revered shrine.`, 
+        transitToNext: "10 min walk along pedestrian river stone steps (500m)",
+        tip: "Dress modestly covering shoulders and knees; footwear deposit is available outside." 
+      },
+      afternoon: { 
+        title: `${destName} Heritage Stepwell & Sacred Reservoir`, 
+        desc: `Discover centuries-old water conservation architecture with intricate geometric stone stairs.`, 
+        transitToNext: "15 min wooden boat ride / walk along ghats (1.2 km)",
+        foodSpot: `Anandam Pure Veg Heritage Restaurant on Temple Marg (~₹220)` 
+      },
+      evening: { 
+        title: `${destName} Sunset Riverfront / Lakeside Promenade`, 
+        desc: `Watch the crimson sunset horizon from peaceful river banks while listening to temple bells.`, 
+        transitToNext: "5 min walk to grand aarti steps (200m)",
+        tip: "Hire a traditional boat ride for scenic waterside vantage points." 
+      },
+      night: { 
+        title: `${destName} Grand Evening Aarti Ceremony`, 
+        desc: `Witness rhythmic brass lamps, conch sounds, and devotional chants under the starlit sky.`, 
+        tip: "Arrive 30 minutes before sunset to secure front sitting steps." 
+      }
     },
     {
       theme: "Scenic Nature & Mountain Viewpoints",
@@ -1669,10 +2159,29 @@ export function generateGenericFallback(tripData) {
       insiderTip: "Morning viewpoints offer the clearest mountain visibility before valley clouds roll in. Grab hot local spiced chai at the summit ridge.",
       bestTimeWindow: "06:30 AM – 10:00 AM (Crisp panoramic vistas) & 04:00 PM – 06:30 PM (Golden sunset glow over peaks)",
       practicalNote: "Highland mornings can be breezy; pack a light fleece or windbreaker. Keep motion sickness medicine if sensitive to hairpin roads.",
-      morning: { title: `${destName} Hilltop Sunrise Ridge & Nature Trails`, desc: `Hike or take a scenic drive to the peak for panoramic vistas of the awakening valley landscape.`, tip: "Carry a light windcheater jacket as mornings can be breezy." },
-      afternoon: { title: `${destName} Botanical Reserve & Cedar Gardens`, desc: `Unwind amidst lush native flora, ancient shaded trees, and peaceful landscaped walking avenues.`, foodSpot: `Pine Wood Valley Bistro` },
-      evening: { title: `${destName} Panoramic Sunset Point`, desc: `Capture breathtaking golden hour photographs overlooking undulating hills and valley slopes.`, tip: "Grab freshly brewed local tea and pakoras from nearby viewpoint shacks." },
-      night: { title: `${destName} Stargazing & Valley Overlook Walk`, desc: `Experience the serene mountain breeze and glittering city lights from the elevated ridge road.`, tip: "Keep your camera mounted on a stable ledge for low-light photos." }
+      morning: { 
+        title: `${destName} Hilltop Sunrise Ridge & Nature Trails`, 
+        desc: `Hike or take a scenic drive to the peak for panoramic vistas of the awakening valley landscape.`, 
+        transitToNext: "25 min cab along winding mountain road (8 km)",
+        tip: "Carry a light windcheater jacket as mornings can be breezy." 
+      },
+      afternoon: { 
+        title: `${destName} Botanical Reserve & Cedar Gardens`, 
+        desc: `Unwind amidst lush native flora, ancient shaded trees, and peaceful landscaped walking avenues.`, 
+        transitToNext: "20 min cab to panoramic sunset point (6 km)",
+        foodSpot: `Pine Wood Valley Bistro on Mall Ridge (~₹350)` 
+      },
+      evening: { 
+        title: `${destName} Panoramic Sunset Point`, 
+        desc: `Capture breathtaking golden hour photographs overlooking undulating hills and valley slopes.`, 
+        transitToNext: "10 min walk to hillside cafe",
+        tip: "Grab freshly brewed local tea and pakoras from nearby viewpoint shacks." 
+      },
+      night: { 
+        title: `${destName} Stargazing & Valley Overlook Walk`, 
+        desc: `Experience the serene mountain breeze and glittering city lights from the elevated ridge road.`, 
+        tip: "Keep your camera mounted on a stable ledge for low-light photos." 
+      }
     },
     {
       theme: "Local Artisan Crafts & Textile Trails",
@@ -1680,10 +2189,29 @@ export function generateGenericFallback(tripData) {
       insiderTip: "Purchase directly from certified weavers' cooperatives or government craft emporiums to ensure authentic handloom hallmarks without agent commissions.",
       bestTimeWindow: "10:00 AM – 01:00 PM (Artisans actively crafting) & 05:00 PM – 08:30 PM (Vibrant bazaar atmosphere)",
       practicalNote: "Maintain ₹500–₹1000 in cash notes as smaller village artisan stalls can experience intermittent digital payment connectivity.",
-      morning: { title: `${destName} Artisan Craft Village & Pottery Guild`, desc: `Watch master artisans perform handloom weaving, block printing, and pottery live.`, tip: "Support local weavers by purchasing directly without middleman markups." },
-      afternoon: { title: `${destName} Regional Textile & Craft Gallery`, desc: `Marvel at curated exhibits of indigenous embroidery, folk garments, and historical dyes.`, foodSpot: `Shilpgram Traditional Rasoi` },
-      evening: { title: `${destName} Handicrafts Night Bazaar`, desc: `Explore stalls featuring brass handicrafts, wooden sculptures, handmade leather mojris, and organic spices.`, tip: "Keep cash handy as small craft stalls may have intermittent card networks." },
-      night: { title: `${destName} Open-Air Cultural Amphitheatre`, desc: `Enjoy authentic folk musicians playing regional instruments and rhythmic Rajasthani/regional dance.`, tip: "Shows typically start at 8:00 PM; tickets can be bought at the gate." }
+      morning: { 
+        title: `${destName} Artisan Craft Village & Pottery Guild`, 
+        desc: `Watch master artisans perform handloom weaving, block printing, and pottery live.`, 
+        transitToNext: "10 min walk to regional craft gallery (450m)",
+        tip: "Support local weavers by purchasing directly without middleman markups." 
+      },
+      afternoon: { 
+        title: `${destName} Regional Textile & Craft Gallery`, 
+        desc: `Marvel at curated exhibits of indigenous embroidery, folk garments, and historical dyes.`, 
+        transitToNext: "15 min auto to night bazaar (3 km)",
+        foodSpot: `Shilpgram Traditional Rasoi in Crafts Enclave (~₹240)` 
+      },
+      evening: { 
+        title: `${destName} Handicrafts Night Bazaar`, 
+        desc: `Explore stalls featuring brass handicrafts, wooden sculptures, handmade leather mojris, and organic spices.`, 
+        transitToNext: "5 min walk to open-air amphitheatre (200m)",
+        tip: "Keep cash handy as small craft stalls may have intermittent card networks." 
+      },
+      night: { 
+        title: `${destName} Open-Air Cultural Amphitheatre`, 
+        desc: `Enjoy authentic folk musicians playing regional instruments and rhythmic regional dance.`, 
+        tip: "Shows typically start at 8:00 PM; tickets can be bought at the gate." 
+      }
     },
     {
       theme: "Hidden Havelis & Architecture Wonders",
@@ -1691,65 +2219,29 @@ export function generateGenericFallback(tripData) {
       insiderTip: "Look upwards into courtyard ceiling arches to spot pristine 200-year-old stone-pigment frescoes. Avoid flash photography to protect historic mineral dyes.",
       bestTimeWindow: "09:00 AM – 12:00 PM (Best sunlight for courtyard photography) & 04:00 PM – 06:30 PM (Comfortable walking weather)",
       practicalNote: "Old haveli lanes are narrow; navigating on foot or taking an e-rickshaw to the main square archway is easiest.",
-      morning: { title: `${destName} Frescoed Merchant Havelis`, desc: `Admire ancient hand-painted murals, intricately carved jharokhas (balconies), and stone lattice work.`, tip: "Look upwards into ceiling domes to spot natural stone-pigment frescoes." },
-      afternoon: { title: `${destName} Central Archaeological Museum`, desc: `Inspect rare coin hoards, centuries-old manuscripts, weapons, and marble statuettes.`, foodSpot: `Royal Darbar Dining Hall` },
-      evening: { title: `${destName} Royal Cenotaphs & Memorial Pavilions`, desc: `Walk through ornamental marble pavilions built in honor of erstwhile royal rulers.`, tip: "Incredible symmetry for architectural photographers during sunset." },
-      night: { title: `${destName} Heritage Sound & Light Show`, desc: `Hear dramatic voice-overs narrating heroic tales and folklore projected across historical walls.`, tip: "English shows usually follow the Hindi performance." }
-    },
-    {
-      theme: "Lakeside Excursion & Rural Trails",
-      area: "Lakeside Valley & Countryside",
-      insiderTip: "Book boat rides directly from the authorized municipal jetty counter. Opt for the late afternoon departure to experience the water in twilight glow.",
-      bestTimeWindow: "07:00 AM – 10:30 AM (Calm water & birdwatching) & 04:30 PM – 07:00 PM (Refreshing lakeside breeze & sunset)",
-      practicalNote: "Use UV sunglasses to protect from water glare, and keep phones/cameras inside a water-resistant pouch during boat rides.",
-      morning: { title: `${destName} Pristine Lakeside Sanctuary`, desc: `Start with birdwatching and serene morning strolls along crystal-clear waters.`, tip: "Binoculars recommended for spotting migratory birds in winter." },
-      afternoon: { title: `${destName} Organic Farmstead & Country Orchard`, desc: `Take a guided tour through organic spice or fruit orchards and taste farm-fresh produce.`, foodSpot: `Kisan Rasoi Farm Kitchen` },
-      evening: { title: `${destName} Lake Island Pavilion`, desc: `Hop onto a boat toward the tranquil island pavilion in the lake center.`, tip: "Pre-book boat tickets at the jetty to avoid rush." },
-      night: { title: `${destName} Waterside Candlelit Promenade`, desc: `Stroll alongside the calm illuminated waterfront enjoying acoustic local music.`, tip: "Enjoy piping hot roasted corn (bhutta) with lemon and masala." }
-    },
-    {
-      theme: "Culinary Trail & Street Food Walk",
-      area: "Old Bazaar Food Streets",
-      insiderTip: "Queue at sweetshops with the largest crowd of local families — high turnover guarantees hot, fresh batches of jalebis and savory kachoris.",
-      bestTimeWindow: "08:00 AM – 10:30 AM (Fresh breakfast morning batches) & 06:00 PM – 09:30 PM (Vibrant evening food street chaupati)",
-      practicalNote: "Choose vendors cooking food freshly in front of you. Always drink packaged or purified drinking water.",
-      morning: { title: `${destName} Heritage Breakfast Trail`, desc: `Taste legendary breakfast specialties such as kachoris, hot jalebis, poha, and spiced chai.`, tip: "Begin by 8:30 AM before popular sweetshops run out of fresh morning batches." },
-      afternoon: { title: `${destName} Spice & Dry Fruit Market Walk`, desc: `Immerse your senses in aromatic saffron, whole cardamoms, and regional spice blends.`, foodSpot: `Surya Sweet & Spice House` },
-      evening: { title: `${destName} Famous Street Food Chaupati`, desc: `Sample an endless parade of chaats, samosas, spicy kathi rolls, and traditional regional snacks.`, tip: "Look for stalls with high local turnover for freshness and hygiene." },
-      night: { title: `${destName} Royal Banquet & Kulfi Tasting`, desc: `Cap off your culinary adventure with a grand multi-course regional feast followed by falooda kulfi.`, tip: "Sip a warm kulhad milk with saffron and pistachios before bed." }
-    },
-    {
-      theme: "Ancient Caves, Rock Art & Monoliths",
-      area: "Valley Monolithic Zone",
-      insiderTip: "Carry a small LED flashlight to view intricate ceiling engravings and relief sculptures in darker cave recesses. Do not touch rock surfaces.",
-      bestTimeWindow: "08:30 AM – 11:30 AM (Pleasant interior rock temperatures) & 04:00 PM – 06:00 PM (Gentle late afternoon light)",
-      practicalNote: "Wear sturdy shoes with rubber grip for stone steps. Carry adequate drinking water as cliffside vendor stalls are limited.",
-      morning: { title: `${destName} Ancient Rock-Cut Caves`, desc: `Explore monastic rock chambers and rock sculptures dating back over a thousand years.`, tip: "Wear shoes with good grip on stone stairs and carry a small flashlight." },
-      afternoon: { title: `${destName} Valley Eco Park & Nature Springs`, desc: `Cool off next to bubbling freshwater springs and shaded cliffside pavilions.`, foodSpot: `Prakriti Nature Cafe` },
-      evening: { title: `${destName} Valley Sunset Lookout Point`, desc: `Enjoy unobstructed horizon views where the valley floor stretches beneath endless skies.`, tip: "Stay until dusk to witness the village lamps twinkle in the distance." },
-      night: { title: `${destName} Campfire & Folk Storytelling`, desc: `Listen to ancient regional myths and folklore shared around an ambient fire pit.`, tip: "Carry warm layers as open valleys cool down rapidly after dark." }
-    },
-    {
-      theme: "Wildlife Sanctuary & Forest Escapade",
-      area: "Forest Reserve Buffer Zone",
-      insiderTip: "Book jungle safaris 2–4 weeks ahead on the official forest portal. Early morning safaris generally yield higher bird and mammal activity.",
-      bestTimeWindow: "05:45 AM – 09:30 AM (Peak morning animal activity) & 03:00 PM – 06:00 PM (Late afternoon waterhole sightings)",
-      practicalNote: "Wear muted earth tones (olive, khaki, brown) and strictly avoid strong perfumes or phone ringtones on safari tracks.",
-      morning: { title: `${destName} Wildlife Safari & Nature Reserve`, desc: `Early morning open-jeep drive through protected deciduous forests spotting deer, peacocks, and wildlife.`, tip: "Wear neutral olive or khaki clothing and avoid loud perfumes." },
-      afternoon: { title: `${destName} Interpretation Center & Butterfly Park`, desc: `Learn about local ecosystem conservation, medicinal plants, and native fauna.`, foodSpot: `Jungle Lodge Dining Shack` },
-      evening: { title: `${destName} Forest Canopy Walkway`, desc: `Walk elevated suspension bridges among the tree crowns for an aerial view of the canopy.`, tip: "Stunning spot for bird photography during the late afternoon return." },
-      night: { title: `${destName} Eco-Resort Starlit Dinner`, desc: `Dine under forest canopies surrounded by soothing crickets and nocturnal sounds.`, tip: "Savor warm clay-pot cooked regional specialties." }
-    },
-    {
-      theme: "Souvenirs, Art Galleries & Farewell Yatra",
-      area: "Emporium Quarter & Central Square",
-      insiderTip: "Request protective bubble-wrap packaging for terracotta or marble handicrafts right at the counter to safeguard them for your journey home.",
-      bestTimeWindow: "10:30 AM – 02:00 PM (Unhurried boutique browsing) & 06:30 PM – 09:30 PM (Celebratory farewell feast)",
-      practicalNote: "Check domestic transport weight limits if buying heavy stone or brass keepsakes. Keep original purchase invoices accessible.",
-      morning: { title: `${destName} Government Handloom & Handicrafts Emporium`, desc: `Pick up certified authentic souvenirs, silk fabrics, miniature paintings, and stone art.`, tip: "Fixed government pricing ensures genuine quality and fair craft wages." },
-      afternoon: { title: `${destName} Contemporary Art & Sculpture Gallery`, desc: `Experience the fusion of historic Indian craft traditions with modern artistic expressions.`, foodSpot: `Kala Cafe & Bakery` },
-      evening: { title: `${destName} Central Town Square & Farewell Walk`, desc: `One last leisurely stroll through your favorite city corners soaking in the ambiance.`, tip: "Pack fragile souvenirs with bubble wrap available at gift emporiums." },
-      night: { title: `${destName} Grand Farewell Feast with Musical Tributes`, desc: `Celebrate the culmination of your journey with a memorable multi-course celebration banquet.`, tip: "Reflect on memorable photos and plan your next destination with BharatDarshan!" }
+      morning: { 
+        title: `${destName} Frescoed Merchant Havelis`, 
+        desc: `Admire ancient hand-painted murals, intricately carved jharokhas (balconies), and stone lattice work.`, 
+        transitToNext: "12 min walk through haveli alleys (700m)",
+        tip: "Look upwards into ceiling domes to spot natural stone-pigment frescoes." 
+      },
+      afternoon: { 
+        title: `${destName} Central Archaeological Museum`, 
+        desc: `Inspect rare coin hoards, centuries-old manuscripts, weapons, and marble statuettes.`, 
+        transitToNext: "15 min auto to royal cenotaphs (3.5 km)",
+        foodSpot: `Royal Darbar Dining Hall on Station Road (~₹320)` 
+      },
+      evening: { 
+        title: `${destName} Royal Cenotaphs & Memorial Pavilions`, 
+        desc: `Walk through ornamental marble pavilions built in honor of erstwhile royal rulers.`, 
+        transitToNext: "10 min cab to heritage sound & light amphitheatre",
+        tip: "Incredible symmetry for architectural photographers during sunset." 
+      },
+      night: { 
+        title: `${destName} Heritage Sound & Light Show`, 
+        desc: `Hear dramatic voice-overs narrating heroic tales and folklore projected across historical walls.`, 
+        tip: "English shows usually follow the Hindi performance." 
+      }
     }
   ];
 
@@ -1758,7 +2250,6 @@ export function generateGenericFallback(tripData) {
 
   for (let i = 0; i < days; i++) {
     const dayNumber = i + 1;
-    // If DB entry has a dedicated curated activity set for this day, use it
     if (dbEntry && dbEntry.activities && i < dbEntry.activities.length) {
       const dbAct = dbEntry.activities[i];
       const morningItem = dbAct.activities[0] || { locationName: `${destName} Historical Citadel`, description: `Visit iconic historical citadel.` };
@@ -1777,27 +2268,35 @@ export function generateGenericFallback(tripData) {
       usedTitles.add(eveningItem.locationName);
       usedTitles.add(nightItem.title);
 
+      const mTransit = morningItem.transitToNext || defaultTransit.morningToAfternoon;
+      const aTransit = afternoonItem.transitToNext || defaultTransit.afternoonToEvening;
+      const eTransit = eveningItem.transitToNext || defaultTransit.eveningToNight;
+
       daysArr.push({
         dayNumber: dayNumber,
         dayTheme: dbAct.theme || `Day ${dayNumber} - Heritage Highlights`,
+        transitNote: `${mTransit ? `Transit: ${mTransit}. ` : ''}${reality?.transportConstraints ? reality.transportConstraints.split('.')[0] + '.' : ''}`,
         morning: {
-          time: "09:00 AM",
+          time: "08:30 AM",
           title: morningItem.locationName,
           description: morningItem.description,
+          transitToNext: mTransit,
           tip: "Head out early for gentle sunlight and serene exploration.",
           googleMapsLink: morningItem.googleMapsLink || makeGoogleMapsUrl(morningItem.locationName, destName)
         },
         afternoon: {
-          time: "01:00 PM",
+          time: "12:30 PM",
           title: afternoonItem.locationName,
           description: afternoonItem.description,
-          foodSpot: dbAct.dining?.[0]?.name || `${destName} Heritage Kitchen`,
+          transitToNext: aTransit,
+          foodSpot: dbAct.dining?.[0]?.name ? `${dbAct.dining[0].name} (${dbAct.dining[0].specialty})` : `${destName} Heritage Kitchen (~₹280)`,
           googleMapsLink: afternoonItem.googleMapsLink || makeGoogleMapsUrl(afternoonItem.locationName, destName)
         },
         evening: {
           time: "05:00 PM",
           title: eveningItem.locationName,
           description: eveningItem.description,
+          transitToNext: eTransit,
           tip: "Stroll through the vibrant evening streets as the temperature cools.",
           googleMapsLink: eveningItem.googleMapsLink || makeGoogleMapsUrl(eveningItem.locationName, destName)
         },
@@ -1811,10 +2310,9 @@ export function generateGenericFallback(tripData) {
         recommendedAreaToStay: hotel?.name || `${destName} Central Heritage Quarter`,
         insiderTip: morningItem.tip || afternoonItem.tip || "Book palace & fort ticket slots online in advance to bypass long ticket lines. Hire an authorized guide at the gate for authentic oral histories.",
         bestTimeWindow: "08:30 AM – 11:30 AM (Minimal crowds & calm light) & 04:30 PM – 07:00 PM (Golden hour & cool breeze)",
-        practicalNote: "Wear comfortable, cushioned walking shoes for stone walkways. Carry a light water bottle and keep modest attire for shrines."
+        practicalNote: reality?.transportConstraints ? reality.transportConstraints.split('.')[0] + '.' : "Wear comfortable, cushioned walking shoes for stone walkways. Carry a light water bottle and keep modest attire for shrines."
       });
     } else {
-      // Pick template and ensure complete uniqueness
       const tmplIndex = i % distinctDayTemplates.length;
       const tmpl = distinctDayTemplates[tmplIndex];
 
@@ -1823,7 +2321,6 @@ export function generateGenericFallback(tripData) {
       let eTitle = tmpl.evening.title;
       let nTitle = tmpl.night.title;
 
-      // Ensure distinctness even for trips longer than template array length
       if (usedTitles.has(mTitle)) mTitle = `${destName} Outer Sector - ${tmpl.morning.title}`;
       if (usedTitles.has(aTitle)) aTitle = `${destName} South Hub - ${tmpl.afternoon.title}`;
       if (usedTitles.has(eTitle)) eTitle = `${destName} Valley Edge - ${tmpl.evening.title}`;
@@ -1837,17 +2334,20 @@ export function generateGenericFallback(tripData) {
       daysArr.push({
         dayNumber: dayNumber,
         dayTheme: tmpl.theme,
+        transitNote: `${tmpl.morning.transitToNext ? `Transit: ${tmpl.morning.transitToNext}. ` : ''}${reality?.transportConstraints ? reality.transportConstraints.split('.')[0] + '.' : ''}`,
         morning: {
-          time: "09:00 AM",
+          time: "08:30 AM",
           title: mTitle,
           description: tmpl.morning.desc,
+          transitToNext: tmpl.morning.transitToNext || defaultTransit.morningToAfternoon,
           tip: tmpl.morning.tip,
           googleMapsLink: makeGoogleMapsUrl(mTitle, destName)
         },
         afternoon: {
-          time: "01:00 PM",
+          time: "12:30 PM",
           title: aTitle,
           description: tmpl.afternoon.desc,
+          transitToNext: tmpl.afternoon.transitToNext || defaultTransit.afternoonToEvening,
           foodSpot: tmpl.afternoon.foodSpot,
           googleMapsLink: makeGoogleMapsUrl(aTitle, destName)
         },
@@ -1855,6 +2355,7 @@ export function generateGenericFallback(tripData) {
           time: "05:00 PM",
           title: eTitle,
           description: tmpl.evening.desc,
+          transitToNext: tmpl.evening.transitToNext || defaultTransit.eveningToNight,
           tip: tmpl.evening.tip,
           googleMapsLink: makeGoogleMapsUrl(eTitle, destName)
         },
@@ -1877,14 +2378,20 @@ export function generateGenericFallback(tripData) {
 
   return normalizeItinerary({
     destination: destName,
-    tripTitle: `Curated ${destName} Yatra`,
-    tagline: `A handpicked, time-optimized journey through the finest sights of ${destName}`,
+    tripTitle: dbEntry?.title || `Curated ${destName} Yatra`,
+    tagline: dbEntry?.tagline || `A handpicked, time-optimized journey through the finest sights of ${destName}`,
     totalEstimatedCost: estBudget.estimatedTotal,
+    highlights: dbEntry?.highlights || undefined,
+    mustTry: reality?.mustTry || dbEntry?.mustTry || undefined,
+    packingEssentials: dbEntry?.packing || undefined,
+    localInsights: reality?.transportConstraints || dbEntry?.localInsights || undefined,
     days: daysArr
   }, tripData);
 }
 
-// Pollinations AI Fallback (Free Serverless)
+// ============================================================
+// POLLINATIONS AI FALLBACK (FREE SERVERLESS)
+// ============================================================
 async function generateViaPollinationsAI(prompt, tripData) {
   try {
     const controller = new AbortController();
@@ -1896,7 +2403,10 @@ async function generateViaPollinationsAI(prompt, tripData) {
       signal: controller.signal,
       body: JSON.stringify({
         messages: [
-          { role: "system", content: "You are an expert India travel concierge. Respond ONLY with raw valid JSON matching the exact schema requested, no markdown, no conversational text." },
+          { 
+            role: "system", 
+            content: "You are an expert India travel concierge. Respond ONLY with valid, parseable JSON conforming strictly to the requested schema. No markdown, no conversational text." 
+          },
           { role: "user", content: prompt }
         ],
         jsonMode: true
@@ -1911,7 +2421,7 @@ async function generateViaPollinationsAI(prompt, tripData) {
     const cleanJson = text.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
     const itinerary = JSON.parse(cleanJson);
 
-    if (itinerary && (itinerary.days || itinerary.itinerary)) {
+    if (itinerary && (itinerary.dayWiseTimeline || itinerary.days || itinerary.itinerary)) {
       return { success: true, data: normalizeItinerary(itinerary, tripData), model: "BharatDarshan AI (Pollinations)", isDemoMode: false };
     }
     throw new Error("Invalid itinerary JSON structure");
@@ -1921,49 +2431,143 @@ async function generateViaPollinationsAI(prompt, tripData) {
   }
 }
 
-// Direct AI Trip Generation Engine with Strict Dynamic Prompting & Zero-Repeat Enforcement
+// ============================================================
+// CANONICAL REALISM PROMPT TEMPLATE & BUILDER
+// ============================================================
+export const ITINERARY_PROMPT_TEMPLATE = `
+Generate a realistic, detailed travel itinerary for \${destination} starting from \${source}.
+
+CRITICAL CONTENT & LOCAL REALISM RULES:
+1. MUST-TRY EXPERIENCES (STRICT):
+   - Do NOT provide generic titles like "Authentic Regional Thali" or "Cultural Folk Show".
+   - Every item MUST include: [Specific iconic dish or activity] at [Exact famous shop, stall, or street] with approximate cost in INR.
+   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" instead of "Traditional lunch".
+
+2. LOCAL INSIGHTS & HACKS:
+   - Provide 2-3 actionable, street-smart survival tips for this exact destination.
+   - Mention physical transit constraints (e.g., if vehicle movement is restricted like Mall Roads/ghats, clarify that walking/lifts are required).
+   - Include realistic tout/scam alerts or overcharging warnings.
+
+3. DAY-BY-DAY TIMELINE LOGISTICS:
+   - Group attractions strictly by proximity. Do not create long gaps between spots located right next to each other.
+   - Include realistic transit time and travel mode to the next spot.
+   - Add one actionable insider tip for each major spot (e.g., best time for photographs, ticket line advice, monkey cautions).
+
+Format the output strictly as JSON following this structure:
+{
+  "curatedTitle": "string",
+  "tags": ["string"],
+  "arrivalLogistics": {
+    "railwayStation": { "name": "string", "distance": "string" },
+    "busStand": { "name": "string", "distance": "string" },
+    "airport": { "name": "string", "distance": "string" }
+  },
+  "dayWiseTimeline": [
+    {
+      "day": 1,
+      "title": "string",
+      "activities": [
+        {
+          "time": "09:00 AM",
+          "title": "string",
+          "description": "string",
+          "transitToNext": "string",
+          "spotTip": "string"
+        }
+      ]
+    }
+  ],
+  "budgetBreakdown": {
+    "stay": "string",
+    "food": "string",
+    "transport": "string",
+    "activities": "string"
+  },
+  "mustTryExperiences": [
+    {
+      "title": "string (e.g. Siddu with desi ghee at Himachali Rasoi)",
+      "description": "string (approx cost and quick highlight)"
+    }
+  ],
+  "packingEssentials": ["string"],
+  "localInsights": ["string"],
+  "bestTimeToVisit": "string"
+}
+`;
+
+export function buildItineraryPrompt(destination, source, numberOfDays = 3) {
+  const durationText = numberOfDays ? ` for ${numberOfDays} days` : "";
+  return `Generate a realistic, detailed travel itinerary for ${destination} starting from ${source}${durationText}.
+
+CRITICAL CONTENT & LOCAL REALISM RULES:
+1. MUST-TRY EXPERIENCES (STRICT):
+   - Do NOT provide generic titles like "Authentic Regional Thali" or "Cultural Folk Show".
+   - Every item MUST include: [Specific iconic dish or activity] at [Exact famous shop, stall, or street] with approximate cost in INR.
+   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" instead of "Traditional lunch".
+
+2. LOCAL INSIGHTS & HACKS:
+   - Provide 2-3 actionable, street-smart survival tips for this exact destination.
+   - Mention physical transit constraints (e.g., if vehicle movement is restricted like Mall Roads/ghats, clarify that walking/lifts are required).
+   - Include realistic tout/scam alerts or overcharging warnings.
+
+3. DAY-BY-DAY TIMELINE LOGISTICS:
+   - Group attractions strictly by proximity. Do not create long gaps between spots located right next to each other.
+   - Include realistic transit time and travel mode to the next spot.
+   - Add one actionable insider tip for each major spot (e.g., best time for photographs, ticket line advice, monkey cautions).
+
+Format the output strictly as JSON following this structure:
+{
+  "curatedTitle": "string",
+  "tags": ["string"],
+  "arrivalLogistics": {
+    "railwayStation": { "name": "string", "distance": "string" },
+    "busStand": { "name": "string", "distance": "string" },
+    "airport": { "name": "string", "distance": "string" }
+  },
+  "dayWiseTimeline": [
+    {
+      "day": 1,
+      "title": "string",
+      "activities": [
+        {
+          "time": "09:00 AM",
+          "title": "string",
+          "description": "string",
+          "transitToNext": "string",
+          "spotTip": "string"
+        }
+      ]
+    }
+  ],
+  "budgetBreakdown": {
+    "stay": "string",
+    "food": "string",
+    "transport": "string",
+    "activities": "string"
+  },
+  "mustTryExperiences": [
+    {
+      "title": "string (e.g. Siddu with desi ghee at Himachali Rasoi)",
+      "description": "string (approx cost and quick highlight)"
+    }
+  ],
+  "packingEssentials": ["string"],
+  "localInsights": ["string"],
+  "bestTimeToVisit": "string"
+}
+`;
+}
+
+// ============================================================
+// DIRECT AI TRIP GENERATION ENGINE WITH CRITICAL REALISM
+// ============================================================
 export async function generateAIItinerary(tripData) {
   const destName = tripData.destinationName || tripData.destination || "India";
   const numberOfDays = Math.max(1, parseInt(tripData.days, 10) || 3);
-  const budgetRange = tripData.budget || "Comfort";
-  const travelerType = tripData.travellers ? `${tripData.travellers} person(s)` : (tripData.travelerType || "Couples / Friends");
-  const vibe = tripData.tripType || tripData.vibe || "Heritage & Cultural Exploration";
-  const origin = tripData.origin || "Delhi";
+  const origin = tripData.departureCity?.name || tripData.origin || tripData.source || "Delhi";
 
-  // Dynamic Prompt with Strict No-Repeat Rule & Clean JSON Schema
-  const structuredPrompt = `Generate a realistic, time-optimized day-by-day itinerary for ${numberOfDays} days in ${destName}.
-
-STRICT RULE: Every single day must feature completely distinct, geographically logical attractions, activities, and local food spots. NEVER repeat any monument, temple, market, or activity across multiple days.
-
-Structure each day into Morning, Afternoon, Evening, and Night, including travel/cab tips and estimated costs matching the budget ${budgetRange}.
-
-Parameters:
-- Destination: ${destName}
-- Number of Days: ${numberOfDays}
-- Budget Tier: ${budgetRange}
-- Traveler Type: ${travelerType}
-- Vibe / Travel Style: ${vibe}
-- Departing / Origin City: ${origin}
-
-Request output strictly in JSON format without markdown wrapping matching this exact schema:
-{
-  "tripTitle": "${destName} Yatra - [Catchy Title]",
-  "totalEstimatedCost": "₹X,XXX total for ${tripData.travellers || 2} person(s)",
-  "days": [
-    {
-      "dayNumber": 1,
-      "dayTheme": "Old City & Royal Forts",
-      "insiderTip": "Actionable insider hack to skip ticket lines or find hidden viewpoint gems",
-      "bestTimeWindow": "08:30 AM – 11:30 AM & 04:30 PM – 07:00 PM (Minimal crowds & pleasant light)",
-      "practicalNote": "Footwear note, clothing recommendations, or local transit advice",
-      "morning": { "time": "9:00 AM", "title": "Real Place Name", "description": "Engaging 1-2 sentence description.", "tip": "Practical visit / transport tip." },
-      "afternoon": { "time": "1:00 PM", "title": "Distinct Real Landmark", "description": "Engaging description.", "foodSpot": "Famous Real Local Restaurant or Cafe" },
-      "evening": { "time": "5:00 PM", "title": "Different Evening Sight or Market", "description": "Engaging description." },
-      "night": { "time": "8:30 PM", "title": "Night Cultural / Dinner Spot", "description": "Engaging description." },
-      "recommendedAreaToStay": "Real Neighborhood or Area Name"
-    }
-  ]
-}`;
+  // Use Canonical Realistic Prompt Template
+  const structuredPrompt = buildItineraryPrompt(destName, origin, numberOfDays);
 
   // Step 1: Direct Google Gemini API (supporting latest and flash models)
   if (GEMINI_API_KEY && GEMINI_API_KEY.trim().length > 5) {
@@ -1972,7 +2576,7 @@ Request output strictly in JSON format without markdown wrapping matching this e
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 20000);
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY.trim()}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/\${model}:generateContent?key=\${GEMINI_API_KEY.trim()}`;
 
         const response = await fetch(geminiUrl, {
           method: "POST",
@@ -1980,6 +2584,11 @@ Request output strictly in JSON format without markdown wrapping matching this e
           signal: controller.signal,
           body: JSON.stringify({
             contents: [{ parts: [{ text: structuredPrompt }] }],
+            systemInstruction: {
+              parts: [{
+                text: "You are an expert India travel concierge. Respond ONLY with valid, parseable JSON conforming strictly to the requested schema. No markdown backticks, no conversational introductory or concluding text."
+              }]
+            },
             generationConfig: {
               temperature: 0.7,
               maxOutputTokens: 8192,
@@ -1995,20 +2604,20 @@ Request output strictly in JSON format without markdown wrapping matching this e
           if (text) {
             const cleanJson = text.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
             const itinerary = JSON.parse(cleanJson);
-            if (itinerary && Array.isArray(itinerary.days) && itinerary.days.length > 0) {
+            if (itinerary && ((Array.isArray(itinerary.days) && itinerary.days.length > 0) || (Array.isArray(itinerary.dayWiseTimeline) && itinerary.dayWiseTimeline.length > 0))) {
               return {
                 success: true,
                 data: normalizeItinerary(itinerary, tripData),
-                model: `Gemini AI Engine (${model})`,
+                model: `Gemini AI Engine (\${model})`,
                 isDemoMode: false
               };
             }
           }
         } else {
-          console.warn(`[AIYatraEngine] Model ${model} returned status ${response.status}`);
+          console.warn(`[AIYatraEngine] Model \${model} returned status \${response.status}`);
         }
       } catch (err) {
-        console.warn(`[AIYatraEngine] Gemini model ${model} attempt failed:`, err.message);
+        console.warn(`[AIYatraEngine] Gemini model \${model} attempt failed:`, err.message);
       }
     }
   }

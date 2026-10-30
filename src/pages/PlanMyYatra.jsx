@@ -1742,6 +1742,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               time: morningItem?.time || "09:00 AM",
               title: morningItem?.title || morningItem?.locationName || morningItem?.activity || "Morning Sightseeing",
               desc: morningItem?.description || morningItem?.desc || "Explore iconic sights and heritage courtyards with crisp morning light.",
+              transitToNext: morningItem?.transitToNext || null,
               mapsLink: morningItem?.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((morningItem?.title || morningItem?.locationName || 'Morning') + ' ' + (tripData?.destinationName || ''))}`
             },
             {
@@ -1753,6 +1754,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               time: afternoonItem?.time || "01:00 PM",
               title: afternoonItem?.title || afternoonItem?.locationName || afternoonItem?.activity || "Afternoon Landmark & Cultural Spot",
               desc: afternoonItem?.description || afternoonItem?.desc || "Tour prominent landmarks, royal museums, and authentic dining places.",
+              transitToNext: afternoonItem?.transitToNext || null,
               mapsLink: afternoonItem?.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((afternoonItem?.title || afternoonItem?.locationName || 'Afternoon') + ' ' + (tripData?.destinationName || ''))}`
             },
             {
@@ -1764,6 +1766,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
               time: eveningItem?.time || "05:00 PM",
               title: eveningItem?.title || eveningItem?.locationName || eveningItem?.activity || "Evening Promenade & Bazaars",
               desc: eveningItem?.description || eveningItem?.desc || "Stroll through vibrant evening bazaars, scenic sunset viewpoints, and night lights.",
+              transitToNext: eveningItem?.transitToNext || null,
               mapsLink: eveningItem?.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((eveningItem?.title || eveningItem?.locationName || 'Evening') + ' ' + (tripData?.destinationName || ''))}`
             }
           ];
@@ -1823,48 +1826,58 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
                 </div>
               </div>
 
-              {/* Compact 3-Row Day Glance */}
-              <div className="p-4 md:p-5 space-y-2.5">
-                {glanceRows.map((row) => (
-                  <div
-                    key={row.key}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 transition-all duration-200"
-                  >
-                    {/* Period Icon badge */}
-                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center text-xl shrink-0">
-                      {row.icon}
-                    </div>
-
-                    {/* Title + 1-line description + time badge */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span
-                          className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0"
-                          style={{ background: row.badgeBg, color: row.badgeColor }}
-                        >
-                          {row.time}
-                        </span>
-                        <h4 className="font-black text-slate-900 text-xs md:text-sm truncate">
-                          {row.title}
-                        </h4>
+              {/* Compact 3-Row Day Glance with Transit Connectors */}
+              <div className="p-4 md:p-5 space-y-2">
+                {glanceRows.map((row, rIdx) => (
+                  <React.Fragment key={row.key}>
+                    {/* Transit Connector between consecutive time slots */}
+                    {rIdx > 0 && glanceRows[rIdx - 1].transitToNext && (
+                      <div className="flex items-center gap-2 pl-4 py-0.5 text-slate-500">
+                        <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100/90 border border-slate-200/90 text-slate-700 text-[10px] font-bold shadow-2xs">
+                          <span>🚶 Transit:</span>
+                          <span className="text-slate-900 font-extrabold">{glanceRows[rIdx - 1].transitToNext}</span>
+                        </div>
                       </div>
-                      <p className="text-[11px] md:text-xs text-slate-500 font-medium truncate">
-                        {row.desc}
-                      </p>
-                    </div>
-
-                    {/* Maps link */}
-                    <a
-                      href={row.mapsLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/70 shadow-2xs"
-                      title={`View ${row.title} on Google Maps`}
+                    )}
+                    <div
+                      className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 transition-all duration-200"
                     >
-                      <span>📍 Maps</span>
-                      <span className="text-[9px]">↗</span>
-                    </a>
-                  </div>
+                      {/* Period Icon badge */}
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center text-xl shrink-0">
+                        {row.icon}
+                      </div>
+
+                      {/* Title + 1-line description + time badge */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span
+                            className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0"
+                            style={{ background: row.badgeBg, color: row.badgeColor }}
+                          >
+                            {row.time}
+                          </span>
+                          <h4 className="font-black text-slate-900 text-xs md:text-sm truncate">
+                            {row.title}
+                          </h4>
+                        </div>
+                        <p className="text-[11px] md:text-xs text-slate-500 font-medium truncate">
+                          {row.desc}
+                        </p>
+                      </div>
+
+                      {/* Maps link */}
+                      <a
+                        href={row.mapsLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/70 shadow-2xs"
+                        title={`View ${row.title} on Google Maps`}
+                      >
+                        <span>📍 Maps</span>
+                        <span className="text-[9px]">↗</span>
+                      </a>
+                    </div>
+                  </React.Fragment>
                 ))}
 
                 {/* Slide-Up Host Tips Drawer Trigger Button */}
@@ -1934,6 +1947,21 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
                 {/* Scrollable Tips Content */}
                 <div className="p-6 overflow-y-auto space-y-4 text-slate-800">
+                  {/* 0. 🚦 Transport Realities & Local Regulations */}
+                  {(day.transitNote || localInsights) && (
+                    <div className="rounded-2xl p-4.5 bg-orange-50/90 border border-orange-200/90 shadow-2xs">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-lg">🚦</span>
+                        <h4 className="font-black text-xs md:text-sm uppercase tracking-wider text-orange-950">
+                          Transport Realities & Local Laws
+                        </h4>
+                      </div>
+                      <p className="text-xs md:text-sm font-medium text-orange-950 leading-relaxed pl-7">
+                        {day.transitNote || localInsights}
+                      </p>
+                    </div>
+                  )}
+
                   {/* 1. 💡 Local Hack */}
                   <div className="rounded-2xl p-4.5 bg-amber-50/90 border border-amber-200/90 shadow-2xs">
                     <div className="flex items-center gap-2 mb-1.5">
@@ -2084,15 +2112,27 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         <div className="rounded-2xl p-6" style={{background:'#fffbeb',border:'1px solid rgba(245,158,11,0.2)',boxShadow:'0 4px 20px rgba(245,158,11,0.07)'}}>
           <h3 className="font-black text-slate-900 mb-4 flex items-center gap-2"><Star size={17} className="text-amber-500" /> Must-Try Experiences</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {mustTry.map((m, i) => (
-              <div key={m.item || i} className="flex gap-3 p-3.5 rounded-xl" style={{background:'rgba(255,255,255,0.8)',border:'1px solid rgba(245,158,11,0.18)'}}>
-                <span className="text-amber-400 font-black text-lg shrink-0">★</span>
-                <div>
-                  <p className="font-black text-slate-900 text-sm">{m.item}</p>
-                  <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">{m.why}</p>
+            {mustTry.map((m, i) => {
+              const title = typeof m === 'object' ? (m.item || m.name || '') : String(m);
+              const desc = typeof m === 'object' ? (m.why || m.description || '') : '';
+              const cost = typeof m === 'object' ? (m.approxCost || '') : '';
+              return (
+                <div key={title || i} className="flex gap-3 p-3.5 rounded-xl justify-between items-start" style={{background:'rgba(255,255,255,0.85)',border:'1px solid rgba(245,158,11,0.18)'}}>
+                  <div className="flex gap-3 items-start min-w-0">
+                    <span className="text-amber-400 font-black text-lg shrink-0 mt-0.5">★</span>
+                    <div className="min-w-0">
+                      <p className="font-black text-slate-900 text-sm leading-snug">{title}</p>
+                      {desc && <p className="text-slate-600 text-xs mt-1 leading-relaxed">{desc}</p>}
+                    </div>
+                  </div>
+                  {cost && (
+                    <span className="shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 ml-2 whitespace-nowrap">
+                      {cost}
+                    </span>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
