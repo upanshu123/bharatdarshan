@@ -2130,15 +2130,55 @@ export function normalizeItinerary(rawItinerary, tripData) {
       flightOrTrainHack: rawItinerary?.bookingSmartHacks?.flightOrTrainHack || rawItinerary?.bookingSmartHacks?.transitHack || `Check Vande Bharat Express or direct State Roadways Super Deluxe / Volvo buses to ${destName} if flight fares surge.`,
       activityHack: rawItinerary?.bookingSmartHacks?.activityHack || `Pre-book monument entry passes on official ASI / state tourism portal or GetYourGuide to bypass 30–45 min physical counter queues.`
     },
-    partnerDeals: {
-      makeMyTripHotels: rawItinerary?.partnerDeals?.makeMyTripHotels || "🏷️ Up to 15% OFF via HDFC/ICICI cards",
-      bookingDotCom: rawItinerary?.partnerDeals?.bookingDotCom || "⚡ Zero Prepayment · Free 24h Cancellation",
-      klook: rawItinerary?.partnerDeals?.klook || "🎁 Extra ₹250 OFF on first app booking",
-      expediaFlights: rawItinerary?.partnerDeals?.expediaFlights || "✈️ Flight + Hotel bundle savings",
-      mmtFlights: rawItinerary?.partnerDeals?.mmtFlights || "💳 Zero convenience fee with coupon",
-      getYourGuide: rawItinerary?.partnerDeals?.getYourGuide || `🎟️ Skip-the-Line Priority Ticket in ${destName}`,
-      goibiboCabs: rawItinerary?.partnerDeals?.goibiboCabs || `🚖 Pre-negotiated Union Fare & Airport Pickup in ${destName}`
-    },
+    partnerDeals: (() => {
+      const encDest = encodeURIComponent(destName);
+      const encSource = encodeURIComponent(tripData?.source || tripData?.departureCity || "Delhi");
+      const normDeal = (deal, defaultBadge, defaultUrl) => {
+        if (!deal) return { dealBadge: defaultBadge, searchUrl: defaultUrl };
+        if (typeof deal === "string") return { dealBadge: deal, searchUrl: defaultUrl };
+        return {
+          dealBadge: deal.dealBadge || defaultBadge,
+          searchUrl: deal.searchUrl || defaultUrl
+        };
+      };
+      return {
+        makeMyTripHotels: normDeal(
+          rawItinerary?.partnerDeals?.makeMyTripHotels,
+          "🏷️ Up to 15% OFF via HDFC/ICICI cards",
+          `https://www.makemytrip.com/hotels/hotel-listing/?city=${encDest}&country=IN`
+        ),
+        bookingDotCom: normDeal(
+          rawItinerary?.partnerDeals?.bookingDotCom,
+          "⚡ Zero Prepayment · Free 24h Cancellation",
+          `https://www.booking.com/searchresults.html?ss=${encDest}`
+        ),
+        klook: normDeal(
+          rawItinerary?.partnerDeals?.klook,
+          "🎁 Extra ₹250 OFF on first app booking",
+          `https://www.klook.com/en-IN/search/result/?query=${encDest}`
+        ),
+        expediaFlights: normDeal(
+          rawItinerary?.partnerDeals?.expediaFlights,
+          "✈️ Flight + Hotel bundle savings",
+          `https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:${encSource},to:${encDest}`
+        ),
+        mmtFlights: normDeal(
+          rawItinerary?.partnerDeals?.mmtFlights,
+          "💳 Zero convenience fee with code FLYMORE",
+          "https://www.makemytrip.com/flights/"
+        ),
+        getYourGuide: normDeal(
+          rawItinerary?.partnerDeals?.getYourGuide,
+          `🎟️ Skip-the-Line Priority Pass in ${destName}`,
+          `https://www.getyourguide.com/s/?q=${encDest}`
+        ),
+        goibiboCabs: normDeal(
+          rawItinerary?.partnerDeals?.goibiboCabs,
+          "🚖 Pre-negotiated Union Fare & Local Cab Pickup",
+          "https://www.goibibo.com/cars/"
+        )
+      };
+    })(),
     budgetBreakdown: rawItinerary?.budgetBreakdown || {
       stay: finalBudget.accommodation,
       food: finalBudget.food,
@@ -2526,32 +2566,49 @@ async function generateViaPollinationsAI(prompt, tripData) {
 export const ITINERARY_PROMPT_TEMPLATE = `
 Generate a hyper-realistic, detailed, day-wise travel itinerary from \${source} to \${destination} for \${travelersCount || 2} person(s) on a \${budgetTier || "Comfort"} budget.
 
-CRITICAL LOCAL REALISM & ACCURACY RULES:
-1. TRANSPORT CONSTRAINTS & REALITY:
-   - Do NOT assume app-based cabs (Ola/Uber) or auto-rickshaws operate everywhere.
-   - Enforce destination-specific transit rules: if areas are pedestrianized (e.g. hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, municipal lifts, battery rickshaws, or registered union taxis are mandatory.
+CRITICAL LOCAL REALISM & VERIFIED DATA RULES:
+1. TRANSPORT REALITY:
+   - Never assume app-cabs (Ola/Uber) or auto-rickshaws operate everywhere.
+   - Enforce destination-specific transit rules: if areas are pedestrianized (e.g., hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, municipal lifts, battery carts, or registered union taxis are mandatory.
    - Nearest stations, bus stands, and airport distances must reflect actual physical ground truth.
 
-2. LOGISTICAL GEOGRAPHY & NO TIME-PADDING:
-   - Group attractions strictly by proximity.
-   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other.
-   - Mention realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
+2. LOGISTICAL GEOGRAPHY:
+   - Group attractions strictly by proximity. Never place 3-4 hour gaps between spots within 500 meters of each other.
+   - State realistic commute times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
 
 3. MUST-TRY EXPERIENCES (STRICT):
-   - Never output generic placeholders like "Authentic Regional Thali" or "Cultural Folk Show".
+   - Never output generic placeholders like "Authentic Regional Thali".
    - Format: [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR]).
 
-4. DYNAMIC AFFILIATE DEALS & CARDS HOOKS (HIGH PRIORITY):
-   - For EACH of the 7 partner platforms, generate a hyper-specific, high-converting deal/badge text that gives the user an immediate monetary or practical reason to click rather than booking directly:
-     * makeMyTripHotels: Mention bank discounts or specific credit card codes (e.g., "🏷️ Up to 15% OFF via HDFC/ICICI cards")
-     * bookingDotCom: Mention risk-free perks (e.g., "⚡ Zero Prepayment · Free 24h Cancellation")
-     * klook: Highlight experience/activity savings (e.g., "🎁 Extra ₹250 OFF on first app booking")
-     * expediaFlights: Route package or airfare savings (e.g., "✈️ Flight + Hotel bundle savings")
-     * mmtFlights: Convenience fee or student/senior discount (e.g., "💳 Zero convenience fee with coupon")
-     * getYourGuide: Monument line bypass (e.g., "🎟️ Skip-the-Line Priority Monument Ticket")
-     * goibiboCabs: Fixed union or verified rate assurance (e.g., "🚖 Pre-negotiated Union Fare & Airport Pickup")
+4. ALL 7 PARTNER PLATFORMS (DYNAMIC SEARCH LINKS & DEALS):
+   - For EACH partner platform, provide:
+     a) "dealBadge": High-converting savings hook tailored to \${destination} (bank codes, queue bypass, or zero fees).
+     b) "searchUrl": Clean, relevant search/landing URL encoded for \${destination} (avoiding static luxury hotel pages).
+   
+   Partners schema requirements:
+   - makeMyTripHotels:
+     dealBadge: e.g. "🏷️ Up to 15% OFF via HDFC/ICICI cards"
+     searchUrl: "https://www.makemytrip.com/hotels/hotel-listing/?city=\${encodeURIComponent(destination)}&country=IN"
+   - bookingDotCom:
+     dealBadge: e.g. "⚡ Zero Prepayment · Free 24h Cancellation"
+     searchUrl: "https://www.booking.com/searchresults.html?ss=\${encodeURIComponent(destination)}"
+   - klook:
+     dealBadge: e.g. "🎁 Extra ₹250 OFF on first app booking"
+     searchUrl: "https://www.klook.com/en-IN/search/result/?query=\${encodeURIComponent(destination)}"
+   - expediaFlights:
+     dealBadge: e.g. "✈️ Flight + Hotel bundle savings"
+     searchUrl: "https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:\${encodeURIComponent(source)},to:\${encodeURIComponent(destination)}"
+   - mmtFlights:
+     dealBadge: e.g. "💳 Zero convenience fee with code FLYMORE"
+     searchUrl: "https://www.makemytrip.com/flights/"
+   - getYourGuide:
+     dealBadge: e.g. "🎟️ Skip-the-Line Priority Pass in \${destination}"
+     searchUrl: "https://www.getyourguide.com/s/?q=\${encodeURIComponent(destination)}"
+   - goibiboCabs:
+     dealBadge: e.g. "🚖 Pre-negotiated Union Fare & Local Cab Pickup"
+     searchUrl: "https://www.goibibo.com/cars/"
 
-Format the output strictly as valid JSON matching this schema:
+Format output strictly as JSON matching this schema:
 {
   "curatedTitle": "string",
   "tags": ["string"],
@@ -2570,8 +2627,7 @@ Format the output strictly as valid JSON matching this schema:
           "title": "string",
           "description": "string",
           "transitToNext": "string",
-          "spotTip": "string",
-          "imageSearchQuery": "string (strictly '[Exact Monument Name] [City] iconic front facade landmark')"
+          "spotTip": "string"
         }
       ]
     }
@@ -2597,47 +2653,66 @@ Format the output strictly as valid JSON matching this schema:
     "activityHack": "string"
   },
   "partnerDeals": {
-    "makeMyTripHotels": "string",
-    "bookingDotCom": "string",
-    "klook": "string",
-    "expediaFlights": "string",
-    "mmtFlights": "string",
-    "getYourGuide": "string",
-    "goibiboCabs": "string"
+    "makeMyTripHotels": { "dealBadge": "string", "searchUrl": "string" },
+    "bookingDotCom": { "dealBadge": "string", "searchUrl": "string" },
+    "klook": { "dealBadge": "string", "searchUrl": "string" },
+    "expediaFlights": { "dealBadge": "string", "searchUrl": "string" },
+    "mmtFlights": { "dealBadge": "string", "searchUrl": "string" },
+    "getYourGuide": { "dealBadge": "string", "searchUrl": "string" },
+    "goibiboCabs": { "dealBadge": "string", "searchUrl": "string" }
   }
 }
 `;
 
 export function buildItineraryPrompt(destination, source, numberOfDays = 3, travelersCount = 2, budgetTier = "Comfort") {
   const durationText = numberOfDays ? ` for ${numberOfDays} days` : "";
+  const encDest = encodeURIComponent(destination);
+  const encSource = encodeURIComponent(source);
   return `Generate a hyper-realistic, detailed, day-wise travel itinerary from ${source} to ${destination}${durationText} for ${travelersCount || 2} person(s) on a ${budgetTier || "Comfort"} budget.
 
-CRITICAL LOCAL REALISM & ACCURACY RULES:
-1. TRANSPORT CONSTRAINTS & REALITY:
-   - Do NOT assume app-based cabs (Ola/Uber) or auto-rickshaws operate everywhere.
-   - Enforce destination-specific transit rules: if areas are pedestrianized (e.g. hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, municipal lifts, battery rickshaws, or registered union taxis are mandatory.
+CRITICAL LOCAL REALISM & VERIFIED DATA RULES:
+1. TRANSPORT REALITY:
+   - Never assume app-cabs (Ola/Uber) or auto-rickshaws operate everywhere.
+   - Enforce destination-specific transit rules: if areas are pedestrianized (e.g., hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, municipal lifts, battery carts, or registered union taxis are mandatory.
    - Nearest stations, bus stands, and airport distances must reflect actual physical ground truth.
 
-2. LOGISTICAL GEOGRAPHY & NO TIME-PADDING:
-   - Group attractions strictly by proximity.
-   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other.
-   - Mention realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
+2. LOGISTICAL GEOGRAPHY:
+   - Group attractions strictly by proximity. Never place 3-4 hour gaps between spots within 500 meters of each other.
+   - State realistic commute times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
 
 3. MUST-TRY EXPERIENCES (STRICT):
-   - Never output generic placeholders like "Authentic Regional Thali" or "Cultural Folk Show".
+   - Never output generic placeholders like "Authentic Regional Thali".
    - Format: [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR]).
 
-4. DYNAMIC AFFILIATE DEALS & CARDS HOOKS (HIGH PRIORITY):
-   - For EACH of the 7 partner platforms, generate a hyper-specific, high-converting deal/badge text that gives the user an immediate monetary or practical reason to click rather than booking directly:
-     * makeMyTripHotels: Mention bank discounts or specific credit card codes (e.g., "🏷️ Up to 15% OFF via HDFC/ICICI cards")
-     * bookingDotCom: Mention risk-free perks (e.g., "⚡ Zero Prepayment · Free 24h Cancellation")
-     * klook: Highlight experience/activity savings (e.g., "🎁 Extra ₹250 OFF on first app booking")
-     * expediaFlights: Route package or airfare savings (e.g., "✈️ Flight + Hotel bundle savings")
-     * mmtFlights: Convenience fee or student/senior discount (e.g., "💳 Zero convenience fee with coupon")
-     * getYourGuide: Monument line bypass (e.g., "🎟️ Skip-the-Line Priority Monument Ticket")
-     * goibiboCabs: Fixed union or verified rate assurance (e.g., "🚖 Pre-negotiated Union Fare & Airport Pickup")
+4. ALL 7 PARTNER PLATFORMS (DYNAMIC SEARCH LINKS & DEALS):
+   - For EACH partner platform, provide:
+     a) "dealBadge": High-converting savings hook tailored to ${destination} (bank codes, queue bypass, or zero fees).
+     b) "searchUrl": Clean, relevant search/landing URL encoded for ${destination} (avoiding static luxury hotel pages).
+   
+   Partners schema requirements:
+   - makeMyTripHotels:
+     dealBadge: e.g. "🏷️ Up to 15% OFF via HDFC/ICICI cards"
+     searchUrl: "https://www.makemytrip.com/hotels/hotel-listing/?city=${encDest}&country=IN"
+   - bookingDotCom:
+     dealBadge: e.g. "⚡ Zero Prepayment · Free 24h Cancellation"
+     searchUrl: "https://www.booking.com/searchresults.html?ss=${encDest}"
+   - klook:
+     dealBadge: e.g. "🎁 Extra ₹250 OFF on first app booking"
+     searchUrl: "https://www.klook.com/en-IN/search/result/?query=${encDest}"
+   - expediaFlights:
+     dealBadge: e.g. "✈️ Flight + Hotel bundle savings"
+     searchUrl: "https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:${encSource},to:${encDest}"
+   - mmtFlights:
+     dealBadge: e.g. "💳 Zero convenience fee with code FLYMORE"
+     searchUrl: "https://www.makemytrip.com/flights/"
+   - getYourGuide:
+     dealBadge: e.g. "🎟️ Skip-the-Line Priority Pass in ${destination}"
+     searchUrl: "https://www.getyourguide.com/s/?q=${encDest}"
+   - goibiboCabs:
+     dealBadge: e.g. "🚖 Pre-negotiated Union Fare & Local Cab Pickup"
+     searchUrl: "https://www.goibibo.com/cars/"
 
-Format the output strictly as valid JSON matching this schema:
+Format output strictly as JSON matching this schema:
 {
   "curatedTitle": "string",
   "tags": ["string"],
@@ -2656,8 +2731,7 @@ Format the output strictly as valid JSON matching this schema:
           "title": "string",
           "description": "string",
           "transitToNext": "string",
-          "spotTip": "string",
-          "imageSearchQuery": "string (strictly '[Exact Monument Name] [City] iconic front facade landmark')"
+          "spotTip": "string"
         }
       ]
     }
@@ -2683,13 +2757,13 @@ Format the output strictly as valid JSON matching this schema:
     "activityHack": "string"
   },
   "partnerDeals": {
-    "makeMyTripHotels": "string",
-    "bookingDotCom": "string",
-    "klook": "string",
-    "expediaFlights": "string",
-    "mmtFlights": "string",
-    "getYourGuide": "string",
-    "goibiboCabs": "string"
+    "makeMyTripHotels": { "dealBadge": "string", "searchUrl": "string" },
+    "bookingDotCom": { "dealBadge": "string", "searchUrl": "string" },
+    "klook": { "dealBadge": "string", "searchUrl": "string" },
+    "expediaFlights": { "dealBadge": "string", "searchUrl": "string" },
+    "mmtFlights": { "dealBadge": "string", "searchUrl": "string" },
+    "getYourGuide": { "dealBadge": "string", "searchUrl": "string" },
+    "goibiboCabs": { "dealBadge": "string", "searchUrl": "string" }
   }
 }
 `;

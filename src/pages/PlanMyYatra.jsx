@@ -1299,7 +1299,25 @@ function getPartnerDealBadge(partnerId, partnerDeals) {
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };
-  return map[partnerId] || null;
+  const val = map[partnerId];
+  if (!val) return null;
+  return typeof val === 'object' ? val.dealBadge : val;
+}
+
+function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
+  if (!partnerDeals) return fallbackUrl;
+  const map = {
+    makemytrip: partnerDeals.makeMyTripHotels,
+    booking: partnerDeals.bookingDotCom,
+    klook: partnerDeals.klook,
+    expedia: partnerDeals.expediaFlights,
+    'makemytrip-flights': partnerDeals.mmtFlights,
+    getyourguide: partnerDeals.getYourGuide,
+    goibibo: partnerDeals.goibiboCabs
+  };
+  const val = map[partnerId];
+  if (val && typeof val === 'object' && val.searchUrl) return val.searchUrl;
+  return fallbackUrl;
 }
 
 function ItineraryResult({ itinerary, tripData, onReset }) {
@@ -2231,7 +2249,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {/* 1. MakeMyTrip Hotels */}
           <a
-            href={AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'makemytrip')?.affiliateUrl || "https://bitli.in/vH7D6en"}
+            href={getPartnerDealUrl('makemytrip', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'makemytrip')?.affiliateUrl || "https://bitli.in/vH7D6en")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -2239,9 +2257,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-lg">🏨</div>
               <div>
-                {itinerary?.partnerDeals?.makeMyTripHotels && (
+                {getPartnerDealBadge('makemytrip', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-red-600 bg-red-50 border border-red-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.makeMyTripHotels}
+                    {getPartnerDealBadge('makemytrip', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-orange-600 transition-colors">MakeMyTrip</h4>
@@ -2253,7 +2271,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
           {/* 2. Booking.com */}
           <a
-            href={AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'booking')?.affiliateUrl || "https://www.anrdoezrs.net/click-101883662-17322915"}
+            href={getPartnerDealUrl('booking', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'booking')?.affiliateUrl || "https://www.anrdoezrs.net/click-101883662-17322915")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all"
@@ -2261,9 +2279,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-lg">🏨</div>
               <div>
-                {itinerary?.partnerDeals?.bookingDotCom && (
+                {getPartnerDealBadge('booking', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.bookingDotCom}
+                    {getPartnerDealBadge('booking', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition-colors">Booking.com</h4>
@@ -2275,7 +2293,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
           {/* 3. Klook */}
           <a
-            href={AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'klook')?.affiliateUrl || "https://klook.tpo.mx/0r4GgPTK"}
+            href={getPartnerDealUrl('klook', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'klook')?.affiliateUrl || "https://klook.tpo.mx/0r4GgPTK")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -2283,9 +2301,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-lg">🏨</div>
               <div>
-                {itinerary?.partnerDeals?.klook && (
+                {getPartnerDealBadge('klook', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-orange-600 bg-orange-50 border border-orange-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.klook}
+                    {getPartnerDealBadge('klook', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-orange-600 transition-colors">Klook</h4>
@@ -2297,7 +2315,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
           {/* 4. Expedia */}
           <a
-            href={AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'expedia')?.affiliateUrl || "https://bitli.in/sP8sZwo"}
+            href={getPartnerDealUrl('expedia', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'expedia')?.affiliateUrl || "https://bitli.in/sP8sZwo")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-yellow-200 transition-all"
@@ -2305,9 +2323,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center text-lg">✈️</div>
               <div>
-                {itinerary?.partnerDeals?.expediaFlights && (
+                {getPartnerDealBadge('expedia', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-yellow-800 bg-yellow-50 border border-yellow-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.expediaFlights}
+                    {getPartnerDealBadge('expedia', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-yellow-600 transition-colors">Expedia</h4>
@@ -2319,7 +2337,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
           {/* 5. MMT Flights */}
           <a
-            href={AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'makemytrip-flights')?.affiliateUrl || "https://bitli.in/vH7D6en"}
+            href={getPartnerDealUrl('makemytrip-flights', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'makemytrip-flights')?.affiliateUrl || "https://bitli.in/vH7D6en")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all"
@@ -2327,9 +2345,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-lg">✈️</div>
               <div>
-                {itinerary?.partnerDeals?.mmtFlights && (
+                {getPartnerDealBadge('makemytrip-flights', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.mmtFlights}
+                    {getPartnerDealBadge('makemytrip-flights', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-indigo-600 transition-colors">MMT Flights</h4>
@@ -2341,7 +2359,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
           {/* 6. GetYourGuide */}
           <a
-            href={AFFILIATE_PARTNERS?.activities?.find(p => p.id === 'getyourguide')?.affiliateUrl || "https://gyg.me/izQrSbTv"}
+            href={getPartnerDealUrl('getyourguide', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.activities?.find(p => p.id === 'getyourguide')?.affiliateUrl || "https://gyg.me/izQrSbTv")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all"
@@ -2349,9 +2367,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-lg">🎟️</div>
               <div>
-                {itinerary?.partnerDeals?.getYourGuide && (
+                {getPartnerDealBadge('getyourguide', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-purple-600 bg-purple-50 border border-purple-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.getYourGuide}
+                    {getPartnerDealBadge('getyourguide', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition-colors">GetYourGuide</h4>
@@ -2363,7 +2381,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
 
           {/* 7. Goibibo Cabs */}
           <a
-            href={AFFILIATE_PARTNERS?.transport?.find(p => p.id === 'goibibo')?.affiliateUrl || "https://bitli.in/xKkdwRT"}
+            href={getPartnerDealUrl('goibibo', itinerary?.partnerDeals, AFFILIATE_PARTNERS?.transport?.find(p => p.id === 'goibibo')?.affiliateUrl || "https://bitli.in/xKkdwRT")}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all"
@@ -2371,9 +2389,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-lg">🚖</div>
               <div>
-                {itinerary?.partnerDeals?.goibiboCabs && (
+                {getPartnerDealBadge('goibibo', itinerary?.partnerDeals) && (
                   <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                    {itinerary.partnerDeals.goibiboCabs}
+                    {getPartnerDealBadge('goibibo', itinerary?.partnerDeals)}
                   </span>
                 )}
                 <h4 className="font-bold text-gray-800 text-sm group-hover:text-emerald-600 transition-colors">Goibibo Cabs</h4>
