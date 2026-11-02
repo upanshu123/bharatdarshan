@@ -28,8 +28,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Amber_Fort_Jaipur.jpg/1200px-Amber_Fort_Jaipur.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -63,8 +62,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Hawa_Mahal_2011.jpg/1200px-Hawa_Mahal_2011.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -98,8 +96,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Nahargarh_Fort_Jaipur_view.jpg/1200px-Nahargarh_Fort_Jaipur_view.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -133,9 +130,7 @@ export const topDestinations = [
     ],
     "image": "https://images.unsplash.com/photo-1621831971871-9ce722722711?q=80&w=1200&auto=format&fit=crop",
     "images": [
-      "https://images.unsplash.com/photo-1621831971871-9ce722722711?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1621831971871-9ce722722711?q=80&w=1200&auto=format&fit=crop"
     ],
     "vibes": [
       "Spiritual & Temples",
@@ -166,11 +161,9 @@ export const topDestinations = [
       "Migratory Birdwatching",
       "Aravalli Mountain Reflection"
     ],
-    "image": "https://images.unsplash.com/photo-1524230572899-a752b3835840?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jal_Mahal%2C_Jaipur.jpg/1200px-Jal_Mahal%2C_Jaipur.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1524230572899-a752b3835840?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jal_Mahal%2C_Jaipur.jpg/1200px-Jal_Mahal%2C_Jaipur.jpg"
     ],
     "vibes": [
       "Hill Stations & Nature",
@@ -201,10 +194,9 @@ export const topDestinations = [
       "Stained Glass Mythological Art",
       "Illuminated Evening View"
     ],
-    "image": "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Birla_Mandir%2C_Jaipur_02.jpg/1200px-Birla_Mandir%2C_Jaipur_02.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Birla_Mandir%2C_Jaipur_02.jpg/1200px-Birla_Mandir%2C_Jaipur_02.jpg"
     ],
     "vibes": [
       "Spiritual & Temples",
@@ -235,10 +227,9 @@ export const topDestinations = [
       "Jantar Mantar Stone Sundial",
       "Royal Armory & Textile Museum"
     ],
-    "image": "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/City_Palace_Jaipur_Entrance.jpg/1200px-City_Palace_Jaipur_Entrance.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/City_Palace_Jaipur_Entrance.jpg/1200px-City_Palace_Jaipur_Entrance.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -904,8 +895,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1545232979-fbf34fe378a9?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Delhi_Red_fort.JPG/1200px-Delhi_Red_fort.JPG"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -936,11 +926,9 @@ export const topDestinations = [
       "Cultural Heritage Boat Ride",
       "Silent Prayer Meditation Halls"
     ],
-    "image": "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lotus_Temple_in_New_Delhi_03-2016.jpg/1200px-Lotus_Temple_in_New_Delhi_03-2016.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1545232979-fbf34fe378a9?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lotus_Temple_in_New_Delhi_03-2016.jpg/1200px-Lotus_Temple_in_New_Delhi_03-2016.jpg"
     ],
     "vibes": [
       "Spiritual & Temples",
@@ -974,8 +962,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1545232979-fbf34fe378a9?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1545232979-fbf34fe378a9?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1598977123118-4e30ba3c4f5b?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Qutub_Minar_in_New_Delhi_06-2016_img3.jpg/1200px-Qutub_Minar_in_New_Delhi_06-2016_img3.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -1008,9 +995,7 @@ export const topDestinations = [
     ],
     "image": "https://images.unsplash.com/photo-1598977123118-4e30ba3c4f5b?q=80&w=1200&auto=format&fit=crop",
     "images": [
-      "https://images.unsplash.com/photo-1598977123118-4e30ba3c4f5b?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1545232979-fbf34fe378a9?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1598977123118-4e30ba3c4f5b?q=80&w=1200&auto=format&fit=crop"
     ],
     "vibes": [
       "Hill Stations & Nature",
@@ -1362,8 +1347,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1200px-Taj_Mahal_%28Edited%29.jpeg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -1397,8 +1381,7 @@ export const topDestinations = [
     "image": "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop",
     "images": [
       "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Agra_Fort_Amar_Singh_Gate.jpg/1200px-Agra_Fort_Amar_Singh_Gate.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -1431,9 +1414,7 @@ export const topDestinations = [
     ],
     "image": "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop",
     "images": [
-      "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop"
     ],
     "vibes": [
       "Hill Stations & Nature",
@@ -1464,11 +1445,10 @@ export const topDestinations = [
       "Diwan-i-Khas Central Pillar",
       "Panch Mahal Tiered Wind Palace"
     ],
-    "image": "https://images.unsplash.com/photo-1597211684565-dca64d72bdfe?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buland_Darwaza_Fatehpur_Sikri.jpg/1200px-Buland_Darwaza_Fatehpur_Sikri.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1597211684565-dca64d72bdfe?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buland_Darwaza_Fatehpur_Sikri.jpg/1200px-Buland_Darwaza_Fatehpur_Sikri.jpg",
+      "https://images.unsplash.com/photo-1597211684565-dca64d72bdfe?q=80&w=1200&auto=format&fit=crop"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -1499,11 +1479,10 @@ export const topDestinations = [
       "World's Largest Free Langar",
       "Akal Takht Historical Throne"
     ],
-    "image": "https://images.unsplash.com/photo-1588096344356-9b168670b1ec?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
     "images": [
-      "https://images.unsplash.com/photo-1588096344356-9b168670b1ec?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/The_Golden_Temple_of_Amritsar_at_night.jpg/1200px-The_Golden_Temple_of_Amritsar_at_night.jpg"
     ],
     "vibes": [
       "Spiritual & Temples",
@@ -1534,11 +1513,9 @@ export const topDestinations = [
       "Stadium Patriotic Cheers",
       "Grand Swarn Jayanti Gate"
     ],
-    "image": "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Wagah_Border_Ceremony.jpg/1200px-Wagah_Border_Ceremony.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1588096344356-9b168670b1ec?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Wagah_Border_Ceremony.jpg/1200px-Wagah_Border_Ceremony.jpg"
     ],
     "vibes": [
       "Culture & Art",
@@ -1569,11 +1546,9 @@ export const topDestinations = [
       "Martyr's Well Structure",
       "Interactive Freedom Gallery Museum"
     ],
-    "image": "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Jallianwala_Bagh_memorial.jpg/1200px-Jallianwala_Bagh_memorial.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1588096344356-9b168670b1ec?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Jallianwala_Bagh_memorial.jpg/1200px-Jallianwala_Bagh_memorial.jpg"
     ],
     "vibes": [
       "Heritage & Forts",
@@ -1604,11 +1579,9 @@ export const topDestinations = [
       "Ancient Sikh Armory Museum",
       "Lakeside Sunset Aarti"
     ],
-    "image": "https://images.unsplash.com/photo-1565354041049-5f210515ff8b?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Durgiana_Temple_Amritsar.jpg/1200px-Durgiana_Temple_Amritsar.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1565354041049-5f210515ff8b?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1588096344356-9b168670b1ec?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Durgiana_Temple_Amritsar.jpg/1200px-Durgiana_Temple_Amritsar.jpg"
     ],
     "vibes": [
       "Spiritual & Temples",
@@ -1996,7 +1969,7 @@ export const topDestinations = [
     "images": [
       "https://images.unsplash.com/photo-1520222984843-df35ebc0f24d?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1587135941948-670b381f08ce?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Jaisalmer_Fort_2013.jpg/1200px-Jaisalmer_Fort_2013.jpg"
     ],
     "vibes": [
       "Heritage & Forts",

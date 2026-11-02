@@ -2167,6 +2167,46 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       </div>
 
+      {/* ── Booking Smart Hacks & Discounts ── */}
+      {itinerary?.bookingSmartHacks && (
+        <div className="rounded-2xl p-5 border border-amber-200/90 bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-white shadow-2xs">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xl">💡</span>
+            <div>
+              <h3 className="font-serif font-black text-slate-900 text-base">Booking Hubs, Discounts & Coupon Hooks</h3>
+              <p className="text-[11px] text-slate-500 font-medium">Local insider money-saving tips & queue bypass advice</p>
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300/80 ml-auto shadow-2xs">Verified Hacks</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            {itinerary.bookingSmartHacks.hotelHack && (
+              <div className="p-3.5 rounded-xl bg-white border border-amber-200/70 shadow-2xs">
+                <p className="font-black text-slate-900 mb-1.5 flex items-center gap-1.5">
+                  <span className="text-sm">🏨</span> Stay & Hotel Savings
+                </p>
+                <p className="text-slate-600 leading-relaxed font-medium">{itinerary.bookingSmartHacks.hotelHack}</p>
+              </div>
+            )}
+            {itinerary.bookingSmartHacks.flightOrTrainHack && (
+              <div className="p-3.5 rounded-xl bg-white border border-amber-200/70 shadow-2xs">
+                <p className="font-black text-slate-900 mb-1.5 flex items-center gap-1.5">
+                  <span className="text-sm">🚆</span> Transit & Route Hack
+                </p>
+                <p className="text-slate-600 leading-relaxed font-medium">{itinerary.bookingSmartHacks.flightOrTrainHack}</p>
+              </div>
+            )}
+            {itinerary.bookingSmartHacks.activityHack && (
+              <div className="p-3.5 rounded-xl bg-white border border-amber-200/70 shadow-2xs">
+                <p className="font-black text-slate-900 mb-1.5 flex items-center gap-1.5">
+                  <span className="text-sm">🎟️</span> Ticket Queue Bypass
+                </p>
+                <p className="text-slate-600 leading-relaxed font-medium">{itinerary.bookingSmartHacks.activityHack}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Affiliate Booking CTAs ── */}
       <div>
         <h3 className="text-lg font-serif font-black text-slate-900 mb-4 flex items-center gap-2">

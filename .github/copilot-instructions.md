@@ -32,3 +32,19 @@ _None found (or no workspace open)._
 _None found._
 
 <!-- github-copilot-toolbox:mcp-skills-awareness-end -->
+
+---
+
+## CRITICAL IMAGE & VISUAL ACCURACY RULES (ZERO MISMATCH POLICY)
+
+### 1. LANDMARK-SPECIFIC HERO SHOTS ONLY
+- For any destination or landmark, the primary image query MUST target the single most recognizable, iconic front-facing facade of THAT specific monument.
+- Strictly FORBID generic queries (e.g., NEVER use "Jaipur fort", "Rajasthan heritage", "Indian temple", or generic city landscapes).
+- If generating an image search term or Unsplash query, strictly format as:
+  `"[Exact Monument Name] [City] iconic front facade landmark"`
+  (Example: `"Hawa Mahal Jaipur iconic front facade"` — NOT `"Jaipur palace"`).
+
+### 2. STRICT PROHIBITION ON MIXING SISTER MONUMENTS
+- Do NOT swap or confuse nearby attractions within the same city (e.g., Amer Fort wall cannot be used for Hawa Mahal; Taj Mahal cannot use Agra Fort photos; Qutub Minar cannot use Red Fort photos).
+- If the exact landmark photo cannot be verified with certainty, fallback strictly to an official high-resolution Wikimedia Commons URL for that exact monument title, never a random stock photo.
+

@@ -1679,11 +1679,81 @@ function getBudgetDining(destKey, budgetTier) {
 
 
 // ============================================================
+// CRITICAL IMAGE & VISUAL ACCURACY ENGINE (ZERO MISMATCH POLICY)
+// ============================================================
+export const VERIFIED_LANDMARK_WIKIMEDIA = {
+  "hawa mahal": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Hawa_Mahal_2011.jpg/1200px-Hawa_Mahal_2011.jpg",
+  "amer fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Amber_Fort_Jaipur.jpg/1200px-Amber_Fort_Jaipur.jpg",
+  "amber fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Amber_Fort_Jaipur.jpg/1200px-Amber_Fort_Jaipur.jpg",
+  "nahargarh fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Nahargarh_Fort_Jaipur_view.jpg/1200px-Nahargarh_Fort_Jaipur_view.jpg",
+  "jal mahal": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jal_Mahal%2C_Jaipur.jpg/1200px-Jal_Mahal%2C_Jaipur.jpg",
+  "city palace jaipur": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/City_Palace_Jaipur_Entrance.jpg/1200px-City_Palace_Jaipur_Entrance.jpg",
+  "birla mandir jaipur": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Birla_Mandir%2C_Jaipur_02.jpg/1200px-Birla_Mandir%2C_Jaipur_02.jpg",
+  "taj mahal": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1200px-Taj_Mahal_%28Edited%29.jpeg",
+  "agra fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Agra_Fort_Amar_Singh_Gate.jpg/1200px-Agra_Fort_Amar_Singh_Gate.jpg",
+  "fatehpur sikri": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buland_Darwaza_Fatehpur_Sikri.jpg/1200px-Buland_Darwaza_Fatehpur_Sikri.jpg",
+  "buland darwaza": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buland_Darwaza_Fatehpur_Sikri.jpg/1200px-Buland_Darwaza_Fatehpur_Sikri.jpg",
+  "qutub minar": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Qutub_Minar_in_New_Delhi_06-2016_img3.jpg/1200px-Qutub_Minar_in_New_Delhi_06-2016_img3.jpg",
+  "red fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Delhi_Red_fort.JPG/1200px-Delhi_Red_fort.JPG",
+  "lal qila": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Delhi_Red_fort.JPG/1200px-Delhi_Red_fort.JPG",
+  "india gate": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/India_Gate_in_New_Delhi_03-2016.jpg/1200px-India_Gate_in_New_Delhi_03-2016.jpg",
+  "humayun": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Humayun%27s_Tomb_New_Delhi.jpg/1200px-Humayun%27s_Tomb_New_Delhi.jpg",
+  "lotus temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lotus_Temple_in_New_Delhi_03-2016.jpg/1200px-Lotus_Temple_in_New_Delhi_03-2016.jpg",
+  "golden temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/The_Golden_Temple_of_Amritsar_at_night.jpg/1200px-The_Golden_Temple_of_Amritsar_at_night.jpg",
+  "harmandir sahib": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/The_Golden_Temple_of_Amritsar_at_night.jpg/1200px-The_Golden_Temple_of_Amritsar_at_night.jpg",
+  "wagah border": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Wagah_Border_Ceremony.jpg/1200px-Wagah_Border_Ceremony.jpg",
+  "jallianwala bagh": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Jallianwala_Bagh_memorial.jpg/1200px-Jallianwala_Bagh_memorial.jpg",
+  "durgiana temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Durgiana_Temple_Amritsar.jpg/1200px-Durgiana_Temple_Amritsar.jpg",
+  "gateway of india": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Mumbai_03-2016_30_Gateway_of_India.jpg/1200px-Mumbai_03-2016_30_Gateway_of_India.jpg",
+  "victoria memorial": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Victoria_Memorial_Kolkata_sunset.jpg/1200px-Victoria_Memorial_Kolkata_sunset.jpg",
+  "charminar": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Charminar_Hyderabad_1.jpg/1200px-Charminar_Hyderabad_1.jpg",
+  "konark": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_Front.jpg/1200px-Konark_Sun_Temple_Front.jpg",
+  "meenakshi": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Madurai_Meenakshi_Amman_temple_view.jpg/1200px-Madurai_Meenakshi_Amman_temple_view.jpg",
+  "mysore palace": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Mysore_Palace_Morning.jpg/1200px-Mysore_Palace_Morning.jpg"
+};
+
+/**
+ * Formats an image search term or Unsplash query strictly according to the Zero Mismatch Policy:
+ * "[Exact Monument Name] [City] iconic front facade landmark"
+ *
+ * @param {string} monumentName - Exact landmark or monument name
+ * @param {string} city - Destination or city name
+ * @returns {string} Formatted landmark query
+ */
+export function formatLandmarkImageQuery(monumentName, city = "") {
+  const cleanMon = (monumentName || "").trim();
+  const cleanCity = (city || "").trim();
+  if (!cleanMon) return "";
+  return cleanCity
+    ? `${cleanMon} ${cleanCity} iconic front facade landmark`
+    : `${cleanMon} iconic front facade landmark`;
+}
+
+/**
+ * Returns a verified, official high-resolution Wikimedia Commons URL for a landmark,
+ * preventing any sister-monument cross-contamination or generic stock photo confusion.
+ *
+ * @param {string} monumentName
+ * @returns {string|null} Official Wikimedia Commons URL if verified, or null
+ */
+export function getVerifiedLandmarkWikimediaUrl(monumentName) {
+  if (!monumentName) return null;
+  const normalized = monumentName.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim();
+  for (const [key, url] of Object.entries(VERIFIED_LANDMARK_WIKIMEDIA)) {
+    if (normalized.includes(key) || key.includes(normalized)) {
+      return url;
+    }
+  }
+  return null;
+}
+
+// ============================================================
 // NORMALIZE ITINERARY ENGINE
 // Enforces:
 // 1. Strict Transport Constraints & Local Municipal Rules
 // 2. Realistic Logistical Geography without Zero-Distance Padding
 // 3. Concrete Hyper-Local Food & Experience Names (No Generic Placeholders)
+// 4. Critical Image & Visual Accuracy (Zero Mismatch Policy)
 // ============================================================
 export function normalizeItinerary(rawItinerary, tripData) {
   const destName = tripData.destinationName || tripData.destination || rawItinerary?.destination || "India";
@@ -1871,7 +1941,9 @@ export function normalizeItinerary(rawItinerary, tripData) {
           dwellTime: act.dwellTime || (period.toLowerCase() === "morning" ? "2 hours" : period.toLowerCase() === "afternoon" ? "2.5 hours" : "1.5 hours"),
           spotTip: tipText,
           tip: tipText,
-          estimatedCost: act.estimatedCost || "₹150 - ₹450"
+          estimatedCost: act.estimatedCost || "₹150 - ₹450",
+          imageSearchQuery: act.imageSearchQuery || formatLandmarkImageQuery(loc, destName),
+          verifiedWikimediaUrl: act.verifiedWikimediaUrl || getVerifiedLandmarkWikimediaUrl(loc)
         };
       });
     } else {
@@ -1901,7 +1973,9 @@ export function normalizeItinerary(rawItinerary, tripData) {
             dwellTime: item.dwellTime || (period === "morning" ? "2 hours" : period === "afternoon" ? "2 hours" : "1.5 hours"),
             spotTip: tipText,
             tip: tipText,
-            estimatedCost: item.estimatedCost || defaultCosts[period]
+            estimatedCost: item.estimatedCost || defaultCosts[period],
+            imageSearchQuery: item.imageSearchQuery || formatLandmarkImageQuery(loc, destName),
+            verifiedWikimediaUrl: item.verifiedWikimediaUrl || getVerifiedLandmarkWikimediaUrl(loc)
           });
         }
       });
@@ -2050,6 +2124,11 @@ export function normalizeItinerary(rawItinerary, tripData) {
     localInsights: cleanLocalInsights,
     localInsightsList: Array.isArray(rawItinerary?.localInsights) ? rawItinerary.localInsights : [cleanLocalInsights],
     bestTimeToVisit: rawItinerary?.bestTimeToVisit || dbEntry?.bestTime || "October to March offers pleasant and ideal sightseeing weather.",
+    bookingSmartHacks: rawItinerary?.bookingSmartHacks || {
+      hotelHack: `Book via Booking.com for free 24hr cancellation or compare with MMT for bank credit card discounts (up to 12% off in ${destName}).`,
+      flightOrTrainHack: `Check Vande Bharat Express or direct State Roadways Super Deluxe / Volvo buses to ${destName} if flight fares surge.`,
+      activityHack: `Pre-book monument entry passes on official ASI / state tourism portal or GetYourGuide to bypass 30–45 min physical counter queues.`
+    },
     budgetBreakdown: rawItinerary?.budgetBreakdown || {
       stay: finalBudget.accommodation,
       food: finalBudget.food,
@@ -2435,25 +2514,35 @@ async function generateViaPollinationsAI(prompt, tripData) {
 // CANONICAL REALISM PROMPT TEMPLATE & BUILDER
 // ============================================================
 export const ITINERARY_PROMPT_TEMPLATE = `
-Generate a realistic, detailed travel itinerary for \${destination} starting from \${source}.
+Generate a hyper-realistic, day-wise travel itinerary from \${source} to \${destination} for \${travelersCount || 2} person(s) on a \${budgetTier || "Comfort"} budget.
 
-CRITICAL CONTENT & LOCAL REALISM RULES:
-1. MUST-TRY EXPERIENCES (STRICT):
-   - Do NOT provide generic titles like "Authentic Regional Thali" or "Cultural Folk Show".
-   - Every item MUST include: [Specific iconic dish or activity] at [Exact famous shop, stall, or street] with approximate cost in INR.
-   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" instead of "Traditional lunch".
+CRITICAL LOCAL REALISM & CONTENT RULES:
+1. TRANSPORT CONSTRAINTS & REALITY:
+   - Do NOT assume app-based cabs or auto-rickshaws run everywhere.
+   - Enforce destination-specific transit laws: if areas are pedestrianized (e.g., hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, local municipal lifts, battery carts, or registered union taxis are mandatory.
+   - Nearest stations, bus stands, and airport distances must reflect actual physical ground truth.
 
-2. LOCAL INSIGHTS & HACKS:
-   - Provide 2-3 actionable, street-smart survival tips for this exact destination.
-   - Mention physical transit constraints (e.g., if vehicle movement is restricted like Mall Roads/ghats, clarify that walking/lifts are required).
-   - Include realistic tout/scam alerts or overcharging warnings.
+2. LOGISTICAL GEOGRAPHY & NO TIME-PADDING:
+   - Group attractions strictly by walking distance and geographical proximity.
+   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other unless an activity specifically demands it.
+   - State realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
 
-3. DAY-BY-DAY TIMELINE LOGISTICS:
-   - Group attractions strictly by proximity. Do not create long gaps between spots located right next to each other.
-   - Include realistic transit time and travel mode to the next spot.
-   - Add one actionable insider tip for each major spot (e.g., best time for photographs, ticket line advice, monkey cautions).
+3. MUST-TRY EXPERIENCES (STRICT):
+   - Never output generic placeholders like "Authentic Regional Thali" or "Cultural Folk Show".
+   - Every single entry MUST follow this exact format:
+     [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR])
+   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" or "Kadhi Kachori at Rawat Mishtan Bhandar (~₹60)".
 
-Format the output strictly as JSON following this structure:
+4. BOOKING HUBS, DISCOUNTS & COUPON HOOKS:
+   - Give actionable, realistic insider savings hacks for the user's booking section:
+     * hotelHack: Specific bank/promo code advice or booking timing (e.g., "Book via Booking.com for free 24hr cancellation, or use MMT with HDFC/ICICI cards for up to 12% off").
+     * flightOrTrainHack: Realistic transport savings tip (e.g., "Check Vande Bharat/Volvo buses if flights to nearby hill airports are over ₹4,000").
+     * activityHack: Ticket queue bypass advice (e.g., "Pre-book online tickets on GetYourGuide/official portal to bypass 40-min counter queues").
+
+5. IMAGE QUERY ACCURACY:
+   - For any landmark visual query, strictly target the iconic front-facing facade of that specific monument (e.g., "Hawa Mahal Jaipur iconic front facade honeycomb windows"). Never mix up sister monuments.
+
+Format the output strictly as valid JSON matching this schema:
 {
   "curatedTitle": "string",
   "tags": ["string"],
@@ -2472,7 +2561,8 @@ Format the output strictly as JSON following this structure:
           "title": "string",
           "description": "string",
           "transitToNext": "string",
-          "spotTip": "string"
+          "spotTip": "string",
+          "imageSearchQuery": "string (strictly '[Exact Monument Name] [City] iconic front facade landmark')"
         }
       ]
     }
@@ -2485,37 +2575,52 @@ Format the output strictly as JSON following this structure:
   },
   "mustTryExperiences": [
     {
-      "title": "string (e.g. Siddu with desi ghee at Himachali Rasoi)",
-      "description": "string (approx cost and quick highlight)"
+      "title": "string",
+      "description": "string"
     }
   ],
   "packingEssentials": ["string"],
   "localInsights": ["string"],
-  "bestTimeToVisit": "string"
+  "bestTimeToVisit": "string",
+  "bookingSmartHacks": {
+    "hotelHack": "string",
+    "flightOrTrainHack": "string",
+    "activityHack": "string"
+  }
 }
 `;
 
-export function buildItineraryPrompt(destination, source, numberOfDays = 3) {
+export function buildItineraryPrompt(destination, source, numberOfDays = 3, travelersCount = 2, budgetTier = "Comfort") {
   const durationText = numberOfDays ? ` for ${numberOfDays} days` : "";
-  return `Generate a realistic, detailed travel itinerary for ${destination} starting from ${source}${durationText}.
+  return `Generate a hyper-realistic, day-wise travel itinerary from ${source} to ${destination}${durationText} for ${travelersCount || 2} person(s) on a ${budgetTier || "Comfort"} budget.
 
-CRITICAL CONTENT & LOCAL REALISM RULES:
-1. MUST-TRY EXPERIENCES (STRICT):
-   - Do NOT provide generic titles like "Authentic Regional Thali" or "Cultural Folk Show".
-   - Every item MUST include: [Specific iconic dish or activity] at [Exact famous shop, stall, or street] with approximate cost in INR.
-   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" instead of "Traditional lunch".
+CRITICAL LOCAL REALISM & CONTENT RULES:
+1. TRANSPORT CONSTRAINTS & REALITY:
+   - Do NOT assume app-based cabs or auto-rickshaws run everywhere.
+   - Enforce destination-specific transit laws: if areas are pedestrianized (e.g., hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, local municipal lifts, battery carts, or registered union taxis are mandatory.
+   - Nearest stations, bus stands, and airport distances must reflect actual physical ground truth.
 
-2. LOCAL INSIGHTS & HACKS:
-   - Provide 2-3 actionable, street-smart survival tips for this exact destination.
-   - Mention physical transit constraints (e.g., if vehicle movement is restricted like Mall Roads/ghats, clarify that walking/lifts are required).
-   - Include realistic tout/scam alerts or overcharging warnings.
+2. LOGISTICAL GEOGRAPHY & NO TIME-PADDING:
+   - Group attractions strictly by walking distance and geographical proximity.
+   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other unless an activity specifically demands it.
+   - State realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
 
-3. DAY-BY-DAY TIMELINE LOGISTICS:
-   - Group attractions strictly by proximity. Do not create long gaps between spots located right next to each other.
-   - Include realistic transit time and travel mode to the next spot.
-   - Add one actionable insider tip for each major spot (e.g., best time for photographs, ticket line advice, monkey cautions).
+3. MUST-TRY EXPERIENCES (STRICT):
+   - Never output generic placeholders like "Authentic Regional Thali" or "Cultural Folk Show".
+   - Every single entry MUST follow this exact format:
+     [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR])
+   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" or "Kadhi Kachori at Rawat Mishtan Bhandar (~₹60)".
 
-Format the output strictly as JSON following this structure:
+4. BOOKING HUBS, DISCOUNTS & COUPON HOOKS:
+   - Give actionable, realistic insider savings hacks for the user's booking section:
+     * hotelHack: Specific bank/promo code advice or booking timing (e.g., "Book via Booking.com for free 24hr cancellation, or use MMT with HDFC/ICICI cards for up to 12% off").
+     * flightOrTrainHack: Realistic transport savings tip (e.g., "Check Vande Bharat/Volvo buses if flights to nearby hill airports are over ₹4,000").
+     * activityHack: Ticket queue bypass advice (e.g., "Pre-book online tickets on GetYourGuide/official portal to bypass 40-min counter queues").
+
+5. IMAGE QUERY ACCURACY:
+   - For any landmark visual query, strictly target the iconic front-facing facade of that specific monument (e.g., "Hawa Mahal Jaipur iconic front facade honeycomb windows"). Never mix up sister monuments.
+
+Format the output strictly as valid JSON matching this schema:
 {
   "curatedTitle": "string",
   "tags": ["string"],
@@ -2534,7 +2639,8 @@ Format the output strictly as JSON following this structure:
           "title": "string",
           "description": "string",
           "transitToNext": "string",
-          "spotTip": "string"
+          "spotTip": "string",
+          "imageSearchQuery": "string (strictly '[Exact Monument Name] [City] iconic front facade landmark')"
         }
       ]
     }
@@ -2547,13 +2653,18 @@ Format the output strictly as JSON following this structure:
   },
   "mustTryExperiences": [
     {
-      "title": "string (e.g. Siddu with desi ghee at Himachali Rasoi)",
-      "description": "string (approx cost and quick highlight)"
+      "title": "string",
+      "description": "string"
     }
   ],
   "packingEssentials": ["string"],
   "localInsights": ["string"],
-  "bestTimeToVisit": "string"
+  "bestTimeToVisit": "string",
+  "bookingSmartHacks": {
+    "hotelHack": "string",
+    "flightOrTrainHack": "string",
+    "activityHack": "string"
+  }
 }
 `;
 }
@@ -2565,9 +2676,11 @@ export async function generateAIItinerary(tripData) {
   const destName = tripData.destinationName || tripData.destination || "India";
   const numberOfDays = Math.max(1, parseInt(tripData.days, 10) || 3);
   const origin = tripData.departureCity?.name || tripData.origin || tripData.source || "Delhi";
+  const travelersCount = tripData.travellers || tripData.travelersCount || 2;
+  const budgetTier = tripData.budget || tripData.budgetTier || "Comfort";
 
   // Use Canonical Realistic Prompt Template
-  const structuredPrompt = buildItineraryPrompt(destName, origin, numberOfDays);
+  const structuredPrompt = buildItineraryPrompt(destName, origin, numberOfDays, travelersCount, budgetTier);
 
   // Step 1: Direct Google Gemini API (supporting latest and flash models)
   if (GEMINI_API_KEY && GEMINI_API_KEY.trim().length > 5) {

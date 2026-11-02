@@ -286,6 +286,31 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
       currentY += 4;
     }
 
+    // ── Booking Hubs, Discounts & Insider Hacks ────────────────────
+    if (itinerary.bookingSmartHacks) {
+      checkAddPage(22);
+      drawSectionHeader(doc, 'Booking Hubs, Discounts & Insider Hacks', margin, currentY);
+      currentY += 8;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(51, 65, 85);
+
+      const hacks = [
+        itinerary.bookingSmartHacks.hotelHack ? `•  Hotel & Stay: ${itinerary.bookingSmartHacks.hotelHack}` : null,
+        itinerary.bookingSmartHacks.flightOrTrainHack ? `•  Transit & Route: ${itinerary.bookingSmartHacks.flightOrTrainHack}` : null,
+        itinerary.bookingSmartHacks.activityHack ? `•  Queue Bypass: ${itinerary.bookingSmartHacks.activityHack}` : null
+      ].filter(Boolean);
+
+      hacks.forEach(hack => {
+        checkAddPage(6);
+        const hackLines = doc.splitTextToSize(hack, contentWidth - 4);
+        doc.text(hackLines, margin + 2, currentY);
+        currentY += hackLines.length * 4.5 + 2;
+      });
+      currentY += 4;
+    }
+
     // ── Add Footers to all pages ──────────────────────────────────
     const totalPages = doc.internal.getNumberOfPages();
     for (let p = 1; p <= totalPages; p++) {
