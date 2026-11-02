@@ -2124,10 +2124,20 @@ export function normalizeItinerary(rawItinerary, tripData) {
     localInsights: cleanLocalInsights,
     localInsightsList: Array.isArray(rawItinerary?.localInsights) ? rawItinerary.localInsights : [cleanLocalInsights],
     bestTimeToVisit: rawItinerary?.bestTimeToVisit || dbEntry?.bestTime || "October to March offers pleasant and ideal sightseeing weather.",
-    bookingSmartHacks: rawItinerary?.bookingSmartHacks || {
-      hotelHack: `Book via Booking.com for free 24hr cancellation or compare with MMT for bank credit card discounts (up to 12% off in ${destName}).`,
-      flightOrTrainHack: `Check Vande Bharat Express or direct State Roadways Super Deluxe / Volvo buses to ${destName} if flight fares surge.`,
-      activityHack: `Pre-book monument entry passes on official ASI / state tourism portal or GetYourGuide to bypass 30–45 min physical counter queues.`
+    bookingSmartHacks: {
+      hotelHack: rawItinerary?.bookingSmartHacks?.hotelHack || `Book via Booking.com for free 24hr cancellation or compare with MMT for bank credit card discounts (up to 12% off in ${destName}).`,
+      transitHack: rawItinerary?.bookingSmartHacks?.transitHack || rawItinerary?.bookingSmartHacks?.flightOrTrainHack || `Check Vande Bharat Express or direct State Roadways Super Deluxe / Volvo buses to ${destName} if flight fares surge.`,
+      flightOrTrainHack: rawItinerary?.bookingSmartHacks?.flightOrTrainHack || rawItinerary?.bookingSmartHacks?.transitHack || `Check Vande Bharat Express or direct State Roadways Super Deluxe / Volvo buses to ${destName} if flight fares surge.`,
+      activityHack: rawItinerary?.bookingSmartHacks?.activityHack || `Pre-book monument entry passes on official ASI / state tourism portal or GetYourGuide to bypass 30–45 min physical counter queues.`
+    },
+    partnerDeals: {
+      makeMyTripHotels: rawItinerary?.partnerDeals?.makeMyTripHotels || "🏷️ Up to 15% OFF via HDFC/ICICI cards",
+      bookingDotCom: rawItinerary?.partnerDeals?.bookingDotCom || "⚡ Zero Prepayment · Free 24h Cancellation",
+      klook: rawItinerary?.partnerDeals?.klook || "🎁 Extra ₹250 OFF on first app booking",
+      expediaFlights: rawItinerary?.partnerDeals?.expediaFlights || "✈️ Flight + Hotel bundle savings",
+      mmtFlights: rawItinerary?.partnerDeals?.mmtFlights || "💳 Zero convenience fee with coupon",
+      getYourGuide: rawItinerary?.partnerDeals?.getYourGuide || `🎟️ Skip-the-Line Priority Ticket in ${destName}`,
+      goibiboCabs: rawItinerary?.partnerDeals?.goibiboCabs || `🚖 Pre-negotiated Union Fare & Airport Pickup in ${destName}`
     },
     budgetBreakdown: rawItinerary?.budgetBreakdown || {
       stay: finalBudget.accommodation,
@@ -2514,33 +2524,32 @@ async function generateViaPollinationsAI(prompt, tripData) {
 // CANONICAL REALISM PROMPT TEMPLATE & BUILDER
 // ============================================================
 export const ITINERARY_PROMPT_TEMPLATE = `
-Generate a hyper-realistic, day-wise travel itinerary from \${source} to \${destination} for \${travelersCount || 2} person(s) on a \${budgetTier || "Comfort"} budget.
+Generate a hyper-realistic, detailed, day-wise travel itinerary from \${source} to \${destination} for \${travelersCount || 2} person(s) on a \${budgetTier || "Comfort"} budget.
 
-CRITICAL LOCAL REALISM & CONTENT RULES:
+CRITICAL LOCAL REALISM & ACCURACY RULES:
 1. TRANSPORT CONSTRAINTS & REALITY:
-   - Do NOT assume app-based cabs or auto-rickshaws run everywhere.
-   - Enforce destination-specific transit laws: if areas are pedestrianized (e.g., hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, local municipal lifts, battery carts, or registered union taxis are mandatory.
+   - Do NOT assume app-based cabs (Ola/Uber) or auto-rickshaws operate everywhere.
+   - Enforce destination-specific transit rules: if areas are pedestrianized (e.g. hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, municipal lifts, battery rickshaws, or registered union taxis are mandatory.
    - Nearest stations, bus stands, and airport distances must reflect actual physical ground truth.
 
 2. LOGISTICAL GEOGRAPHY & NO TIME-PADDING:
-   - Group attractions strictly by walking distance and geographical proximity.
-   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other unless an activity specifically demands it.
-   - State realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
+   - Group attractions strictly by proximity.
+   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other.
+   - Mention realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
 
 3. MUST-TRY EXPERIENCES (STRICT):
    - Never output generic placeholders like "Authentic Regional Thali" or "Cultural Folk Show".
-   - Every single entry MUST follow this exact format:
-     [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR])
-   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" or "Kadhi Kachori at Rawat Mishtan Bhandar (~₹60)".
+   - Format: [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR]).
 
-4. BOOKING HUBS, DISCOUNTS & COUPON HOOKS:
-   - Give actionable, realistic insider savings hacks for the user's booking section:
-     * hotelHack: Specific bank/promo code advice or booking timing (e.g., "Book via Booking.com for free 24hr cancellation, or use MMT with HDFC/ICICI cards for up to 12% off").
-     * flightOrTrainHack: Realistic transport savings tip (e.g., "Check Vande Bharat/Volvo buses if flights to nearby hill airports are over ₹4,000").
-     * activityHack: Ticket queue bypass advice (e.g., "Pre-book online tickets on GetYourGuide/official portal to bypass 40-min counter queues").
-
-5. IMAGE QUERY ACCURACY:
-   - For any landmark visual query, strictly target the iconic front-facing facade of that specific monument (e.g., "Hawa Mahal Jaipur iconic front facade honeycomb windows"). Never mix up sister monuments.
+4. DYNAMIC AFFILIATE DEALS & CARDS HOOKS (HIGH PRIORITY):
+   - For EACH of the 7 partner platforms, generate a hyper-specific, high-converting deal/badge text that gives the user an immediate monetary or practical reason to click rather than booking directly:
+     * makeMyTripHotels: Mention bank discounts or specific credit card codes (e.g., "🏷️ Up to 15% OFF via HDFC/ICICI cards")
+     * bookingDotCom: Mention risk-free perks (e.g., "⚡ Zero Prepayment · Free 24h Cancellation")
+     * klook: Highlight experience/activity savings (e.g., "🎁 Extra ₹250 OFF on first app booking")
+     * expediaFlights: Route package or airfare savings (e.g., "✈️ Flight + Hotel bundle savings")
+     * mmtFlights: Convenience fee or student/senior discount (e.g., "💳 Zero convenience fee with coupon")
+     * getYourGuide: Monument line bypass (e.g., "🎟️ Skip-the-Line Priority Monument Ticket")
+     * goibiboCabs: Fixed union or verified rate assurance (e.g., "🚖 Pre-negotiated Union Fare & Airport Pickup")
 
 Format the output strictly as valid JSON matching this schema:
 {
@@ -2584,41 +2593,49 @@ Format the output strictly as valid JSON matching this schema:
   "bestTimeToVisit": "string",
   "bookingSmartHacks": {
     "hotelHack": "string",
-    "flightOrTrainHack": "string",
+    "transitHack": "string",
     "activityHack": "string"
+  },
+  "partnerDeals": {
+    "makeMyTripHotels": "string",
+    "bookingDotCom": "string",
+    "klook": "string",
+    "expediaFlights": "string",
+    "mmtFlights": "string",
+    "getYourGuide": "string",
+    "goibiboCabs": "string"
   }
 }
 `;
 
 export function buildItineraryPrompt(destination, source, numberOfDays = 3, travelersCount = 2, budgetTier = "Comfort") {
   const durationText = numberOfDays ? ` for ${numberOfDays} days` : "";
-  return `Generate a hyper-realistic, day-wise travel itinerary from ${source} to ${destination}${durationText} for ${travelersCount || 2} person(s) on a ${budgetTier || "Comfort"} budget.
+  return `Generate a hyper-realistic, detailed, day-wise travel itinerary from ${source} to ${destination}${durationText} for ${travelersCount || 2} person(s) on a ${budgetTier || "Comfort"} budget.
 
-CRITICAL LOCAL REALISM & CONTENT RULES:
+CRITICAL LOCAL REALISM & ACCURACY RULES:
 1. TRANSPORT CONSTRAINTS & REALITY:
-   - Do NOT assume app-based cabs or auto-rickshaws run everywhere.
-   - Enforce destination-specific transit laws: if areas are pedestrianized (e.g., hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, local municipal lifts, battery carts, or registered union taxis are mandatory.
+   - Do NOT assume app-based cabs (Ola/Uber) or auto-rickshaws operate everywhere.
+   - Enforce destination-specific transit rules: if areas are pedestrianized (e.g. hill station Mall Roads/Ridge, sacred ghats, old city alleys), explicitly state that walking, municipal lifts, battery rickshaws, or registered union taxis are mandatory.
    - Nearest stations, bus stands, and airport distances must reflect actual physical ground truth.
 
 2. LOGISTICAL GEOGRAPHY & NO TIME-PADDING:
-   - Group attractions strictly by walking distance and geographical proximity.
-   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other unless an activity specifically demands it.
-   - State realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
+   - Group attractions strictly by proximity.
+   - Never place 3-4 hour gaps between spots that sit within 500 meters of each other.
+   - Mention realistic transit times between consecutive stops (e.g., "5 min stroll", "25 min hill taxi").
 
 3. MUST-TRY EXPERIENCES (STRICT):
    - Never output generic placeholders like "Authentic Regional Thali" or "Cultural Folk Show".
-   - Every single entry MUST follow this exact format:
-     [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR])
-   - Example: "Siddu with desi ghee at Himachali Rasoi (~₹180)" or "Kadhi Kachori at Rawat Mishtan Bhandar (~₹60)".
+   - Format: [Iconic Dish or Unique Activity] at [Famous Street, Shop, or Stall Name] (~₹[Estimated Cost in INR]).
 
-4. BOOKING HUBS, DISCOUNTS & COUPON HOOKS:
-   - Give actionable, realistic insider savings hacks for the user's booking section:
-     * hotelHack: Specific bank/promo code advice or booking timing (e.g., "Book via Booking.com for free 24hr cancellation, or use MMT with HDFC/ICICI cards for up to 12% off").
-     * flightOrTrainHack: Realistic transport savings tip (e.g., "Check Vande Bharat/Volvo buses if flights to nearby hill airports are over ₹4,000").
-     * activityHack: Ticket queue bypass advice (e.g., "Pre-book online tickets on GetYourGuide/official portal to bypass 40-min counter queues").
-
-5. IMAGE QUERY ACCURACY:
-   - For any landmark visual query, strictly target the iconic front-facing facade of that specific monument (e.g., "Hawa Mahal Jaipur iconic front facade honeycomb windows"). Never mix up sister monuments.
+4. DYNAMIC AFFILIATE DEALS & CARDS HOOKS (HIGH PRIORITY):
+   - For EACH of the 7 partner platforms, generate a hyper-specific, high-converting deal/badge text that gives the user an immediate monetary or practical reason to click rather than booking directly:
+     * makeMyTripHotels: Mention bank discounts or specific credit card codes (e.g., "🏷️ Up to 15% OFF via HDFC/ICICI cards")
+     * bookingDotCom: Mention risk-free perks (e.g., "⚡ Zero Prepayment · Free 24h Cancellation")
+     * klook: Highlight experience/activity savings (e.g., "🎁 Extra ₹250 OFF on first app booking")
+     * expediaFlights: Route package or airfare savings (e.g., "✈️ Flight + Hotel bundle savings")
+     * mmtFlights: Convenience fee or student/senior discount (e.g., "💳 Zero convenience fee with coupon")
+     * getYourGuide: Monument line bypass (e.g., "🎟️ Skip-the-Line Priority Monument Ticket")
+     * goibiboCabs: Fixed union or verified rate assurance (e.g., "🚖 Pre-negotiated Union Fare & Airport Pickup")
 
 Format the output strictly as valid JSON matching this schema:
 {
@@ -2662,8 +2679,17 @@ Format the output strictly as valid JSON matching this schema:
   "bestTimeToVisit": "string",
   "bookingSmartHacks": {
     "hotelHack": "string",
-    "flightOrTrainHack": "string",
+    "transitHack": "string",
     "activityHack": "string"
+  },
+  "partnerDeals": {
+    "makeMyTripHotels": "string",
+    "bookingDotCom": "string",
+    "klook": "string",
+    "expediaFlights": "string",
+    "mmtFlights": "string",
+    "getYourGuide": "string",
+    "goibiboCabs": "string"
   }
 }
 `;
