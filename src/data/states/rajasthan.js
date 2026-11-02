@@ -152,7 +152,7 @@ export const RAJASTHAN_PLACES = [
     state: "Jaipur, Rajasthan",
     category: "Heritage",
     badge: "Palace of Winds",
-    image: " https://www.travel-rajasthan.com/images/experiance-in-rajsthan/forts-and-palaces/hawa-mahal-travel-rajasthan.jpg ",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Hawa_Mahal_2011.jpg/1200px-Hawa_Mahal_2011.jpg",
     description: "A five-story pink sandstone structure with 953 small windows (Jharokhas), designed to allow royal ladies to watch street festivals without being seen.",
     coordinates: { lat: 26.9239, lng: 75.8267 },
     essentials: {
@@ -221,7 +221,7 @@ export const RAJASTHAN_PLACES = [
     state: "Rajsamand, Rajasthan",
     category: "Heritage",
     badge: "Great Wall of India",
-    image: " https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/201711241843395473-bca9f370668f11edb2ad0a58a9feac02.jpg ",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Kumbhalgarh_fort_wall.jpg/1200px-Kumbhalgarh_fort_wall.jpg",
     description: "Famous for the second-longest wall in the world (36km). It is the birthplace of Maharana Pratap and offers spectacular views of the Aravalli range.",
     coordinates: { lat: 25.1479, lng: 73.5882 },
     essentials: {

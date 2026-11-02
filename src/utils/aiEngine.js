@@ -1709,7 +1709,9 @@ export const VERIFIED_LANDMARK_WIKIMEDIA = {
   "charminar": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Charminar_Hyderabad_1.jpg/1200px-Charminar_Hyderabad_1.jpg",
   "konark": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_Front.jpg/1200px-Konark_Sun_Temple_Front.jpg",
   "meenakshi": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Madurai_Meenakshi_Amman_temple_view.jpg/1200px-Madurai_Meenakshi_Amman_temple_view.jpg",
-  "mysore palace": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Mysore_Palace_Morning.jpg/1200px-Mysore_Palace_Morning.jpg"
+  "mysore palace": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Mysore_Palace_Morning.jpg/1200px-Mysore_Palace_Morning.jpg",
+  "kumbhalgarh fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Kumbhalgarh_fort_wall.jpg/1200px-Kumbhalgarh_fort_wall.jpg",
+  "kumbhalgarh": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Kumbhalgarh_fort_wall.jpg/1200px-Kumbhalgarh_fort_wall.jpg"
 };
 
 /**
@@ -1724,9 +1726,16 @@ export function formatLandmarkImageQuery(monumentName, city = "") {
   const cleanMon = (monumentName || "").trim();
   const cleanCity = (city || "").trim();
   if (!cleanMon) return "";
+  const norm = cleanMon.toLowerCase();
+  if (norm.includes("hawa mahal")) {
+    return "Hawa Mahal Jaipur iconic front honeycomb windows facade";
+  }
+  if (norm.includes("kumbhalgarh")) {
+    return "Kumbhalgarh Fort historic great wall ramparts Rajasthan architecture";
+  }
   return cleanCity
-    ? `${cleanMon} ${cleanCity} iconic front facade landmark`
-    : `${cleanMon} iconic front facade landmark`;
+    ? `${cleanMon} ${cleanCity} historic monument stone architecture front exterior landmark`
+    : `${cleanMon} historic monument stone architecture front exterior landmark`;
 }
 
 /**
