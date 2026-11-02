@@ -2221,100 +2221,167 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         </div>
       )}
 
-      {/* ── Affiliate Booking CTAs ── */}
-      <div>
-        <h3 className="text-lg font-serif font-black text-slate-900 mb-4 flex items-center gap-2">
-          <Hotel size={19} className="text-orange-600" /> Book Your Trip
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {(AFFILIATE_PARTNERS.hotels || []).map(p => {
-            const badge = getPartnerDealBadge(p.id, itinerary?.partnerDeals);
-            return (
-              <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-                className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
-                style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.15)'}}>🏨</div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                  <p className="text-[11px] text-slate-400 font-medium">Hotels & Stays</p>
-                  {badge && (
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-bold tracking-tight shadow-2xs">
-                      {badge}
-                    </span>
-                  )}
-                </div>
-                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(234,88,12,0.08)',border:'1px solid rgba(234,88,12,0.2)'}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </div>
-              </a>
-            );
-          })}
-          {(AFFILIATE_PARTNERS.flights || []).map(p => {
-            const badge = getPartnerDealBadge(p.id, itinerary?.partnerDeals);
-            return (
-              <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-                className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
-                style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.15)'}}><Plane size={18} className="text-blue-600" /></div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                  <p className="text-[11px] text-slate-400 font-medium">Flights & Airfare</p>
-                  {badge && (
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-900 border border-blue-200 text-[10px] font-bold tracking-tight shadow-2xs">
-                      {badge}
-                    </span>
-                  )}
-                </div>
-                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.2)'}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </div>
-              </a>
-            );
-          })}
-          {(AFFILIATE_PARTNERS.activities || []).map(p => {
-            const badge = getPartnerDealBadge(p.id, itinerary?.partnerDeals);
-            return (
-              <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-                className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
-                style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.15)'}}><Navigation size={18} className="text-violet-600" /></div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                  <p className="text-[11px] text-slate-400 font-medium">Tours & Experiences</p>
-                  {badge && (
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-purple-50 text-purple-900 border border-purple-200 text-[10px] font-bold tracking-tight shadow-2xs">
-                      {badge}
-                    </span>
-                  )}
-                </div>
-                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.2)'}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </div>
-              </a>
-            );
-          })}
-          {(AFFILIATE_PARTNERS.transport || []).map(p => {
-            const badge = getPartnerDealBadge(p.id, itinerary?.partnerDeals);
-            return (
-              <a key={p.id} href={p.affiliateUrl} target="_blank" rel="noopener noreferrer"
-                className="group flex items-center gap-3.5 p-4 rounded-2xl transition-all duration-200 active:scale-[0.97]"
-                style={{background:'rgba(255,255,255,0.95)',border:'1.5px solid rgba(226,232,240,0.8)',boxShadow:'0 2px 12px rgba(0,0,0,0.05)'}}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{background:'rgba(16,185,129,0.08)',border:'1px solid rgba(16,185,129,0.15)'}}><Car size={18} className="text-emerald-600" /></div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-black text-slate-900 text-sm">{p.name}</p>
-                  <p className="text-[11px] text-slate-400 font-medium">Cabs & Rentals</p>
-                  {badge && (
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-900 border border-emerald-200 text-[10px] font-bold tracking-tight shadow-2xs">
-                      {badge}
-                    </span>
-                  )}
-                </div>
-                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-0.5" style={{background:'rgba(16,185,129,0.08)',border:'1px solid rgba(16,185,129,0.2)'}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </div>
-              </a>
-            );
-          })}
+      {/* ── Book Your Trip Section ── */}
+      <div className="mt-8">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-xl">🏨</span>
+          <h3 className="text-lg font-bold text-gray-900">Book Your Trip</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {/* 1. MakeMyTrip Hotels */}
+          <a
+            href={AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'makemytrip')?.affiliateUrl || "https://bitli.in/vH7D6en"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-lg">🏨</div>
+              <div>
+                {itinerary?.partnerDeals?.makeMyTripHotels && (
+                  <span className="text-[10px] font-semibold text-red-600 bg-red-50 border border-red-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.makeMyTripHotels}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-orange-600 transition-colors">MakeMyTrip</h4>
+                <p className="text-xs text-gray-500">Hotels & Stays</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-orange-50 group-hover:text-orange-500 transition-all">→</div>
+          </a>
+
+          {/* 2. Booking.com */}
+          <a
+            href={AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'booking')?.affiliateUrl || "https://www.anrdoezrs.net/click-101883662-17322915"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-lg">🏨</div>
+              <div>
+                {itinerary?.partnerDeals?.bookingDotCom && (
+                  <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.bookingDotCom}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition-colors">Booking.com</h4>
+                <p className="text-xs text-gray-500">Hotels & Stays</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all">→</div>
+          </a>
+
+          {/* 3. Klook */}
+          <a
+            href={AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'klook')?.affiliateUrl || "https://klook.tpo.mx/0r4GgPTK"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-lg">🏨</div>
+              <div>
+                {itinerary?.partnerDeals?.klook && (
+                  <span className="text-[10px] font-semibold text-orange-600 bg-orange-50 border border-orange-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.klook}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-orange-600 transition-colors">Klook</h4>
+                <p className="text-xs text-gray-500">Hotels & Stays</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-orange-50 group-hover:text-orange-500 transition-all">→</div>
+          </a>
+
+          {/* 4. Expedia */}
+          <a
+            href={AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'expedia')?.affiliateUrl || "https://bitli.in/sP8sZwo"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-yellow-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center text-lg">✈️</div>
+              <div>
+                {itinerary?.partnerDeals?.expediaFlights && (
+                  <span className="text-[10px] font-semibold text-yellow-800 bg-yellow-50 border border-yellow-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.expediaFlights}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-yellow-600 transition-colors">Expedia</h4>
+                <p className="text-xs text-gray-500">Flights & Airfare</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-yellow-50 group-hover:text-yellow-500 transition-all">→</div>
+          </a>
+
+          {/* 5. MMT Flights */}
+          <a
+            href={AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'makemytrip-flights')?.affiliateUrl || "https://bitli.in/vH7D6en"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-lg">✈️</div>
+              <div>
+                {itinerary?.partnerDeals?.mmtFlights && (
+                  <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.mmtFlights}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-indigo-600 transition-colors">MMT Flights</h4>
+                <p className="text-xs text-gray-500">Flights & Airfare</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-all">→</div>
+          </a>
+
+          {/* 6. GetYourGuide */}
+          <a
+            href={AFFILIATE_PARTNERS?.activities?.find(p => p.id === 'getyourguide')?.affiliateUrl || "https://gyg.me/izQrSbTv"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-lg">🎟️</div>
+              <div>
+                {itinerary?.partnerDeals?.getYourGuide && (
+                  <span className="text-[10px] font-semibold text-purple-600 bg-purple-50 border border-purple-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.getYourGuide}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition-colors">GetYourGuide</h4>
+                <p className="text-xs text-gray-500">Tours & Experiences</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-purple-50 group-hover:text-purple-500 transition-all">→</div>
+          </a>
+
+          {/* 7. Goibibo Cabs */}
+          <a
+            href={AFFILIATE_PARTNERS?.transport?.find(p => p.id === 'goibibo')?.affiliateUrl || "https://bitli.in/xKkdwRT"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-lg">🚖</div>
+              <div>
+                {itinerary?.partnerDeals?.goibiboCabs && (
+                  <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                    {itinerary.partnerDeals.goibiboCabs}
+                  </span>
+                )}
+                <h4 className="font-bold text-gray-800 text-sm group-hover:text-emerald-600 transition-colors">Goibibo Cabs</h4>
+                <p className="text-xs text-gray-500">Cabs & Rentals</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-500 transition-all">→</div>
+          </a>
         </div>
       </div>
 
