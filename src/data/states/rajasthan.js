@@ -152,7 +152,7 @@ export const RAJASTHAN_PLACES = [
     state: "Jaipur, Rajasthan",
     category: "Heritage",
     badge: "Palace of Winds",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Hawa_Mahal_2011.jpg/1200px-Hawa_Mahal_2011.jpg",
+    image: "https://images.unsplash.com/photo-1712516906610-f53a80c482e3?fm=jpg&q=80&w=1200&auto=format&fit=crop",
     description: "A five-story pink sandstone structure with 953 small windows (Jharokhas), designed to allow royal ladies to watch street festivals without being seen.",
     coordinates: { lat: 26.9239, lng: 75.8267 },
     essentials: {

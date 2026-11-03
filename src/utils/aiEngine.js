@@ -1682,7 +1682,7 @@ function getBudgetDining(destKey, budgetTier) {
 // CRITICAL IMAGE & VISUAL ACCURACY ENGINE (ZERO MISMATCH POLICY)
 // ============================================================
 export const VERIFIED_LANDMARK_WIKIMEDIA = {
-  "hawa mahal": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Hawa_Mahal_2011.jpg/1200px-Hawa_Mahal_2011.jpg",
+  "hawa mahal": "https://images.unsplash.com/photo-1712516906610-f53a80c482e3?fm=jpg&q=80&w=1200&auto=format&fit=crop",
   "amer fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Amber_Fort_Jaipur.jpg/1200px-Amber_Fort_Jaipur.jpg",
   "amber fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Amber_Fort_Jaipur.jpg/1200px-Amber_Fort_Jaipur.jpg",
   "nahargarh fort": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Nahargarh_Fort_Jaipur_view.jpg/1200px-Nahargarh_Fort_Jaipur_view.jpg",

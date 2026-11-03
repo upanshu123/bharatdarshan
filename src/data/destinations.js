@@ -59,10 +59,10 @@ export const topDestinations = [
       "Ratan & Vichitra Chambers",
       "Pink City Bazaars Panorama"
     ],
-    "image": "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1712516906610-f53a80c482e3?fm=jpg&q=80&w=1200&auto=format&fit=crop",
     "images": [
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1200&auto=format&fit=crop",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Hawa_Mahal_2011.jpg/1200px-Hawa_Mahal_2011.jpg"
+      "https://images.unsplash.com/photo-1712516906610-f53a80c482e3?fm=jpg&q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1781865087678-38284cf6471f?fm=jpg&q=80&w=1200&auto=format&fit=crop"
     ],
     "vibes": [
       "Heritage & Forts",
