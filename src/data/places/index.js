@@ -86,10 +86,12 @@ export const ALL_PLACES = RAW_ALL_PLACES.map(place => {
     }
     return tdNameNorm === placeNameNorm;
   });
-  if (enriched) {
-    return { ...place, ...enriched };
+  const merged = enriched ? { ...place, ...enriched } : { ...place };
+  const pName = merged.name || merged.title || '';
+  if (!merged.exactVisualQuery) {
+    merged.exactVisualQuery = `${pName} historic monument front facade`;
   }
-  return place;
+  return merged;
 });
 
 // Append any topDestinations not present in RAW_ALL_PLACES
@@ -102,7 +104,12 @@ topDestinations.forEach(td => {
     return false;
   });
   if (!exists) {
-    ALL_PLACES.push(td);
+    const item = { ...td };
+    const pName = item.name || item.title || '';
+    if (!item.exactVisualQuery) {
+      item.exactVisualQuery = `${pName} historic monument front facade`;
+    }
+    ALL_PLACES.push(item);
   }
 });
 

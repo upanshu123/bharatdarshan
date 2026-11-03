@@ -1728,14 +1728,34 @@ export function formatLandmarkImageQuery(monumentName, city = "") {
   if (!cleanMon) return "";
   const norm = cleanMon.toLowerCase();
   if (norm.includes("hawa mahal")) {
-    return "Hawa Mahal Jaipur iconic front honeycomb windows facade";
+    return "Hawa Mahal Jaipur iconic front pink honeycomb jharokha windows facade";
   }
   if (norm.includes("kumbhalgarh")) {
-    return "Kumbhalgarh Fort historic great wall ramparts Rajasthan architecture";
+    return "Kumbhalgarh Fort iconic great stone wall ramparts ancient hill bastion Rajasthan";
+  }
+  if (norm.includes("baga beach")) {
+    return "Baga beach North Goa Arabian sea shoreline waves tropical shacks coastline";
+  }
+  if (norm.includes("amer fort") || norm.includes("amber fort")) {
+    return "Amer Fort Jaipur Maota lake front facade ramparts Cheel ka Teela";
   }
   return cleanCity
-    ? `${cleanMon} ${cleanCity} historic monument stone architecture front exterior landmark`
-    : `${cleanMon} historic monument stone architecture front exterior landmark`;
+    ? `${cleanMon} ${cleanCity} historic monument front facade`
+    : `${cleanMon} historic monument front facade`;
+}
+
+/**
+ * Resolves the visual search query for a place:
+ * Prioritizes placeData.exactVisualQuery, falling back to `${placeData.name} historic monument front facade`.
+ *
+ * @param {Object} placeData - Place data object
+ * @returns {string} Search query for visual discovery
+ */
+export function getDiscoverySearchQuery(placeData = {}) {
+  if (!placeData) return "";
+  const name = placeData.name || placeData.title || "";
+  const searchQuery = placeData.exactVisualQuery || (name ? `${name} historic monument front facade` : "");
+  return searchQuery;
 }
 
 /**
