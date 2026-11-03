@@ -32,7 +32,7 @@ export const KARNATAKA_PLACES = [
     state: "Mysuru, Karnataka",
     category: "Heritage",
     badge: "City of Palaces",
-    image: "https://www.worldatlas.com/r/w1200/upload/e5/0e/5f/shutterstock-122322643.jpg",
+    image: "https://images.unsplash.com/photo-1659126574791-13313aa424bd?q=80&w=1200&auto=format&fit=crop",
     description: "Official residence of the Wadiyars, famous for Indo-Saracenic architecture.",
     coordinates: { lat: 12.3051, lng: 76.6551 },
     essentials: { bestTime: "All Year", timings: "10:00 AM - 05:30 PM", entryFee: { Adult: "₹100", Foreigner: "₹500" } },

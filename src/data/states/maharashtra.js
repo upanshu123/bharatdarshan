@@ -39,7 +39,7 @@ export const MAHARASHTRA_PLACES = [
     state: "Sambhaji Nagar, Maharashtra",
     category: "Heritage",
     badge: "Kailasa Temple Marvel",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Kailasa_temple_at_Ellora.jpg/800px-Kailasa_temple_at_Ellora.jpg",
+    image: "https://images.unsplash.com/photo-1700105208033-e95179eb9bf1?q=80&w=1200&auto=format&fit=crop",
     description: "One of the largest rock-cut monastery-temple cave complexes in the world, featuring Hindu, Buddhist, and Jain monuments.",
     coordinates: { lat: 20.0268, lng: 75.1771 },
     essentials: { 
