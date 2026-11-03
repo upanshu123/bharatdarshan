@@ -191,11 +191,12 @@ export const matchesVibe = (item, selectedVibe) => {
 };
 
 /**
- * Case-insensitive and trimmed location matching.
- * Matches against item.city, item.state, item.name, item.title, item.location, item.cityState.
+ * Case-insensitive, token-aware location and destination matching.
+ * Matches against item.name, item.title, item.city, item.state, item.location, item.cityState, item.category.
+ * Seamlessly handles combined multi-word queries like "Jaipur Hawa Mahal", "Hawa Mahal Jaipur", "Taj Mahal Agra", etc.
  * 
  * @param {Destination|Object} item - Destination item
- * @param {string} query - Location query (City or State)
+ * @param {string} query - Location or landmark query (City, State, or Landmark name)
  * @returns {boolean}
  */
 export const matchesLocation = (item, query) => {
@@ -208,14 +209,33 @@ export const matchesLocation = (item, query) => {
   const state = (item.state || '').toLowerCase();
   const location = (item.location || '').toLowerCase();
   const cityState = (item.cityState || '').toLowerCase();
+  const category = (item.category || '').toLowerCase();
 
-  return (
+  // 1. Direct single-field containment
+  if (
     name.includes(q) ||
     city.includes(q) ||
     state.includes(q) ||
     location.includes(q) ||
     cityState.includes(q)
-  );
+  ) {
+    return true;
+  }
+
+  // 2. Full combined string check
+  const combined = `${name} ${city} ${state} ${location} ${cityState} ${category}`.toLowerCase();
+  if (combined.includes(q)) {
+    return true;
+  }
+
+  // 3. Multi-token check (e.g. "jaipur hawa mahal" -> ["jaipur", "hawa", "mahal"])
+  // Every non-trivial token must be present in the destination's combined metadata
+  const tokens = q.split(/[\s,]+/).filter(Boolean);
+  if (tokens.length > 1) {
+    return tokens.every((token) => combined.includes(token));
+  }
+
+  return false;
 };
 
 /**

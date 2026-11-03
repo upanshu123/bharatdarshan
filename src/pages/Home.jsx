@@ -31,6 +31,7 @@ export default function Home() {
     if (query.length <= 1) return [];
 
     const dataset = ALL_PLACES || PLACES || [];
+    const tokens = query.split(/[\s,]+/).filter(Boolean);
 
     // Extract clean state names (e.g., gets "Uttar Pradesh" out of "Agra, Uttar Pradesh")
     const rawStates = dataset.map(p => p.state || p.cityState || p.location || "");
@@ -39,18 +40,58 @@ export default function Home() {
       return parts[parts.length - 1].trim();
     });
 
-    const matchingStates = [...new Set(cleanStates)].filter(s => s.toLowerCase().includes(query));
-
-    const matchingPlaces = dataset.filter(p => {
-      const nMatch = (p.name || p.title || "").toLowerCase().includes(query);
-      const lMatch = (p.location || p.cityState || p.city || "").toLowerCase().includes(query);
-      const sMatch = (p.state || "").toLowerCase().includes(query);
-      return nMatch || lMatch || sMatch;
+    const matchingStates = [...new Set(cleanStates)].filter(s => {
+      const sLower = s.toLowerCase();
+      return sLower.includes(query) || (tokens.length > 1 && tokens.every(t => sLower.includes(t)));
     });
+
+    // Score and rank matching places (multi-token aware)
+    const scoredPlaces = dataset.map(p => {
+      const name = (p.name || p.title || "").toLowerCase();
+      const city = (p.city || "").toLowerCase();
+      const state = (p.state || "").toLowerCase();
+      const location = (p.location || p.cityState || "").toLowerCase();
+      const combined = `${name} ${city} ${state} ${location}`;
+
+      let score = 0;
+      if (name === query) {
+        score += 100;
+      } else if (name.startsWith(query)) {
+        score += 50;
+      } else if (name.includes(query)) {
+        score += 30;
+      }
+
+      if (tokens.length > 1) {
+        if (tokens.every(t => combined.includes(t))) {
+          score += 40;
+          tokens.forEach(t => {
+            if (name.includes(t)) score += 20;
+            if (city.includes(t) || state.includes(t) || location.includes(t)) score += 5;
+          });
+        }
+      } else if (combined.includes(query)) {
+        score += 20;
+      }
+
+      return { place: p, score };
+    }).filter(item => item.score > 0);
+
+    scoredPlaces.sort((a, b) => b.score - a.score);
+
+    // Deduplicate any places with duplicate IDs
+    const seenIds = new Set();
+    const uniqueMatchingPlaces = [];
+    for (const item of scoredPlaces) {
+      if (!seenIds.has(item.place.id)) {
+        seenIds.add(item.place.id);
+        uniqueMatchingPlaces.push(item.place);
+      }
+    }
 
     return [
       ...matchingStates.slice(0, 3).map(s => ({ type: 'state', name: s })),
-      ...matchingPlaces.slice(0, 8).map(p => ({
+      ...uniqueMatchingPlaces.slice(0, 8).map(p => ({
         type: 'place',
         name: p.name || p.title,
         id: p.id,

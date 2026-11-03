@@ -33,7 +33,7 @@ export default function SearchResults() {
       filtered = locationFiltered.filter((p) => matchesVibe(p, category));
     }
 
-    // Scoring for ranking closest matches first
+    // Scoring for ranking closest matches first (multi-token aware)
     const getScore = (place) => {
       if (!q) return 0;
       const name = (place.name || place.title || '').toLowerCase();
@@ -41,12 +41,40 @@ export default function SearchResults() {
       const city = (place.city || '').toLowerCase();
       const location = (place.location || '').toLowerCase();
       const cityState = (place.cityState || '').toLowerCase();
+      const combined = `${name} ${city} ${state} ${location} ${cityState}`.toLowerCase();
 
-      if (name === q) return 4;
-      if (name.startsWith(q)) return 3;
-      if (name.includes(q)) return 2;
-      if (state.includes(q) || city.includes(q) || location.includes(q) || cityState.includes(q)) return 1;
-      return 0;
+      let score = 0;
+
+      // Exact place name match
+      if (name === q) return 100;
+      if (name.startsWith(q)) score += 50;
+      if (name.includes(q)) score += 30;
+
+      const tokens = q.split(/[\s,]+/).filter(Boolean);
+      if (tokens.length > 0) {
+        let nameMatchCount = 0;
+        let locMatchCount = 0;
+
+        tokens.forEach((tok) => {
+          if (name.includes(tok)) nameMatchCount++;
+          if (city.includes(tok) || state.includes(tok) || location.includes(tok) || cityState.includes(tok)) {
+            locMatchCount++;
+          }
+        });
+
+        // If all tokens are matched across the combined place metadata
+        if (tokens.every((tok) => combined.includes(tok))) {
+          score += 40;
+        }
+
+        // Extra points for matching tokens in the monument name itself
+        score += nameMatchCount * 20;
+        // Points for matching city or state
+        score += locMatchCount * 5;
+      }
+
+      if (city === q || state === q) score += 10;
+      return score;
     };
 
     const sortedExact = [...filtered].sort((a, b) => getScore(b) - getScore(a));

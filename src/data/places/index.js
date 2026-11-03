@@ -94,17 +94,26 @@ export const ALL_PLACES = RAW_ALL_PLACES.map(place => {
   return merged;
 });
 
-// Append any topDestinations not present in RAW_ALL_PLACES
+// Append any topDestinations not present in RAW_ALL_PLACES (guaranteeing unique non-colliding IDs)
 topDestinations.forEach(td => {
   const tdNameNorm = (td.name || td.title || '').toLowerCase().trim();
   const exists = ALL_PLACES.some(p => {
     const pNameNorm = (p.name || p.title || '').toLowerCase().trim();
+    if (p.id === td.id && (pNameNorm === tdNameNorm || pNameNorm.includes(tdNameNorm) || tdNameNorm.includes(pNameNorm))) return true;
     if (pNameNorm === tdNameNorm) return true;
     if (pNameNorm && tdNameNorm && (pNameNorm.includes(tdNameNorm) || tdNameNorm.includes(pNameNorm))) return true;
     return false;
   });
+
   if (!exists) {
     const item = { ...td };
+    // Guarantee unique non-colliding ID across ALL_PLACES
+    let safeId = item.id;
+    while (ALL_PLACES.some(p => p.id === safeId)) {
+      safeId += 10000;
+    }
+    item.id = safeId;
+
     const pName = item.name || item.title || '';
     if (!item.exactVisualQuery) {
       item.exactVisualQuery = `${pName} historic monument front facade`;
