@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 
 // 1. Pages
 import Home from './pages/Home.jsx';
@@ -66,6 +67,7 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <AppShell />
+      <Analytics />
     </BrowserRouter>
   );
 }
