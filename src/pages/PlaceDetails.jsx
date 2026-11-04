@@ -8,31 +8,7 @@ import {
   Sparkles, Clock, Ticket, AlertCircle, Camera, CheckCircle2, 
   Car, Landmark, HelpCircle, SunMedium, ExternalLink, Lightbulb
 } from 'lucide-react';
-
-const CATEGORY_FALLBACK_IMAGES = {
-  'Heritage & Forts': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80',
-  'Heritage': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80',
-  'Spiritual & Temples': 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=80',
-  'Spiritual': 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=80',
-  'Hill Stations & Nature': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80',
-  'Hill Station': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80',
-  'Nature': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80',
-  'Beaches & Coastal': 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80',
-  'Beaches': 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80',
-  'Wildlife & Safari': 'https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1200&q=80',
-  'Default': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80'
-};
-
-const getCategoryFallbackImage = (category) => {
-  if (!category) return CATEGORY_FALLBACK_IMAGES['Default'];
-  const catLower = category.toLowerCase();
-  for (const [key, url] of Object.entries(CATEGORY_FALLBACK_IMAGES)) {
-    if (catLower.includes(key.toLowerCase()) || key.toLowerCase().includes(catLower)) {
-      return url;
-    }
-  }
-  return CATEGORY_FALLBACK_IMAGES['Default'];
-};
+import { fetchWikimediaHeroImage, getCuratedFallbackImage } from '../utils/wikimediaImage';
 
 export default function PlaceDetails() {
   const { id } = useParams();
@@ -76,6 +52,34 @@ export default function PlaceDetails() {
   const placeDescription = place?.detailedDescription || place?.description || place?.shortDescription || `Explore the timeless cultural heritage and scenic beauty of ${placeName}, located in ${placeCity ? placeCity + ', ' : ''}${placeState}.`;
 
   const planTripUrl = `/plan-my-yatra?destination=${encodeURIComponent(placeName)}`;
+
+  // Dynamic accurate hero image state fetched from official Wikimedia API
+  const [heroImage, setHeroImage] = useState(place?.image || null);
+  const [loadingWikiImage, setLoadingWikiImage] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadAccurateImage() {
+      if (!placeName) return;
+      setLoadingWikiImage(true);
+      try {
+        const wikiUrl = await fetchWikimediaHeroImage(placeName, placeCategory, placeState);
+        if (isMounted && wikiUrl) {
+          setHeroImage(wikiUrl);
+        }
+      } catch (e) {
+        if (isMounted && !heroImage) {
+          setHeroImage(getCuratedFallbackImage(placeCategory, placeState));
+        }
+      } finally {
+        if (isMounted) setLoadingWikiImage(false);
+      }
+    }
+
+    loadAccurateImage();
+    return () => { isMounted = false; };
+  }, [place?.id, placeName, placeCategory, placeState]);
 
   // Shared Auth Logic for Plan My Yatra
   const handleProtectedAction = (path) => {
@@ -206,14 +210,14 @@ export default function PlaceDetails() {
       </div>
 
       {/* 2. HERO SECTION */}
-      <div className="relative h-[65vh] lg:h-[520px] mt-[65px] overflow-hidden">
+      <div className="relative h-[65vh] lg:h-[520px] mt-[65px] overflow-hidden bg-slate-900">
         <img 
-          src={place.image || getCategoryFallbackImage(place.category)} 
+          src={heroImage || place.image || getCuratedFallbackImage(placeCategory, placeState)} 
           alt={placeName} 
-          className="w-full h-full object-cover" 
+          className="w-full h-full object-cover transition-opacity duration-500" 
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = getCategoryFallbackImage(place.category);
+            e.target.src = getCuratedFallbackImage(placeCategory, placeState);
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-black/30"></div>
@@ -503,7 +507,7 @@ export default function PlaceDetails() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = getCategoryFallbackImage(place.category);
+                        e.target.src = getCuratedFallbackImage(placeCategory, placeState);
                       }}
                     />
                   </div>
