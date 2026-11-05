@@ -1307,14 +1307,17 @@ function getPartnerDealBadge(partnerId, partnerDeals) {
 }
 
 function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
+  if (partnerId === 'cleartrip' || partnerId === 'makemytrip-flights') {
+    return 'https://bitli.in/O9l1k81';
+  }
   if (!partnerDeals) return fallbackUrl;
   const map = {
     makemytrip: partnerDeals.makeMyTripHotels,
     booking: partnerDeals.bookingDotCom,
     klook: partnerDeals.klook,
     expedia: partnerDeals.expediaFlights,
-    cleartrip: partnerDeals.cleartrip || partnerDeals.mmtFlights,
-    'makemytrip-flights': partnerDeals.cleartrip || partnerDeals.mmtFlights,
+    cleartrip: 'https://bitli.in/O9l1k81',
+    'makemytrip-flights': 'https://bitli.in/O9l1k81',
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };

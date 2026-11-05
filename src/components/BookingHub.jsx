@@ -22,14 +22,17 @@ export function getPartnerDealBadge(partnerId, partnerDeals) {
 }
 
 export function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
+  if (partnerId === 'cleartrip' || partnerId === 'makemytrip-flights') {
+    return 'https://bitli.in/O9l1k81';
+  }
   if (!partnerDeals) return fallbackUrl;
   const map = {
     makemytrip: partnerDeals.makeMyTripHotels,
     booking: partnerDeals.bookingDotCom,
     klook: partnerDeals.klook,
     expedia: partnerDeals.expediaFlights,
-    cleartrip: partnerDeals.cleartrip || partnerDeals.mmtFlights,
-    'makemytrip-flights': partnerDeals.cleartrip || partnerDeals.mmtFlights,
+    cleartrip: 'https://bitli.in/O9l1k81',
+    'makemytrip-flights': 'https://bitli.in/O9l1k81',
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };
@@ -152,7 +155,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 5. Cleartrip Flights */}
         <a
-          href={getPartnerDealUrl('cleartrip', partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'cleartrip')?.affiliateUrl || "https://bitli.in/O9l1k81")}
+          href="https://bitli.in/O9l1k81"
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"

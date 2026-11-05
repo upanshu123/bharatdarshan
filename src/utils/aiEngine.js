@@ -2193,16 +2193,14 @@ export function normalizeItinerary(rawItinerary, tripData) {
           "✈️ Flight + Hotel bundle savings",
           `https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:${encSource},to:${encDest}`
         ),
-        cleartrip: normDeal(
-          rawItinerary?.partnerDeals?.cleartrip || rawItinerary?.partnerDeals?.mmtFlights,
-          "✈️ Special airfare discounts on domestic flights",
-          "https://bitli.in/O9l1k81"
-        ),
-        mmtFlights: normDeal(
-          rawItinerary?.partnerDeals?.cleartrip || rawItinerary?.partnerDeals?.mmtFlights,
-          "✈️ Special airfare discounts on domestic flights",
-          "https://bitli.in/O9l1k81"
-        ),
+        cleartrip: {
+          dealBadge: rawItinerary?.partnerDeals?.cleartrip?.dealBadge || rawItinerary?.partnerDeals?.mmtFlights?.dealBadge || "✈️ Special airfare discounts on domestic flights",
+          searchUrl: "https://bitli.in/O9l1k81"
+        },
+        mmtFlights: {
+          dealBadge: rawItinerary?.partnerDeals?.cleartrip?.dealBadge || rawItinerary?.partnerDeals?.mmtFlights?.dealBadge || "✈️ Special airfare discounts on domestic flights",
+          searchUrl: "https://bitli.in/O9l1k81"
+        },
         getYourGuide: normDeal(
           rawItinerary?.partnerDeals?.getYourGuide,
           `🎟️ Skip-the-Line Priority Pass in ${destName}`,
@@ -2636,7 +2634,7 @@ CRITICAL LOCAL REALISM & VERIFIED DATA RULES:
      searchUrl: "https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:\${encodeURIComponent(source)},to:\${encodeURIComponent(destination)}"
    - mmtFlights:
      dealBadge: e.g. "💳 Zero convenience fee with code FLYMORE"
-     searchUrl: "https://www.makemytrip.com/flights/"
+     searchUrl: "https://bitli.in/O9l1k81"
    - getYourGuide:
      dealBadge: e.g. "🎟️ Skip-the-Line Priority Pass in \${destination}"
      searchUrl: "https://www.getyourguide.com/s/?q=\${encodeURIComponent(destination)}"
@@ -2740,7 +2738,7 @@ CRITICAL LOCAL REALISM & VERIFIED DATA RULES:
      searchUrl: "https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:${encSource},to:${encDest}"
    - mmtFlights:
      dealBadge: e.g. "💳 Zero convenience fee with code FLYMORE"
-     searchUrl: "https://www.makemytrip.com/flights/"
+     searchUrl: "https://bitli.in/O9l1k81"
    - getYourGuide:
      dealBadge: e.g. "🎟️ Skip-the-Line Priority Pass in ${destination}"
      searchUrl: "https://www.getyourguide.com/s/?q=${encDest}"
