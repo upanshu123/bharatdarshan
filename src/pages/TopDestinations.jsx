@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { topDestinations } from '../data/destinations';
 import { STANDARD_EXPERIENCE_TAGS, matchesVibe, matchesLocation, formatLocationName } from '../data/categories';
 import { getCuratedFallbackImage } from '../utils/wikimediaImage';
+import { DestinationCardImage } from '../components/DestinationCard';
 
 const categories = [
   "All",
@@ -186,15 +187,10 @@ export default function TopDestinations() {
                 
                 {/* Responsive Image Container */}
                 <div className="relative h-60 sm:h-64 md:h-72 overflow-hidden shrink-0">
-                  <img 
-                    src={place.image} 
+                  <DestinationCardImage 
+                    place={place} 
                     alt={place.name} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = getCuratedFallbackImage(place.category, place.state || place.location, place.name);
-                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
                   

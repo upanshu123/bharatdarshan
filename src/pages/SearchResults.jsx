@@ -4,6 +4,7 @@ import { ALL_PLACES } from '../data/places/index';
 import { ChevronRight, MapPin, Search, Sparkles, Compass } from 'lucide-react';
 import { matchesVibe, matchesLocation, formatLocationName } from '../data/categories';
 import { getCuratedFallbackImage } from '../utils/wikimediaImage';
+import { DestinationCardImage } from '../components/DestinationCard';
 
 export default function SearchResults() {
   const navigate = useNavigate();
@@ -180,14 +181,10 @@ export default function SearchResults() {
             {displayResults.map((place) => (
               <Link to={`/place/${place.id}`} key={place.id} className="group flex flex-col h-full">
                 <div className="h-[500px] overflow-hidden rounded-[80px] relative shadow-2xl transition-all duration-700 group-hover:rounded-[40px]">
-                  <img 
-                    src={place.image} 
+                  <DestinationCardImage 
+                    place={place} 
                     className="w-full h-full object-cover group-hover:scale-110 transition duration-1000" 
                     alt={place.name} 
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = getCuratedFallbackImage(place.category, place.cityState || place.state || place.location, place.name);
-                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
                   

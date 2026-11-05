@@ -39,6 +39,60 @@ export const CURATED_STATE_FALLBACKS = {
 };
 
 /**
+ * Specific Place Image Map:
+ * Direct verified lookup map for top prominent destinations so they never hit fallback.
+ */
+export const SPECIFIC_PLACE_IMAGE_MAP = {
+  'Mainpat': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+  'Dudhsagar Waterfalls Trek': 'https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80',
+  'Dudhsagar Waterfalls': 'https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80',
+  'Dudhsagar Falls': 'https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80',
+  'Nahargarh Fort & Sunset Point': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80',
+  'Nahargarh Fort': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80'
+};
+
+/**
+ * Clean the place name before requesting an image or querying Wikimedia/Unsplash:
+ * Strips out parentheses, trekking suffixes, or extra qualifiers.
+ * Example: "Dudhsagar Waterfalls Trek" -> "Dudhsagar Falls"
+ * Example: "Manali (Hadimba Temple & Solang)" -> "Manali"
+ */
+export function cleanDestinationName(name = '') {
+  if (!name) return '';
+  let cleaned = name
+    .replace(/\(.*?\)/g, '')
+    .replace(/Trek|Safari|Camping|White Water Rafting|Trail/gi, '')
+    .trim();
+
+  if (/dudhsagar/i.test(cleaned)) {
+    cleaned = cleaned.replace(/waterfalls?/i, 'Falls');
+  }
+  return cleaned.replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Quick direct lookup helper for specific prominent destinations
+ */
+export function getSpecificPlaceImage(name = '') {
+  if (!name) return null;
+  const raw = name.trim();
+  const clean = cleanDestinationName(name);
+
+  if (SPECIFIC_PLACE_IMAGE_MAP[raw]) return SPECIFIC_PLACE_IMAGE_MAP[raw];
+  if (SPECIFIC_PLACE_IMAGE_MAP[clean]) return SPECIFIC_PLACE_IMAGE_MAP[clean];
+
+  const rawLower = raw.toLowerCase();
+  const cleanLower = clean.toLowerCase();
+  for (const [key, url] of Object.entries(SPECIFIC_PLACE_IMAGE_MAP)) {
+    const kLower = key.toLowerCase();
+    if (kLower === rawLower || kLower === cleanLower || rawLower.includes(kLower) || cleanLower.includes(kLower)) {
+      return url;
+    }
+  }
+  return null;
+}
+
+/**
  * Returns a high-quality curated Unsplash image matching category, name, or state,
  * avoiding generic single-monument hardcoding.
  */
@@ -106,13 +160,22 @@ export async function fetchWikimediaHeroImage(placeTitle, category = '', state =
     return imageCache.get(cacheKey);
   }
 
+  // 0. Check specific place image map first
+  const specific = getSpecificPlaceImage(placeTitle);
+  if (specific) {
+    imageCache.set(cacheKey, specific);
+    return specific;
+  }
+
   // Generate candidate search titles
   const candidates = [];
   const raw = placeTitle.trim();
-  candidates.push(raw);
+  const clean = cleanDestinationName(placeTitle);
+  if (clean && !candidates.includes(clean)) candidates.push(clean);
+  if (!candidates.includes(raw)) candidates.push(raw);
 
   // Strip parentheticals e.g. "Galtaji Temple (Monkey Temple)" -> "Galtaji Temple"
-  const noParen = raw.replace(/\(.*?\)/g, '').trim();
+  const noParen = (clean || raw).replace(/\(.*?\)/g, '').trim();
   if (noParen && !candidates.includes(noParen)) candidates.push(noParen);
 
   // Strip subtitle after "&" e.g. "Nahargarh Fort & Sunset Point" -> "Nahargarh Fort"
