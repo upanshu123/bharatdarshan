@@ -152,7 +152,7 @@ export const CHHATTISGARH_PLACES = [
     state: "Surguja, Chhattisgarh",
     category: "Hill Stations",
     badge: "Shimla of Chhattisgarh",
-    image: "https://trippyhills.in/wp-content/uploads/2022/03/Jal-Pari-Point-Lucky-Musafir_copy_900x600.jpg",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
     description: "A plateau in the Surguja district, known for its cool climate, Tibetan settlements, and the unique 'Ulta Pani' (gravity-defying stream) and bouncing earth (Jaljali).",
     coordinates: { lat: 22.8256, lng: 83.2925 },
     essentials: {

@@ -106,7 +106,7 @@ export const GOA_PLACES = [
     state: "Sanguem, South Goa",
     category: "Nature",
     badge: "Sea of Milk",
-    image: "https://dudhsagartrek.org/wp-content/uploads/2025/10/dudhsagar-trek-2-1-scaled.webp",
+    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80",
     description: "One of India's tallest waterfalls (310m), located on the Mandovi River. The white cascading water looks like milk.",
     coordinates: { lat: 15.3144, lng: 74.3143 },
     essentials: {
