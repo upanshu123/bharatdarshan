@@ -1,44 +1,87 @@
 /**
  * helpers/affiliateLinks.js & utils/affiliateLinks.js
- * Pre-filled Dynamic Route & Direct SEO Landing Affiliate Deep Links
+ * Direct Category Routing & Search-Engine Bypass URLs for Booking Hub
  */
 
-export const getAffiliateUrl = (provider, plan) => {
-  const city = (plan?.destination || 'Amritsar').trim().split(',')[0].trim();
-  const origin = (plan?.departingFrom || 'Delhi').trim().split(',')[0].trim();
-  const cleanCitySlug = city.toLowerCase().replace(/\s+/g, '-');
-  const encodedCity = encodeURIComponent(city);
-  const encodedOrigin = encodeURIComponent(origin);
+export const getAffiliateUrls = (plan = {}) => {
+  // A. Extract clean parameters from current itinerary state
+  const destinationCity = (plan?.destination || plan?.destinationName || 'Amritsar').split(',')[0].trim();
+  const originCity = (plan?.departingFrom || plan?.origin || 'Jaipur').split(',')[0].trim();
+  const citySlug = destinationCity.toLowerCase().replace(/\s+/g, '-');
+  const encodedDest = encodeURIComponent(destinationCity);
+  const encodedOrigin = encodeURIComponent(originCity);
+
+  // B. Category-Specific Working Deep Links:
+
+  // 1. MakeMyTrip (Direct Hotel City Hub - bypasses 'All Properties Filtered Out' query bug)
+  const mmtHotelUrl = `https://www.makemytrip.com/hotels/${citySlug}-hotels.html`;
+
+  // 2. Booking.com (Direct Hotel Search with auto-populated city and guests)
+  const bookingHotelUrl = `https://www.booking.com/searchresults.html?ss=${encodedDest}&group_adults=2&no_rooms=1`;
+
+  // 3. Expedia (Direct Hotel Inventory Search for the exact destination)
+  const expediaHotelUrl = `https://www.expedia.co.in/Hotel-Search?destination=${encodedDest}`;
+
+  // 4. Cleartrip (Explicit Flights section with Origin -> Destination route populated)
+  const cleartripFlightUrl = `https://www.cleartrip.com/flights/results?from=${encodedOrigin}&to=${encodedDest}&adults=2&class=Economy`;
+
+  // 5. Goibibo Cabs (Direct Outstation / Local Route Cab listing)
+  const goibiboCabUrl = `https://www.goibibo.com/cabs/listing?fromCity=${encodedOrigin}&toCity=${encodedDest}`;
+
+  // 6. GetYourGuide (Direct Tours & Activities search for the destination)
+  const gygToursUrl = `https://www.getyourguide.com/s/?q=${encodedDest}`;
+
+  // 7. Klook (Direct City Experiences hub)
+  const klookUrl = `https://www.klook.com/en-IN/search/?query=${encodedDest}`;
+
+  return {
+    destinationCity,
+    originCity,
+    citySlug,
+    encodedDest,
+    encodedOrigin,
+    mmtHotelUrl,
+    bookingHotelUrl,
+    expediaHotelUrl,
+    cleartripFlightUrl,
+    goibiboCabUrl,
+    gygToursUrl,
+    klookUrl
+  };
+};
+
+export const getAffiliateUrl = (provider, plan = {}) => {
+  const urls = getAffiliateUrls(plan);
 
   switch (provider) {
     // 1. MAKEMYTRIP HOTELS (SEO direct landing bypasses filter bug)
     case 'makemytrip':
-      return `https://www.makemytrip.com/hotels/${cleanCitySlug}-hotels.html`;
+      return urls.mmtHotelUrl;
 
     // 2. CLEARTRIP FLIGHTS (Direct route parameter link)
     case 'cleartrip':
-      return `https://www.cleartrip.com/flights/results?from=${encodedOrigin}&to=${encodedCity}&adults=2&class=Economy`;
+      return urls.cleartripFlightUrl;
 
     // 3. EXPEDIA FLIGHTS & HOTELS (Clean search routing)
     case 'expedia':
-      return `https://www.expedia.co.in/Hotel-Search?destination=${encodedCity}`;
+      return urls.expediaHotelUrl;
 
     // 4. GOIBIBO CABS (Direct route listing)
     case 'goibibo_cabs':
     case 'goibibo':
-      return `https://www.goibibo.com/cabs/listing?fromCity=${encodedOrigin}&toCity=${encodedCity}`;
+      return urls.goibiboCabUrl;
 
     // 5. BOOKING.COM HOTELS (Standard working parameter)
     case 'booking':
-      return `https://www.booking.com/searchresults.html?ss=${encodedCity}&group_adults=2&no_rooms=1`;
+      return urls.bookingHotelUrl;
 
     // 6. GETYOURGUIDE TOURS
     case 'getyourguide':
-      return `https://www.getyourguide.com/s/?q=${encodedCity}`;
+      return urls.gygToursUrl;
 
     // 7. KLOOK EXPERIENCES & STAYS
     case 'klook':
-      return `https://www.klook.com/en-IN/search/?query=${encodedCity}`;
+      return urls.klookUrl;
 
     default:
       return 'https://bharatdarshanyatra.live';
@@ -47,7 +90,7 @@ export const getAffiliateUrl = (provider, plan) => {
 
 // Booking.com Pre-filled Deep Link
 export const getBookingUrl = (destination = '', checkIn = '', checkOut = '', adults = 2) => {
-  const encodedDest = encodeURIComponent(destination || '');
+  const encodedDest = encodeURIComponent(destination || 'Amritsar');
   let url = `https://www.booking.com/searchresults.html?ss=${encodedDest}&group_adults=${adults || 2}&no_rooms=1`;
   if (checkIn && checkOut) {
     url += `&checkin=${checkIn}&checkout=${checkOut}`;
@@ -64,7 +107,7 @@ export const getMMTHotelUrl = (destination = '') => {
 
 // Goibibo Cabs Pre-filled Route URL
 export const getGoibiboCabUrl = (fromCity = '', toCity = '') => {
-  const from = encodeURIComponent(fromCity || 'Delhi');
-  const to = encodeURIComponent(toCity || '');
+  const from = encodeURIComponent(fromCity || 'Jaipur');
+  const to = encodeURIComponent(toCity || 'Amritsar');
   return `https://www.goibibo.com/cabs/listing?fromCity=${from}&toCity=${to}`;
 };

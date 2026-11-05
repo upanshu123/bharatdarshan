@@ -1,8 +1,20 @@
 import React from 'react';
 import { AFFILIATE_PARTNERS } from '../data/plannerData';
-import { getAffiliateUrl, getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl } from '../utils/affiliateLinks';
+import {
+  getAffiliateUrls,
+  getAffiliateUrl,
+  getBookingUrl,
+  getMMTHotelUrl,
+  getGoibiboCabUrl
+} from '../utils/affiliateLinks';
 
-export { getAffiliateUrl, getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl };
+export {
+  getAffiliateUrls,
+  getAffiliateUrl,
+  getBookingUrl,
+  getMMTHotelUrl,
+  getGoibiboCabUrl
+};
 
 export function getPartnerDealBadge(partnerId, partnerDeals) {
   if (!partnerDeals) return null;
@@ -43,12 +55,40 @@ export function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
 
 /**
  * BookingHub Component
- * Renders the 'Book Your Trip' affiliate cards with dynamic pre-filled search parameters
+ * Renders the 'Book Your Trip' affiliate cards with direct category routing & search-engine bypass deep links
  */
 export default function BookingHub({ plan = {}, itinerary = {} }) {
-  const destination = plan.destination || plan.destinationName || itinerary?.destination || 'India';
-  const departingFrom = plan.departingFrom || plan.origin || 'Delhi';
   const partnerDeals = itinerary?.partnerDeals;
+
+  // A. Extract clean parameters from current itinerary state
+  const destinationCity = (plan?.destination || plan?.destinationName || itinerary?.destination || 'Amritsar').split(',')[0].trim();
+  const originCity = (plan?.departingFrom || plan?.origin || 'Jaipur').split(',')[0].trim();
+  const citySlug = destinationCity.toLowerCase().replace(/\s+/g, '-');
+  const encodedDest = encodeURIComponent(destinationCity);
+  const encodedOrigin = encodeURIComponent(originCity);
+
+  // B. Category-Specific Working Deep Links:
+
+  // 1. MakeMyTrip (Direct Hotel City Hub - bypasses 'All Properties Filtered Out' query bug)
+  const mmtHotelUrl = `https://www.makemytrip.com/hotels/${citySlug}-hotels.html`;
+
+  // 2. Booking.com (Direct Hotel Search with auto-populated city and guests)
+  const bookingHotelUrl = `https://www.booking.com/searchresults.html?ss=${encodedDest}&group_adults=2&no_rooms=1`;
+
+  // 3. Expedia (Direct Hotel Inventory Search for the exact destination)
+  const expediaHotelUrl = `https://www.expedia.co.in/Hotel-Search?destination=${encodedDest}`;
+
+  // 4. Cleartrip (Explicit Flights section with Origin -> Destination route populated)
+  const cleartripFlightUrl = `https://www.cleartrip.com/flights/results?from=${encodedOrigin}&to=${encodedDest}&adults=2&class=Economy`;
+
+  // 5. Goibibo Cabs (Direct Outstation / Local Route Cab listing)
+  const goibiboCabUrl = `https://www.goibibo.com/cabs/listing?fromCity=${encodedOrigin}&toCity=${encodedDest}`;
+
+  // 6. GetYourGuide (Direct Tours & Activities search for the destination)
+  const gygToursUrl = `https://www.getyourguide.com/s/?q=${encodedDest}`;
+
+  // 7. Klook (Direct City Experiences hub)
+  const klookUrl = `https://www.klook.com/en-IN/search/?query=${encodedDest}`;
 
   return (
     <div className="mt-8">
@@ -60,7 +100,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {/* 1. MakeMyTrip Hotels */}
         <a
-          href={getAffiliateUrl('makemytrip', plan)}
+          href={mmtHotelUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -82,7 +122,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 2. Booking.com */}
         <a
-          href={getAffiliateUrl('booking', plan)}
+          href={bookingHotelUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all"
@@ -104,7 +144,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 3. Klook */}
         <a
-          href={getAffiliateUrl('klook', plan)}
+          href={klookUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -126,7 +166,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 4. Expedia */}
         <a
-          href={getAffiliateUrl('expedia', plan)}
+          href={expediaHotelUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-yellow-200 transition-all"
@@ -148,7 +188,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 5. Cleartrip Flights */}
         <a
-          href={getAffiliateUrl('cleartrip', plan)}
+          href={cleartripFlightUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -170,7 +210,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 6. GetYourGuide */}
         <a
-          href={getAffiliateUrl('getyourguide', plan)}
+          href={gygToursUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all"
@@ -192,7 +232,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 7. Goibibo Cabs */}
         <a
-          href={getAffiliateUrl('goibibo_cabs', plan)}
+          href={goibiboCabUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all"
