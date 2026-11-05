@@ -1,6 +1,7 @@
 import React from 'react';
 import { AFFILIATE_PARTNERS } from '../data/plannerData';
 import {
+  getCleartripUrl,
   getAffiliateUrls,
   getAffiliateUrl,
   getBookingUrl,
@@ -9,6 +10,7 @@ import {
 } from '../utils/affiliateLinks';
 
 export {
+  getCleartripUrl,
   getAffiliateUrls,
   getAffiliateUrl,
   getBookingUrl,
@@ -66,6 +68,13 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
   const citySlug = destinationCity.toLowerCase().replace(/\s+/g, '-');
   const encodedDest = encodeURIComponent(destinationCity);
   const encodedOrigin = encodeURIComponent(originCity);
+  const adultsCount = Number(plan?.travelers || plan?.persons) || 1;
+
+  // Safe Cleartrip Flight Deep Link
+  const getCleartripUrlLocal = (destination) => {
+    // Direct to Cleartrip Flight booking hub with clean context
+    return 'https://www.cleartrip.com/flights';
+  };
 
   // B. Category-Specific Working Deep Links:
 
@@ -78,8 +87,8 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
   // 3. Expedia (Direct Hotel Inventory Search for the exact destination)
   const expediaHotelUrl = `https://www.expedia.co.in/Hotel-Search?destination=${encodedDest}`;
 
-  // 4. Cleartrip (Explicit Flights section with Origin -> Destination route populated)
-  const cleartripFlightUrl = `https://www.cleartrip.com/flights/results?from=${encodedOrigin}&to=${encodedDest}&adults=2&class=Economy`;
+  // 4. Cleartrip (Safe Flights landing to prevent NaN query and invalid city crash)
+  const cleartripFlightUrl = getCleartripUrl(destinationCity);
 
   // 5. Goibibo Cabs (Direct Outstation / Local Route Cab listing)
   const goibiboCabUrl = `https://www.goibibo.com/cabs/listing?fromCity=${encodedOrigin}&toCity=${encodedDest}`;

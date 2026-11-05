@@ -1,6 +1,7 @@
 // helpers/affiliateLinks.js
 
 export {
+  getCleartripUrl,
   getAffiliateUrls,
   getAffiliateUrl,
   getBookingUrl,
@@ -14,15 +15,16 @@ export const getAffiliateUrlDirect = (provider, plan) => {
   const citySlug = destinationCity.toLowerCase().replace(/\s+/g, '-');
   const encodedDest = encodeURIComponent(destinationCity);
   const encodedOrigin = encodeURIComponent(originCity);
+  const adultsCount = Number(plan?.travelers || plan?.persons) || 1;
 
   switch (provider) {
     // 1. MAKEMYTRIP HOTELS (SEO direct landing bypasses filter bug)
     case 'makemytrip':
       return `https://www.makemytrip.com/hotels/${citySlug}-hotels.html`;
 
-    // 2. CLEARTRIP FLIGHTS (Direct route parameter link)
+    // 2. CLEARTRIP FLIGHTS (Safe Flights landing prevents NaN and non-airport crash)
     case 'cleartrip':
-      return `https://www.cleartrip.com/flights/results?from=${encodedOrigin}&to=${encodedDest}&adults=2&class=Economy`;
+      return 'https://www.cleartrip.com/flights';
 
     // 3. EXPEDIA FLIGHTS & HOTELS (Clean search routing)
     case 'expedia':

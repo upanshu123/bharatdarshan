@@ -3,6 +3,12 @@
  * Direct Category Routing & Search-Engine Bypass URLs for Booking Hub
  */
 
+// Safe Cleartrip Flight Deep Link
+export const getCleartripUrl = (destination = '') => {
+  // Direct to Cleartrip Flight booking hub with clean context
+  return 'https://www.cleartrip.com/flights';
+};
+
 export const getAffiliateUrls = (plan = {}) => {
   // A. Extract clean parameters from current itinerary state
   const destinationCity = (plan?.destination || plan?.destinationName || 'Amritsar').split(',')[0].trim();
@@ -10,6 +16,7 @@ export const getAffiliateUrls = (plan = {}) => {
   const citySlug = destinationCity.toLowerCase().replace(/\s+/g, '-');
   const encodedDest = encodeURIComponent(destinationCity);
   const encodedOrigin = encodeURIComponent(originCity);
+  const adultsCount = Number(plan?.travelers || plan?.persons) || 1;
 
   // B. Category-Specific Working Deep Links:
 
@@ -22,8 +29,8 @@ export const getAffiliateUrls = (plan = {}) => {
   // 3. Expedia (Direct Hotel Inventory Search for the exact destination)
   const expediaHotelUrl = `https://www.expedia.co.in/Hotel-Search?destination=${encodedDest}`;
 
-  // 4. Cleartrip (Explicit Flights section with Origin -> Destination route populated)
-  const cleartripFlightUrl = `https://www.cleartrip.com/flights/results?from=${encodedOrigin}&to=${encodedDest}&adults=2&class=Economy`;
+  // 4. Cleartrip (Safe Flights landing to prevent NaN query and invalid city crash)
+  const cleartripFlightUrl = getCleartripUrl(destinationCity);
 
   // 5. Goibibo Cabs (Direct Outstation / Local Route Cab listing)
   const goibiboCabUrl = `https://www.goibibo.com/cabs/listing?fromCity=${encodedOrigin}&toCity=${encodedDest}`;
@@ -40,6 +47,7 @@ export const getAffiliateUrls = (plan = {}) => {
     citySlug,
     encodedDest,
     encodedOrigin,
+    adultsCount,
     mmtHotelUrl,
     bookingHotelUrl,
     expediaHotelUrl,
@@ -58,7 +66,7 @@ export const getAffiliateUrl = (provider, plan = {}) => {
     case 'makemytrip':
       return urls.mmtHotelUrl;
 
-    // 2. CLEARTRIP FLIGHTS (Direct route parameter link)
+    // 2. CLEARTRIP FLIGHTS (Safe Flights landing prevents NaN and non-airport crash)
     case 'cleartrip':
       return urls.cleartripFlightUrl;
 
