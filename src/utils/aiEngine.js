@@ -3,6 +3,8 @@
  * Plan My Yatra | Bharat Darshan Ecosystem
  */
 
+import { getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl } from './affiliateLinks';
+
 const GEMINI_API_KEY = (typeof import.meta !== "undefined" && import.meta.env?.VITE_GEMINI_API_KEY)
   ? import.meta.env.VITE_GEMINI_API_KEY
   : (typeof process !== "undefined" ? process.env?.VITE_GEMINI_API_KEY : "");
@@ -2174,12 +2176,12 @@ export function normalizeItinerary(rawItinerary, tripData) {
         makeMyTripHotels: normDeal(
           rawItinerary?.partnerDeals?.makeMyTripHotels,
           "🏷️ Up to 15% OFF via HDFC/ICICI cards",
-          `https://www.makemytrip.com/hotels/hotel-listing/?city=${encDest}&country=IN`
+          getMMTHotelUrl(destName)
         ),
         bookingDotCom: normDeal(
           rawItinerary?.partnerDeals?.bookingDotCom,
           "⚡ Zero Prepayment · Free 24h Cancellation",
-          `https://www.booking.com/searchresults.html?ss=${encDest}`
+          getBookingUrl(destName, tripData?.startDate, tripData?.endDate, tripData?.travellers || tripData?.persons || 2)
         ),
         klook: normDeal(
           rawItinerary?.partnerDeals?.klook,
@@ -2204,7 +2206,7 @@ export function normalizeItinerary(rawItinerary, tripData) {
         goibiboCabs: normDeal(
           rawItinerary?.partnerDeals?.goibiboCabs,
           "🚖 Pre-negotiated Union Fare & Local Cab Pickup",
-          "https://www.goibibo.com/cars/"
+          getGoibiboCabUrl(tripData?.source || tripData?.departureCity || "Delhi", destName)
         )
       };
     })(),
