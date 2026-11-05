@@ -1,8 +1,8 @@
 import React from 'react';
 import { AFFILIATE_PARTNERS } from '../data/plannerData';
-import { getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl } from '../utils/affiliateLinks';
+import { getAffiliateUrl, getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl } from '../utils/affiliateLinks';
 
-export { getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl };
+export { getAffiliateUrl, getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl };
 
 export function getPartnerDealBadge(partnerId, partnerDeals) {
   if (!partnerDeals) return null;
@@ -48,14 +48,7 @@ export function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
 export default function BookingHub({ plan = {}, itinerary = {} }) {
   const destination = plan.destination || plan.destinationName || itinerary?.destination || 'India';
   const departingFrom = plan.departingFrom || plan.origin || 'Delhi';
-  const checkIn = plan.startDate || '';
-  const checkOut = plan.endDate || '';
-  const persons = plan.persons || plan.travelers || plan.travellers || 2;
   const partnerDeals = itinerary?.partnerDeals;
-
-  const mmtHotelHref = getMMTHotelUrl(destination);
-  const bookingDotComHref = getBookingUrl(destination, checkIn, checkOut, persons);
-  const goibiboCabHref = getGoibiboCabUrl(departingFrom, destination);
 
   return (
     <div className="mt-8">
@@ -67,7 +60,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {/* 1. MakeMyTrip Hotels */}
         <a
-          href={mmtHotelHref}
+          href={getAffiliateUrl('makemytrip', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -89,7 +82,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 2. Booking.com */}
         <a
-          href={bookingDotComHref}
+          href={getAffiliateUrl('booking', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all"
@@ -111,7 +104,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 3. Klook */}
         <a
-          href={getPartnerDealUrl('klook', partnerDeals, AFFILIATE_PARTNERS?.hotels?.find(p => p.id === 'klook')?.affiliateUrl || "https://klook.tpo.mx/0r4GgPTK")}
+          href={getAffiliateUrl('klook', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -133,7 +126,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 4. Expedia */}
         <a
-          href={getPartnerDealUrl('expedia', partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'expedia')?.affiliateUrl || "https://bitli.in/sP8sZwo")}
+          href={getAffiliateUrl('expedia', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-yellow-200 transition-all"
@@ -155,7 +148,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 5. Cleartrip Flights */}
         <a
-          href="https://bitli.in/O9l1k81"
+          href={getAffiliateUrl('cleartrip', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
@@ -177,7 +170,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 6. GetYourGuide */}
         <a
-          href={getPartnerDealUrl('getyourguide', partnerDeals, AFFILIATE_PARTNERS?.activities?.find(p => p.id === 'getyourguide')?.affiliateUrl || "https://gyg.me/izQrSbTv")}
+          href={getAffiliateUrl('getyourguide', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all"
@@ -199,7 +192,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 7. Goibibo Cabs */}
         <a
-          href={goibiboCabHref}
+          href={getAffiliateUrl('goibibo_cabs', plan)}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all"
