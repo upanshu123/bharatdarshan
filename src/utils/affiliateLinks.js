@@ -27,3 +27,4 @@ export const getGoibiboCabUrl = (fromCity = '', toCity = '') => {
   const to = encodeURIComponent(toCity || '');
   return `https://www.goibibo.com/cabs/listing?fromCity=${from}&toCity=${to}`;
 };
+

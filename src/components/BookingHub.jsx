@@ -150,7 +150,7 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
 
         {/* 5. MMT Flights */}
         <a
-          href={getPartnerDealUrl('makemytrip-flights', partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'makemytrip-flights')?.affiliateUrl || "https://bitli.in/vH7D6en")}
+          href={getPartnerDealUrl('makemytrip-flights', partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'makemytrip-flights')?.affiliateUrl || "https://bitli.in/O9l1k81")}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all"

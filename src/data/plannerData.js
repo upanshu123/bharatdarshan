@@ -122,7 +122,7 @@ export const AFFILIATE_PARTNERS = {
       id: "makemytrip-flights",
       name: "MMT Flights",
       shortName: "MMT",
-      affiliateUrl: "https://bitli.in/vH7D6en",
+      affiliateUrl: "https://bitli.in/O9l1k81",
       searchBase: "https://www.makemytrip.com/flights/search?tripType=O&itinerary=DEL-",
       commission: "2–3%",
       color: "bg-red-50 border-red-200 text-red-700 hover:border-red-400",
