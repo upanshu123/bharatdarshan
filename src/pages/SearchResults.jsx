@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { ALL_PLACES } from '../data/places/index';
 import { ChevronRight, MapPin, Search, Sparkles, Compass } from 'lucide-react';
 import { matchesVibe, matchesLocation, formatLocationName } from '../data/categories';
+import { getCuratedFallbackImage } from '../utils/wikimediaImage';
 
 export default function SearchResults() {
   const navigate = useNavigate();
@@ -185,7 +186,7 @@ export default function SearchResults() {
                     alt={place.name} 
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80';
+                      e.target.src = getCuratedFallbackImage(place.category, place.cityState || place.state || place.location, place.name);
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>

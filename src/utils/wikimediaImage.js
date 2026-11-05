@@ -8,17 +8,22 @@
 const imageCache = new Map();
 
 export const CURATED_CATEGORY_FALLBACKS = {
+  // Verified Unsplash Category Fallbacks
+  'hill stations': 'https://images.unsplash.com/photo-1723214520491-7f90eeda2cdd?auto=format&fit=crop&w=1600&q=80',
+  'hill station': 'https://images.unsplash.com/photo-1723214520491-7f90eeda2cdd?auto=format&fit=crop&w=1600&q=80',
+  'hill stations & nature': 'https://images.unsplash.com/photo-1723214520491-7f90eeda2cdd?auto=format&fit=crop&w=1600&q=80',
+  'nature': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80',
+  'waterfalls': 'https://images.unsplash.com/photo-1534531409543-069f6204c5b4?auto=format&fit=crop&w=1600&q=80',
+  'waterfall': 'https://images.unsplash.com/photo-1534531409543-069f6204c5b4?auto=format&fit=crop&w=1600&q=80',
   'heritage & forts': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1600&q=80',
   'heritage': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1600&q=80',
+  'beaches & coastal': 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1600&q=80',
+  'beaches': 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1600&q=80',
   'spiritual & temples': 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1600&q=80',
   'spiritual': 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1600&q=80',
-  'hill stations & nature': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=80',
-  'hill station': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=80',
-  'nature': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80',
-  'beaches & coastal': 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1600&q=80',
-  'beaches': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80',
   'wildlife & safari': 'https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80',
-  'default': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1600&q=80'
+  'wildlife': 'https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80',
+  'default': 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1600&q=80'
 };
 
 export const CURATED_STATE_FALLBACKS = {
@@ -34,18 +39,54 @@ export const CURATED_STATE_FALLBACKS = {
 };
 
 /**
- * Returns a high-quality curated Unsplash image matching category or state,
+ * Returns a high-quality curated Unsplash image matching category, name, or state,
  * avoiding generic single-monument hardcoding.
  */
-export function getCuratedFallbackImage(category = '', state = '') {
-  const stateNorm = (state || '').toLowerCase().trim();
-  for (const [sKey, url] of Object.entries(CURATED_STATE_FALLBACKS)) {
-    if (stateNorm.includes(sKey)) return url;
+export function getCuratedFallbackImage(category = '', state = '', placeName = '') {
+  const nameNorm = (placeName || '').toLowerCase().trim();
+  const catNorm = (category || '').toLowerCase().trim();
+
+  // 1. Strict waterfall check: If place.name or category includes "Waterfall", fallback MUST be the waterfall photo.
+  if (nameNorm.includes('waterfall') || catNorm.includes('waterfall') || nameNorm.includes('falls') || nameNorm.includes('water fall')) {
+    return CURATED_CATEGORY_FALLBACKS['waterfalls'];
   }
 
-  const catNorm = (category || '').toLowerCase().trim();
-  for (const [cKey, url] of Object.entries(CURATED_CATEGORY_FALLBACKS)) {
-    if (catNorm.includes(cKey) || cKey.includes(catNorm)) return url;
+  // 2. Strict hill station check: If place.category includes "Hill Stations" (or name has hill/tea garden), fallback MUST be the hills photo.
+  if (catNorm.includes('hill station') || catNorm.includes('hill stations') || (catNorm.includes('hill') && !catNorm.includes('spiritual')) || nameNorm.includes('hill station') || nameNorm.includes('tea garden')) {
+    return CURATED_CATEGORY_FALLBACKS['hill stations'];
+  }
+
+  // 3. Category-specific match
+  if (catNorm) {
+    if (catNorm.includes('wildlife') || catNorm.includes('safari')) {
+      return CURATED_CATEGORY_FALLBACKS['wildlife & safari'];
+    }
+    if (catNorm.includes('spiritual') || catNorm.includes('temple')) {
+      return CURATED_CATEGORY_FALLBACKS['spiritual & temples'];
+    }
+    if (catNorm.includes('beach') || catNorm.includes('coastal')) {
+      return CURATED_CATEGORY_FALLBACKS['beaches & coastal'];
+    }
+    if (catNorm.includes('heritage') || catNorm.includes('fort') || catNorm.includes('palace')) {
+      return CURATED_CATEGORY_FALLBACKS['heritage & forts'];
+    }
+    if (catNorm.includes('nature') || catNorm.includes('valley') || catNorm.includes('lake') || catNorm.includes('river')) {
+      return CURATED_CATEGORY_FALLBACKS['nature'];
+    }
+
+    for (const [cKey, url] of Object.entries(CURATED_CATEGORY_FALLBACKS)) {
+      if (cKey !== 'default' && (catNorm.includes(cKey) || cKey.includes(catNorm))) {
+        return url;
+      }
+    }
+  }
+
+  // 4. State fallback if category was ambiguous
+  const stateNorm = (state || '').toLowerCase().trim();
+  if (stateNorm) {
+    for (const [sKey, url] of Object.entries(CURATED_STATE_FALLBACKS)) {
+      if (stateNorm.includes(sKey)) return url;
+    }
   }
 
   return CURATED_CATEGORY_FALLBACKS['default'];
@@ -57,7 +98,7 @@ export function getCuratedFallbackImage(category = '', state = '') {
  */
 export async function fetchWikimediaHeroImage(placeTitle, category = '', state = '') {
   if (!placeTitle) {
-    return getCuratedFallbackImage(category, state);
+    return getCuratedFallbackImage(category, state, placeTitle);
   }
 
   const cacheKey = placeTitle.toLowerCase().trim();
@@ -130,7 +171,8 @@ export async function fetchWikimediaHeroImage(placeTitle, category = '', state =
   }
 
   // 3. Graceful curated fallback matching category/state
-  const fallback = getCuratedFallbackImage(category, state);
+  const fallback = getCuratedFallbackImage(category, state, placeTitle);
   imageCache.set(cacheKey, fallback);
   return fallback;
 }
+
