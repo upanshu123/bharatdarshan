@@ -1296,7 +1296,8 @@ function getPartnerDealBadge(partnerId, partnerDeals) {
     booking: partnerDeals.bookingDotCom,
     klook: partnerDeals.klook,
     expedia: partnerDeals.expediaFlights,
-    'makemytrip-flights': partnerDeals.mmtFlights,
+    cleartrip: partnerDeals.cleartrip || partnerDeals.mmtFlights,
+    'makemytrip-flights': partnerDeals.cleartrip || partnerDeals.mmtFlights,
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };
@@ -1312,7 +1313,8 @@ function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
     booking: partnerDeals.bookingDotCom,
     klook: partnerDeals.klook,
     expedia: partnerDeals.expediaFlights,
-    'makemytrip-flights': partnerDeals.mmtFlights,
+    cleartrip: partnerDeals.cleartrip || partnerDeals.mmtFlights,
+    'makemytrip-flights': partnerDeals.cleartrip || partnerDeals.mmtFlights,
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };

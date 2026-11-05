@@ -11,7 +11,8 @@ export function getPartnerDealBadge(partnerId, partnerDeals) {
     booking: partnerDeals.bookingDotCom,
     klook: partnerDeals.klook,
     expedia: partnerDeals.expediaFlights,
-    'makemytrip-flights': partnerDeals.mmtFlights,
+    cleartrip: partnerDeals.cleartrip || partnerDeals.mmtFlights,
+    'makemytrip-flights': partnerDeals.cleartrip || partnerDeals.mmtFlights,
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };
@@ -27,7 +28,8 @@ export function getPartnerDealUrl(partnerId, partnerDeals, fallbackUrl) {
     booking: partnerDeals.bookingDotCom,
     klook: partnerDeals.klook,
     expedia: partnerDeals.expediaFlights,
-    'makemytrip-flights': partnerDeals.mmtFlights,
+    cleartrip: partnerDeals.cleartrip || partnerDeals.mmtFlights,
+    'makemytrip-flights': partnerDeals.cleartrip || partnerDeals.mmtFlights,
     getyourguide: partnerDeals.getYourGuide,
     goibibo: partnerDeals.goibiboCabs
   };
@@ -148,26 +150,26 @@ export default function BookingHub({ plan = {}, itinerary = {} }) {
           <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-yellow-50 group-hover:text-yellow-500 transition-all">→</div>
         </a>
 
-        {/* 5. MMT Flights */}
+        {/* 5. Cleartrip Flights */}
         <a
-          href={getPartnerDealUrl('makemytrip-flights', partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'makemytrip-flights')?.affiliateUrl || "https://bitli.in/O9l1k81")}
+          href={getPartnerDealUrl('cleartrip', partnerDeals, AFFILIATE_PARTNERS?.flights?.find(p => p.id === 'cleartrip')?.affiliateUrl || "https://bitli.in/O9l1k81")}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all"
+          className="group relative flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-lg">✈️</div>
+            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-lg">✈️</div>
             <div>
-              {getPartnerDealBadge('makemytrip-flights', partnerDeals) && (
-                <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
-                  {getPartnerDealBadge('makemytrip-flights', partnerDeals)}
+              {getPartnerDealBadge('cleartrip', partnerDeals) && (
+                <span className="text-[10px] font-semibold text-orange-600 bg-orange-50 border border-orange-200/60 px-2 py-0.5 rounded-full inline-block mb-1">
+                  {getPartnerDealBadge('cleartrip', partnerDeals)}
                 </span>
               )}
-              <h4 className="font-bold text-gray-800 text-sm group-hover:text-indigo-600 transition-colors">MMT Flights</h4>
+              <h4 className="font-bold text-gray-800 text-sm group-hover:text-orange-600 transition-colors">Cleartrip</h4>
               <p className="text-xs text-gray-500">Flights & Airfare</p>
             </div>
           </div>
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-all">→</div>
+          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-orange-50 group-hover:text-orange-500 transition-all">→</div>
         </a>
 
         {/* 6. GetYourGuide */}

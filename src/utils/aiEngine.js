@@ -2193,10 +2193,15 @@ export function normalizeItinerary(rawItinerary, tripData) {
           "✈️ Flight + Hotel bundle savings",
           `https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=from:${encSource},to:${encDest}`
         ),
+        cleartrip: normDeal(
+          rawItinerary?.partnerDeals?.cleartrip || rawItinerary?.partnerDeals?.mmtFlights,
+          "✈️ Special airfare discounts on domestic flights",
+          "https://bitli.in/O9l1k81"
+        ),
         mmtFlights: normDeal(
-          rawItinerary?.partnerDeals?.mmtFlights,
-          "💳 Zero convenience fee with code FLYMORE",
-          "https://www.makemytrip.com/flights/"
+          rawItinerary?.partnerDeals?.cleartrip || rawItinerary?.partnerDeals?.mmtFlights,
+          "✈️ Special airfare discounts on domestic flights",
+          "https://bitli.in/O9l1k81"
         ),
         getYourGuide: normDeal(
           rawItinerary?.partnerDeals?.getYourGuide,
