@@ -147,6 +147,12 @@ export function getCuratedFallbackImage(category = '', state = '', placeName = '
 }
 
 /**
+ * Convenient alias matching category fallback requirements
+ */
+export const getCategoryFallback = (category = '', state = '', placeName = '') => 
+  getCuratedFallbackImage(category, state, placeName);
+
+/**
  * Query the official Wikipedia/Wikimedia API for the place title.
  * Returns the 1600px thumbnail source or a clean curated fallback.
  */

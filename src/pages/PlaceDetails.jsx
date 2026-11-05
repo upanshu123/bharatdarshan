@@ -8,7 +8,13 @@ import {
   Sparkles, Clock, Ticket, AlertCircle, Camera, CheckCircle2, 
   Car, Landmark, HelpCircle, SunMedium, ExternalLink, Lightbulb
 } from 'lucide-react';
-import { fetchWikimediaHeroImage, getCuratedFallbackImage } from '../utils/wikimediaImage';
+import { 
+  fetchWikimediaHeroImage, 
+  getCuratedFallbackImage, 
+  getCategoryFallback,
+  getSpecificPlaceImage, 
+  cleanDestinationName 
+} from '../utils/wikimediaImage';
 
 export default function PlaceDetails() {
   const { id } = useParams();
@@ -46,6 +52,10 @@ export default function PlaceDetails() {
   }
 
   const placeName = place?.name || place?.title || 'Iconic Monument';
+  const cleanTitle = (place?.name || place?.title || '')
+    .replace(/\(.*?\)/g, '')
+    .replace(/Trek|Safari|Camping|White Water Rafting|Trail/gi, '')
+    .trim();
   const placeCity = place?.city || (place?.location ? place.location.split(',')[0].trim() : '') || (place?.state ? place.state.split(',')[0].trim() : '');
   const placeState = place?.state || (place?.location ? place.location.split(',').slice(1).join(',').trim() : 'India');
   const placeCategory = place?.category || 'Heritage & Cultural';
@@ -53,24 +63,35 @@ export default function PlaceDetails() {
 
   const planTripUrl = `/plan-my-yatra?destination=${encodeURIComponent(placeName)}`;
 
-  // Dynamic accurate hero image state fetched from official Wikimedia API
-  const [heroImage, setHeroImage] = useState(place?.image || null);
+  // Priority 1: Check direct curated lookup map first (so Mainpat, Dudhsagar, Nahargarh Fort always use their verified hero photos)
+  const directHero = getSpecificPlaceImage(placeName) || getSpecificPlaceImage(cleanTitle);
+
+  // Dynamic accurate hero image state
+  const [heroImage, setHeroImage] = useState(
+    directHero || place?.image || getCategoryFallback(placeCategory, placeState, cleanTitle || placeName)
+  );
   const [loadingWikiImage, setLoadingWikiImage] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
     async function loadAccurateImage() {
-      if (!placeName) return;
+      if (directHero) {
+        setHeroImage(directHero);
+        return;
+      }
+      if (!placeName && !cleanTitle) return;
+
       setLoadingWikiImage(true);
       try {
-        const wikiUrl = await fetchWikimediaHeroImage(placeName, placeCategory, placeState);
+        const targetTitle = cleanTitle || placeName;
+        const wikiUrl = await fetchWikimediaHeroImage(targetTitle, placeCategory, placeState);
         if (isMounted && wikiUrl) {
           setHeroImage(wikiUrl);
         }
       } catch (e) {
-        if (isMounted && !heroImage) {
-          setHeroImage(getCuratedFallbackImage(placeCategory, placeState));
+        if (isMounted) {
+          setHeroImage(place?.image || getCategoryFallback(placeCategory, placeState, cleanTitle || placeName));
         }
       } finally {
         if (isMounted) setLoadingWikiImage(false);
@@ -79,7 +100,7 @@ export default function PlaceDetails() {
 
     loadAccurateImage();
     return () => { isMounted = false; };
-  }, [place?.id, placeName, placeCategory, placeState]);
+  }, [place?.id, placeName, cleanTitle, directHero, placeCategory, placeState]);
 
   // Shared Auth Logic for Plan My Yatra
   const handleProtectedAction = (path) => {
@@ -212,12 +233,12 @@ export default function PlaceDetails() {
       {/* 2. HERO SECTION */}
       <div className="relative h-[65vh] lg:h-[520px] mt-[65px] overflow-hidden bg-slate-900">
         <img 
-          src={heroImage || place.image || getCuratedFallbackImage(placeCategory, placeState)} 
+          src={heroImage || directHero || place.image || getCategoryFallback(placeCategory, placeState, cleanTitle || placeName)} 
           alt={placeName} 
           className="w-full h-full object-cover transition-opacity duration-500" 
           onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = getCuratedFallbackImage(placeCategory, placeState);
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = getCategoryFallback(placeCategory, placeState, cleanTitle || placeName);
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-black/30"></div>
@@ -500,16 +521,17 @@ export default function PlaceDetails() {
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {place.images.slice(0, 6).map((imgUrl, i) => (
-                  <div key={i} className="aspect-video rounded-xl overflow-hidden bg-slate-100 border border-slate-200 group">
+                  <div key={i} className="relative aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-200 group">
                     <img 
                       src={imgUrl} 
                       alt={`${placeName} angle ${i + 1}`} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = getCuratedFallbackImage(placeCategory, placeState);
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallback(placeCategory, placeState, cleanTitle || placeName);
                       }}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40 group-hover:opacity-70 transition-opacity pointer-events-none"></div>
                   </div>
                 ))}
               </div>

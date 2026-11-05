@@ -136,3 +136,4 @@ export default function DestinationCard({ place }) {
     </Link>
   );
 }
+
