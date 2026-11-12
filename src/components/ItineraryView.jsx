@@ -31,3 +31,4 @@ export {
 export default function ItineraryView({ plan = {}, itinerary = {} }) {
   return <BookingHub plan={plan} itinerary={itinerary} />;
 }
+

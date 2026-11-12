@@ -42,7 +42,7 @@ export default function Login() {
       .catch((err) => {
         console.error('Redirect result error:', err);
         if (err?.code === 'auth/unauthorized-domain') {
-          setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
+          setError('Domain unauthorized in Firebase Console. Add bharatdarshanyatra.live to Authorized Domains.');
         } else if (err?.message) {
           setError(`Google Sign-in error: ${err.message}`);
         }
@@ -73,7 +73,7 @@ export default function Login() {
       console.warn('Popup login failed/blocked, initiating Google OAuth Redirect:', popupErr);
 
       if (popupErr?.code === 'auth/unauthorized-domain') {
-        setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
+        setError('Domain unauthorized in Firebase Console. Add bharatdarshanyatra.live to Authorized Domains.');
         setLoading(false);
         return;
       }
@@ -83,7 +83,7 @@ export default function Login() {
       } catch (redirectErr) {
         console.error('Redirect sign-in error:', redirectErr);
         if (redirectErr?.code === 'auth/unauthorized-domain') {
-          setError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
+          setError('Domain unauthorized in Firebase Console. Add bharatdarshanyatra.live to Authorized Domains.');
         } else {
           setError(redirectErr?.message || 'Google Login failed. Please try again.');
         }

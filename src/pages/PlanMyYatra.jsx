@@ -1409,7 +1409,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   };
 
   const handleShareWhatsApp = () => {
-    const siteUrl = "https://bharatdarshan-seven.vercel.app";
+    const siteUrl = typeof window !== "undefined" && window.location?.origin ? window.location.origin : "https://bharatdarshanyatra.live";
     let text = `🇮🇳 *BharatDarshan Yatra Itinerary: ${tripTitle}*\n\n`;
     if (tripData?.destinationName) text += `📍 *Destination:* ${tripData.destinationName}\n`;
     if (tripData?.origin) text += `🏁 *Departing From:* ${tripData.origin}\n`;
@@ -1481,7 +1481,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
     if (budgetSummary) {
       text += `Budget Estimate: ${budgetSummary.estimatedTotal || ''}\n\n`;
     }
-    text += `Planned with ❤️ on BharatDarshan: https://bharatdarshan-seven.vercel.app/plan\n`;
+    text += `Planned with ❤️ on BharatDarshan: ${typeof window !== "undefined" && window.location?.origin ? window.location.origin : "https://bharatdarshanyatra.live"}/plan\n`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
@@ -1489,7 +1489,7 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
   };
 
   const handleNativeShare = async () => {
-    const siteUrl = "https://bharatdarshan-seven.vercel.app/plan";
+    const siteUrl = typeof window !== "undefined" && window.location?.origin ? `${window.location.origin}/plan` : "https://bharatdarshanyatra.live/plan";
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
@@ -2366,7 +2366,7 @@ export default function PlanMyYatra() {
     } catch (popupErr) {
       console.warn("Popup login failed/blocked, initiating Google OAuth Redirect:", popupErr);
       if (popupErr?.code === 'auth/unauthorized-domain') {
-        setLoginError('Domain unauthorized in Firebase Console. Add bharatdarshan-seven.vercel.app to Authorized Domains.');
+        setLoginError('Domain unauthorized in Firebase Console. Add bharatdarshanyatra.live to Authorized Domains.');
         setLoginLoading(false);
         return;
       }

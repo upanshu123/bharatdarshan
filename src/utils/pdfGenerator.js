@@ -42,7 +42,7 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7);
       doc.setTextColor(203, 213, 225);
-      doc.text('Official AI Travel Itinerary  •  https://bharatdarshan-seven.vercel.app', margin + 35, 7);
+      doc.text('Official AI Travel Itinerary  •  https://bharatdarshanyatra.live', margin + 35, 7);
     };
 
     // ── Main Page Header ──────────────────────────────────────────
@@ -66,7 +66,7 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
 
     doc.setFontSize(8);
     doc.setTextColor(203, 213, 225);
-    doc.text('https://bharatdarshan-seven.vercel.app', pageWidth - margin - 60, 24);
+    doc.text('https://bharatdarshanyatra.live', pageWidth - margin - 55, 24);
 
     currentY = 40;
 
@@ -322,7 +322,7 @@ export function generateItineraryPDF(itinerary, tripData = {}) {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(148, 163, 184); // slate-400
-      doc.text('Plan your custom yatra at https://bharatdarshan-seven.vercel.app', margin, pageHeight - 7);
+      doc.text('Plan your custom yatra at https://bharatdarshanyatra.live', margin, pageHeight - 7);
 
       doc.text(`Page ${p} of ${totalPages}`, pageWidth - margin - 20, pageHeight - 7);
     }
