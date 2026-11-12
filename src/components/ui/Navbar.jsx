@@ -133,7 +133,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Actions */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               
               {/* Support Button */}
               <button 
@@ -143,15 +143,6 @@ export default function Navbar() {
               >
                 Support
               </button>
-
-              <Link 
-                to="/plan"
-                className="group relative flex items-center gap-2 px-6 py-3 overflow-hidden rounded-full bg-orange-600 text-white text-xs font-black uppercase tracking-widest shadow-xl hover:shadow-orange-500/40 transition-all"
-              >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                <Compass size={14} className="relative z-10" />
-                <span className="relative z-10">Plan My Yatra</span>
-              </Link>
 
               <div className={`h-8 w-px transition-colors ${isDarkMode ? 'bg-slate-200' : 'bg-white/20'}`}></div>
 
