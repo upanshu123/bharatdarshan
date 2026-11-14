@@ -1,6 +1,7 @@
 // helpers/affiliateLinks.js
 
 export {
+  AFFILIATE_TRACKING,
   locationMeta,
   resolvePlace,
   generateBookingLinks,

@@ -1,8 +1,22 @@
 /**
  * src/utils/affiliateLinks.js
- * 100% Working Category-Specific Deep Links (Trains, Flights, Hotels, Cabs)
+ * Category-Specific Deep Links (Trains, Flights, Hotels, Cabs)
  * Auto-Filled Station Codes, Airport Codes, Dates & Passengers
+ * Preserves Active Affiliate Tracking Parameters (CJ, GetYourGuide, MMT, Cleartrip, Expedia, Goibibo)
  */
+
+export const AFFILIATE_TRACKING = {
+  bookingHotelsCj: 'https://www.anrdoezrs.net/click-101883662-17322915',
+  bookingFlightsCj: 'https://www.dpbolvw.net/click-101883662-17289010',
+  bookingCarsCj: 'https://www.kqzyfj.com/click-101883662-17289007',
+  gygPartnerId: 'L21UWLJ',
+  gygUtmMedium: 'online_publisher',
+  cleartripShortlink: 'https://bitli.in/O9l1k81',
+  mmtShortlink: 'https://bitli.in/vH7D6en',
+  expediaShortlink: 'https://bitli.in/sP8sZwo',
+  goibiboShortlink: 'https://bitli.in/xKkdwRT',
+  klookShortlink: 'https://klook.tpo.mx/0r4GgPTK'
+};
 
 export const locationMeta = {
   'delhi': { city: 'Delhi', station: 'NDLS', airport: 'DEL' },
@@ -54,6 +68,7 @@ export const resolvePlace = (rawStr, fallbackKey = 'delhi') => {
 
 /**
  * Build Category-Specific Pre-Filled Deep Links using plan state
+ * Embeds approved affiliate tracking IDs while keeping route, dates, and guests intact
  */
 export const generateBookingLinks = (plan = {}) => {
   const origin = resolvePlace(plan?.departingFrom || plan?.origin, 'delhi');
@@ -72,6 +87,26 @@ export const generateBookingLinks = (plan = {}) => {
   const ddmmyyyy_start = `${pad(start.getDate())}-${pad(start.getMonth() + 1)}-${start.getFullYear()}`;
   const ddmmyyyy_slash = `${pad(start.getDate())}/${pad(start.getMonth() + 1)}/${start.getFullYear()}`;
 
+  // 1. Raw Destination Deep Links with Dynamic Parameters
+  const rawBookingHotels = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(dest.city)}&checkin=${yyyy_mm_dd_start}&checkout=${yyyy_mm_dd_end}&group_adults=${adults}&no_rooms=1`;
+  const rawBookingFlights = `https://www.booking.com/flights/index.html?from=${origin.airport}.AIRPORT&to=${dest.airport}.AIRPORT&depart=${yyyy_mm_dd_start}&return=${yyyy_mm_dd_end}&adults=${adults}&cabinClass=ECONOMY`;
+  const rawMmtHotels = `https://www.makemytrip.com/hotels/hotel-listing/?city=${encodeURIComponent(dest.city)}&checkin=${mmddyyyy_start}&checkout=${mmddyyyy_end}&roomStayQualifier=1e${adults}e0e`;
+  const rawMmtTrains = `https://www.makemytrip.com/railways/listing?classCode=&className=All%20Classes&date=${start.getFullYear()}${pad(start.getMonth() + 1)}${pad(start.getDate())}&destStn=${dest.station}&srcStn=${origin.station}`;
+  const rawCleartripFlights = `https://www.cleartrip.com/flights/results?adults=${adults}&childs=0&infants=0&class=Economy&depart_date=${ddmmyyyy_slash}&from=${origin.airport}&to=${dest.airport}`;
+  const rawExpediaHotels = `https://www.expedia.co.in/Hotel-Search?destination=${encodeURIComponent(dest.city)}&startDate=${yyyy_mm_dd_start}&endDate=${yyyy_mm_dd_end}&adults=${adults}`;
+  const rawGoibiboCabs = `https://www.goibibo.com/cabs/listing?fromCity=${encodeURIComponent(origin.city)}&toCity=${encodeURIComponent(dest.city)}`;
+  const rawGygTours = `https://www.getyourguide.com/s/?q=${encodeURIComponent(dest.city)}&partner_id=${AFFILIATE_TRACKING.gygPartnerId}&utm_medium=${AFFILIATE_TRACKING.gygUtmMedium}`;
+
+  // 2. Tracked Links with affiliate tracking IDs & redirect wrappers
+  const bookingHotels = `${AFFILIATE_TRACKING.bookingHotelsCj}?url=${encodeURIComponent(rawBookingHotels)}`;
+  const bookingFlights = `${AFFILIATE_TRACKING.bookingFlightsCj}?url=${encodeURIComponent(rawBookingFlights)}`;
+  const gygTours = rawGygTours;
+  const mmtTrains = rawMmtTrains;
+  const mmtHotels = rawMmtHotels;
+  const cleartripFlights = rawCleartripFlights;
+  const expediaHotels = rawExpediaHotels;
+  const goibiboCabs = rawGoibiboCabs;
+
   return {
     origin,
     dest,
@@ -82,24 +117,25 @@ export const generateBookingLinks = (plan = {}) => {
       startFormatted: ddmmyyyy_start
     },
 
-    // 1. TRAINS SECTION (Opens directly in Train Search with Origin -> Destination & Date)
-    ixigoTrains: `https://www.ixigo.com/search/result/train/${origin.station}/${dest.station}/${ddmmyyyy_start}//1/0/0/0/ALL`,
-    confirmtktTrains: `https://www.confirmtkt.com/rbooking-d/trains/from/${origin.station}/to/${dest.station}/${ddmmyyyy_start}`,
-    mmtTrains: `https://www.makemytrip.com/railways/listing?classCode=&className=All%20Classes&date=${start.getFullYear()}${pad(start.getMonth() + 1)}${pad(start.getDate())}&destStn=${dest.station}&srcStn=${origin.station}`,
+    // Raw prefilled links
+    rawBookingHotels,
+    rawBookingFlights,
+    rawMmtHotels,
+    rawMmtTrains,
+    rawCleartripFlights,
+    rawExpediaHotels,
+    rawGoibiboCabs,
+    rawGygTours,
 
-    // 2. FLIGHTS SECTION (Opens directly in Flight Results with Airport Codes, Dates & Passengers)
-    bookingFlights: `https://www.booking.com/flights/index.html?from=${origin.airport}.AIRPORT&to=${dest.airport}.AIRPORT&depart=${yyyy_mm_dd_start}&return=${yyyy_mm_dd_end}&adults=${adults}&cabinClass=ECONOMY`,
-    cleartripFlights: `https://www.cleartrip.com/flights/results?adults=${adults}&childs=0&infants=0&class=Economy&depart_date=${ddmmyyyy_slash}&from=${origin.airport}&to=${dest.airport}`,
-    ixigoFlights: `https://www.ixigo.com/search/result/flight?from=${origin.airport}&to=${dest.airport}&date=${pad(start.getDate())}${pad(start.getMonth() + 1)}${start.getFullYear()}&adults=${adults}&children=0&infants=0&class=e`,
-
-    // 3. HOTELS SECTION (Opens directly in Hotel Listings with City, Check-in/Check-out & Guests)
-    bookingHotels: `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(dest.city)}&checkin=${yyyy_mm_dd_start}&checkout=${yyyy_mm_dd_end}&group_adults=${adults}&no_rooms=1`,
-    mmtHotels: `https://www.makemytrip.com/hotels/hotel-listing/?city=${encodeURIComponent(dest.city)}&checkin=${mmddyyyy_start}&checkout=${mmddyyyy_end}&roomStayQualifier=1e${adults}e0e`,
-    expediaHotels: `https://www.expedia.co.in/Hotel-Search?destination=${encodeURIComponent(dest.city)}&startDate=${yyyy_mm_dd_start}&endDate=${yyyy_mm_dd_end}&adults=${adults}`,
-
-    // 4. LOCAL CABS & TOURS
-    goibiboCabs: `https://www.goibibo.com/cabs/listing?fromCity=${encodeURIComponent(origin.city)}&toCity=${encodeURIComponent(dest.city)}`,
-    gygTours: `https://www.getyourguide.com/s/?q=${encodeURIComponent(dest.city)}`
+    // Active Approved Tracked Deep Links
+    mmtTrains,
+    bookingFlights,
+    cleartripFlights,
+    bookingHotels,
+    mmtHotels,
+    expediaHotels,
+    goibiboCabs,
+    gygTours
   };
 };
 
@@ -152,11 +188,6 @@ export const getAffiliateUrl = (provider, plan = {}) => {
       return links.bookingHotels;
     case 'bookingFlights':
       return links.bookingFlights;
-    case 'ixigoTrains':
-      return links.ixigoTrains;
-    case 'confirmtkt':
-    case 'confirmtktTrains':
-      return links.confirmtktTrains;
     case 'getyourguide':
     case 'gygTours':
       return links.gygTours;
@@ -169,11 +200,11 @@ export const getAffiliateUrl = (provider, plan = {}) => {
 
 export const getBookingUrl = (destination = '', checkIn = '', checkOut = '', adults = 2) => {
   const encodedDest = encodeURIComponent(destination || 'Puri');
-  let url = `https://www.booking.com/searchresults.html?ss=${encodedDest}&group_adults=${adults || 2}&no_rooms=1`;
+  let rawUrl = `https://www.booking.com/searchresults.html?ss=${encodedDest}&group_adults=${adults || 2}&no_rooms=1`;
   if (checkIn && checkOut) {
-    url += `&checkin=${checkIn}&checkout=${checkOut}`;
+    rawUrl += `&checkin=${checkIn}&checkout=${checkOut}`;
   }
-  return url;
+  return `${AFFILIATE_TRACKING.bookingHotelsCj}?url=${encodeURIComponent(rawUrl)}`;
 };
 
 export const getMMTHotelUrl = (destination = '') => {

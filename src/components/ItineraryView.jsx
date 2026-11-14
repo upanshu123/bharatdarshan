@@ -8,7 +8,8 @@ import BookingHub, {
   getAffiliateUrl,
   getBookingUrl,
   getMMTHotelUrl,
-  getGoibiboCabUrl
+  getGoibiboCabUrl,
+  AFFILIATE_TRACKING
 } from './BookingHub';
 
 export {
@@ -21,7 +22,8 @@ export {
   getAffiliateUrl,
   getBookingUrl,
   getMMTHotelUrl,
-  getGoibiboCabUrl
+  getGoibiboCabUrl,
+  AFFILIATE_TRACKING
 };
 
 /**
@@ -31,4 +33,3 @@ export {
 export default function ItineraryView({ plan = {}, itinerary = {} }) {
   return <BookingHub plan={plan} itinerary={itinerary} />;
 }
-
