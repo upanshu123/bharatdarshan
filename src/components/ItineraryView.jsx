@@ -11,6 +11,7 @@ import BookingHub, {
   getGoibiboCabUrl,
   AFFILIATE_TRACKING
 } from './BookingHub';
+import { estimateBudget } from '../utils/aiEngine';
 
 export {
   BookingHub,
@@ -23,7 +24,8 @@ export {
   getBookingUrl,
   getMMTHotelUrl,
   getGoibiboCabUrl,
-  AFFILIATE_TRACKING
+  AFFILIATE_TRACKING,
+  estimateBudget
 };
 
 /**

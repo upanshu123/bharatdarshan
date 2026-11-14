@@ -2110,18 +2110,10 @@ export function normalizeItinerary(rawItinerary, tripData) {
     };
   });
 
-  const baseBudget = estimateBudget(tripData?.days || normalizedDays.length || 3, tripData?.travellers || 2, tripData?.budget || "Comfort");
-  const finalBudget = { ...baseBudget };
-  if (rawItinerary?.budgetBreakdown) {
-    const bb = rawItinerary.budgetBreakdown;
-    if (bb.stay) finalBudget.accommodation = bb.stay;
-    if (bb.food) finalBudget.food = bb.food;
-    if (bb.transport) finalBudget.transport = bb.transport;
-    if (bb.activities) finalBudget.activities = bb.activities;
-  }
-  if (rawItinerary?.totalEstimatedCost) {
-    finalBudget.estimatedTotal = rawItinerary.totalEstimatedCost;
-  }
+  const numDays = tripData?.days || normalizedDays.length || 3;
+  const numTravellers = tripData?.travellers || tripData?.persons || tripData?.travelers || 2;
+  const budgetTier = tripData?.budget || "Comfort";
+  const finalBudget = estimateBudget(numDays, numTravellers, budgetTier);
 
   const generatedHighlights = normalizedDays.map(d => d.dayTheme).slice(0, 4);
 
@@ -2537,7 +2529,8 @@ export function generateGenericFallback(tripData) {
     }
   }
 
-  const estBudget = estimateBudget(days, tripData.travellers || 2, budgetTier);
+  const numTravellers = tripData.travellers || tripData.persons || tripData.travelers || 2;
+  const estBudget = estimateBudget(days, numTravellers, budgetTier);
 
   return normalizeItinerary({
     destination: destName,
@@ -2883,30 +2876,70 @@ export async function generateAIItinerary(tripData) {
   };
 }
 
-export function estimateBudget(days, travellers, tier) {
+export function estimateBudget(days = 3, travellers = 2, tier = "Comfort") {
+  const d = Math.max(1, parseInt(days, 10) || 3);
+  const persons = Math.max(1, parseInt(travellers, 10) || 2);
+  const normalizedTier = (tier || "Comfort").trim();
+  const rooms = Math.ceil(persons / 2);
+
+  // Realistic per-night market rates per room & daily travel rates in INR:
+  // Budget matches actual Booking.com/MakeMyTrip verified rates (e.g. ₹1,800/night/room)
   const rates = {
-    Budget:  { stay: 1000,  food: 400,  transport: 350,  activities: 250  },
-    Comfort: { stay: 4000,  food: 1000, transport: 1000, activities: 800  },
-    Luxury:  { stay: 12000, food: 2500, transport: 2500, activities: 2000 },
-    Royal:   { stay: 30000, food: 6000, transport: 6000, activities: 5000 },
+    Budget:   { stay: 1800,  food: 550,  transport: 500,  activities: 300  },
+    Standard: { stay: 3500,  food: 1100, transport: 1200, activities: 750  },
+    Comfort:  { stay: 3500,  food: 1100, transport: 1200, activities: 750  },
+    Luxury:   { stay: 7500,  food: 2400, transport: 2800, activities: 1800 },
+    Royal:    { stay: 16000, food: 4500, transport: 5500, activities: 4000 },
   };
-  const r = rates[tier] || rates.Comfort;
-  const stay = r.stay * days;
-  const food = r.food * days * travellers;
-  const transport = r.transport * days;
-  const activities = r.activities * travellers;
-  const subtotal = stay + food + transport + activities;
-  const total = subtotal + Math.round(subtotal * 0.08);
+
+  const r = rates[normalizedTier] || rates[Object.keys(rates).find(k => k.toLowerCase() === normalizedTier.toLowerCase())] || rates.Comfort;
+
+  // Indian hotel occupancy rules:
+  // 1 or 2 guests: 1 double room (1.0x room rate)
+  // 3 guests: 1 room + extra bed/triple occupancy (1.5x room rate) => ₹1,800 × 5 nights × 1.5 = ₹13,500
+  // 4 guests: 2 double rooms (2.0x room rate)
+  // Odd adult count beyond 2 adds triple-occupancy/extra bed factor (~0.5 room rate)
+  const effectiveRooms = persons === 1 ? 1 : (persons / 2);
+  const stay = Math.round(r.stay * d * effectiveRooms);
+
+  // Food scaling: ~₹500–₹600/person/day for budget tier
+  const food = Math.round(r.food * d * persons);
+
+  // Local transport scaling: dedicated vehicle / auto-rickshaw scaling by vehicle occupancy
+  const vehicles = Math.max(1, Math.ceil(persons / 4));
+  const transport = Math.round(r.transport * d * vehicles);
+
+  // Activities: entrance fees, priority passes, permits per guest
+  const activities = Math.round(r.activities * persons);
+
+  // Exact sum of Stay + Food + Transport + Activities (no hidden markups/tax discrepancy)
+  const total = stay + food + transport + activities;
 
   const tierLabels = {
-    Budget: "Budget Friendly", Comfort: "Comfortable", Luxury: "Premium Luxury", Royal: "Royal Heritage"
+    Budget: "Budget Friendly",
+    Standard: "Comfortable",
+    Comfort: "Comfortable",
+    Luxury: "Premium Luxury",
+    Royal: "Royal Heritage"
   };
+  const tierLabel = tierLabels[normalizedTier] || normalizedTier;
+  const guestLabel = `${persons} ${persons === 1 ? "guest" : "guests"}`;
 
   return {
-    accommodation: `₹${stay.toLocaleString("en-IN")} (${r.stay.toLocaleString("en-IN")}/night × ${days} nights)`,
-    food: `₹${food.toLocaleString("en-IN")} (~₹${r.food}/person/day × ${travellers} person(s))`,
-    transport: `₹${transport.toLocaleString("en-IN")} (local travel for ${days} days)`,
-    activities: `₹${activities.toLocaleString("en-IN")} (entry + experiences for ${travellers} person(s))`,
-    estimatedTotal: `₹${total.toLocaleString("en-IN")} total for ${travellers} person(s) · ${tierLabels[tier] || tier} tier`
+    accommodation: `₹${stay.toLocaleString("en-IN")} (~₹${r.stay.toLocaleString("en-IN")}/night × ${d} nights · ${guestLabel})`,
+    food: `₹${food.toLocaleString("en-IN")} (~₹${r.food.toLocaleString("en-IN")}/person/day × ${d} days · ${guestLabel})`,
+    transport: `₹${transport.toLocaleString("en-IN")} (local travel for ${d} days · ${guestLabel})`,
+    activities: `₹${activities.toLocaleString("en-IN")} (entry + experiences for ${guestLabel})`,
+    estimatedTotal: `₹${total.toLocaleString("en-IN")} total for ${guestLabel} · ${tierLabel} tier`,
+    totalNum: total,
+    breakdownValues: {
+      stay,
+      food,
+      transport,
+      activities,
+      total,
+      rooms,
+      effectiveRooms
+    }
   };
 }

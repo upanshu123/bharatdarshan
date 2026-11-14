@@ -12,7 +12,7 @@ import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from
 import { auth, googleProvider } from "../config/firebaseConfig";
 import FeedbackSection from "../components/ui/FeedbackSection";
 import BookingHub, { getBookingUrl, getMMTHotelUrl, getGoibiboCabUrl } from "../components/BookingHub";
-import { generateAIItinerary } from "../utils/aiEngine";
+import { generateAIItinerary, estimateBudget } from "../utils/aiEngine";
 import { generateItineraryPDF } from "../utils/pdfGenerator";
 import {
   PLANNER_DESTINATIONS, TRIP_TYPES, BUDGET_TIERS, INTERESTS, AFFILIATE_PARTNERS
@@ -723,7 +723,11 @@ function LiveTripMode({ itinerary, tripData, onExit }) {
   const progressPct = totalActivities > 0 ? Math.round((completedCount / totalActivities) * 100) : 0;
 
   const totalSpent = Object.values(expenses).reduce((a, v) => a + (parseFloat(v) || 0), 0);
-  const budgetNum = parseFloat((itinerary?.budgetSummary?.estimatedTotal || '').replace(/[^0-9.]/g, '')) || 0;
+  const budgetNum = (() => {
+    const est = itinerary?.budgetSummary?.estimatedTotal || '';
+    const m = est.match(/[\d,]+/);
+    return m ? parseFloat(m[0].replace(/,/g, '')) : 0;
+  })();
 
   const toggleActivity = useCallback((dayIdx, slotKey) => {
     setCompleted(prev => {
@@ -1338,6 +1342,13 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
     endDate: tripData?.endDate || "",
     persons: tripData?.travellers || tripData?.persons || tripData?.travelers || 2
   };
+  const activeBudget = React.useMemo(() => {
+    if (budgetSummary?.breakdownValues?.total) return budgetSummary;
+    const pCount = plan.persons || tripData?.travellers || tripData?.persons || 2;
+    const dCount = days?.length || tripData?.days || 3;
+    const bTier = tripData?.budget || "Comfort";
+    return estimateBudget(dCount, pCount, bTier);
+  }, [budgetSummary, days, plan.persons, tripData]);
   const [copied, setCopied] = useState(false);
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [activeDayIdx, setActiveDayIdx] = useState(0);
@@ -1415,7 +1426,8 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
     if (tripData?.origin) text += `🏁 *Departing From:* ${tripData.origin}\n`;
     if (tripData?.days) text += `🗓️ *Duration:* ${tripData.days} Days | ${tripData.travellers || 1} Person(s)\n`;
     if (tripData?.budget) text += `💰 *Budget:* ${tripData.budget}\n`;
-    if (budgetSummary?.estimatedTotal) text += `💵 *Est. Budget:* ${budgetSummary.estimatedTotal}\n\n`;
+    const displayBudget = activeBudget?.estimatedTotal || budgetSummary?.estimatedTotal;
+    if (displayBudget) text += `💵 *Est. Budget:* ${displayBudget}\n\n`;
 
     if (highlights && highlights.length > 0) {
       text += `✨ *Highlights:*\n` + highlights.slice(0, 4).map(h => `• ${h}`).join('\n') + `\n\n`;
@@ -1478,8 +1490,9 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
         text += `\n`;
       });
     }
-    if (budgetSummary) {
-      text += `Budget Estimate: ${budgetSummary.estimatedTotal || ''}\n\n`;
+    const displayBudget = activeBudget?.estimatedTotal || budgetSummary?.estimatedTotal;
+    if (displayBudget) {
+      text += `Budget Estimate: ${displayBudget}\n\n`;
     }
     text += `Planned with ❤️ on BharatDarshan: ${typeof window !== "undefined" && window.location?.origin ? window.location.origin : "https://bharatdarshanyatra.live"}/plan\n`;
     navigator.clipboard.writeText(text).then(() => {
@@ -2126,32 +2139,46 @@ function ItineraryResult({ itinerary, tripData, onReset }) {
       </div>
 
       {/* ── Glass Cockpit Budget Summary ── */}
-      {budgetSummary && (
-        <div className="rounded-2xl p-6 bg-emerald-50/60 border border-emerald-200/90 shadow-sm relative overflow-hidden">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-black text-base flex items-center gap-2 text-emerald-950">
-              <Wallet size={17} className="text-emerald-600" /> Budget Breakdown
-            </h3>
-            <div className="px-3.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
-              Est. Total: {budgetSummary.estimatedTotal}
+      {(activeBudget || budgetSummary) && (() => {
+        const currentBudget = activeBudget || budgetSummary;
+        return (
+          <div className="rounded-2xl p-6 bg-emerald-50/60 border border-emerald-200/90 shadow-sm relative overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+              <h3 className="font-black text-base flex items-center gap-2 text-emerald-950">
+                <Wallet size={17} className="text-emerald-600" /> Budget Breakdown
+              </h3>
+              <div className="px-3.5 py-1.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 self-start sm:self-auto">
+                Est. Total: {currentBudget.estimatedTotal}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { label: "Stay", val: currentBudget.accommodation, icon: "🏨", color: '#eff6ff', border: '#bfdbfe', tag: '#1d4ed8' },
+                { label: "Food", val: currentBudget.food, icon: "🍽️", color: '#fffbeb', border: '#fde68a', tag: '#b45309' },
+                { label: "Transport", val: currentBudget.transport, icon: "🚗", color: '#f5f3ff', border: '#ddd6fe', tag: '#6d28d9' },
+                { label: "Activities", val: currentBudget.activities, icon: "🎯", color: '#ecfdf5', border: '#a7f3d0', tag: '#047857' },
+              ].map(item => {
+                const str = String(item.val || '');
+                const parenIdx = str.indexOf('(');
+                const mainCost = parenIdx !== -1 ? str.slice(0, parenIdx).trim() : str;
+                const detail = parenIdx !== -1 ? str.slice(parenIdx).trim() : null;
+                return (
+                  <div key={item.label} className="rounded-xl p-3 text-center bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+                    <div>
+                      <div className="text-xl mb-1.5">{item.icon}</div>
+                      <p className="text-[10px] font-black uppercase tracking-wider mb-1" style={{color:item.tag}}>{item.label}</p>
+                      <p className="text-xs sm:text-sm font-black text-slate-900">{mainCost}</p>
+                    </div>
+                    {detail && (
+                      <p className="text-[10px] font-medium text-slate-500 mt-1 leading-tight">{detail}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { label: "Stay", val: budgetSummary.accommodation, icon: "🏨", color: '#eff6ff', border: '#bfdbfe', tag: '#1d4ed8' },
-              { label: "Food", val: budgetSummary.food, icon: "🍽️", color: '#fffbeb', border: '#fde68a', tag: '#b45309' },
-              { label: "Transport", val: budgetSummary.transport, icon: "🚗", color: '#f5f3ff', border: '#ddd6fe', tag: '#6d28d9' },
-              { label: "Activities", val: budgetSummary.activities, icon: "🎯", color: '#ecfdf5', border: '#a7f3d0', tag: '#047857' },
-            ].map(item => (
-              <div key={item.label} className="rounded-xl p-3 text-center bg-white border border-slate-200/80 shadow-xs">
-                <div className="text-xl mb-1.5">{item.icon}</div>
-                <p className="text-[10px] font-black uppercase tracking-wider mb-1" style={{color:item.tag}}>{item.label}</p>
-                <p className="text-xs font-black text-slate-900">{item.val}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ── Must-Try Experiences ── */}
       {mustTry && mustTry.length > 0 && (
