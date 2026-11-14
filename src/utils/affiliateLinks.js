@@ -82,30 +82,58 @@ export const generateBookingLinks = (plan = {}) => {
 
   const yyyy_mm_dd_start = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`;
   const yyyy_mm_dd_end = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}`;
+  const yyyymmdd_start = `${start.getFullYear()}${pad(start.getMonth() + 1)}${pad(start.getDate())}`;
+  const yyyymmdd_end = `${end.getFullYear()}${pad(end.getMonth() + 1)}${pad(end.getDate())}`;
   const mmddyyyy_start = `${pad(start.getMonth() + 1)}${pad(start.getDate())}${start.getFullYear()}`;
   const mmddyyyy_end = `${pad(end.getMonth() + 1)}${pad(end.getDate())}${end.getFullYear()}`;
   const ddmmyyyy_start = `${pad(start.getDate())}-${pad(start.getMonth() + 1)}-${start.getFullYear()}`;
   const ddmmyyyy_slash = `${pad(start.getDate())}/${pad(start.getMonth() + 1)}/${start.getFullYear()}`;
+  const ddmmyyyy_end_slash = `${pad(end.getDate())}/${pad(end.getMonth() + 1)}/${end.getFullYear()}`;
 
-  // 1. Raw Destination Deep Links with Dynamic Parameters
-  const rawBookingHotels = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(dest.city)}&checkin=${yyyy_mm_dd_start}&checkout=${yyyy_mm_dd_end}&group_adults=${adults}&no_rooms=1`;
-  const rawBookingFlights = `https://www.booking.com/flights/index.html?from=${origin.airport}.AIRPORT&to=${dest.airport}.AIRPORT&depart=${yyyy_mm_dd_start}&return=${yyyy_mm_dd_end}&adults=${adults}&cabinClass=ECONOMY`;
-  const rawMmtHotels = `https://www.makemytrip.com/hotels/hotel-listing/?city=${encodeURIComponent(dest.city)}&checkin=${mmddyyyy_start}&checkout=${mmddyyyy_end}&roomStayQualifier=1e${adults}e0e`;
-  const rawMmtTrains = `https://www.makemytrip.com/railways/listing?classCode=&className=All%20Classes&date=${start.getFullYear()}${pad(start.getMonth() + 1)}${pad(start.getDate())}&destStn=${dest.station}&srcStn=${origin.station}`;
+  // 1. Raw Deep Links with Dynamic Parameters across all 7 Approved Platforms
+  // A. Trains
+  const rawMmtTrains = `https://www.makemytrip.com/railways/listing?classCode=&className=All%20Classes&date=${yyyymmdd_start}&destStn=${dest.station}&srcStn=${origin.station}`;
+  const rawGoibiboTrains = `https://www.goibibo.com/trains/dsrp/${origin.station}/${dest.station}/${yyyymmdd_start}/ALL/`;
+  const rawCleartripTrains = `https://www.cleartrip.com/trains/results?from_station=${origin.station}&to_station=${dest.station}&class=SL&date=${ddmmyyyy_start}&adults=${adults}&children=0`;
+
+  // B. Flights
+  const rawBookingFlights = `https://www.booking.com/flights/index.html?from=${origin.airport}.AIRPORT&to=${dest.airport}.AIRPORT&depart=${yyyy_mm_dd_start}&return=${yyyy_mm_dd_end}&adults=${adults}&aid=8133105`;
+  const rawMmtFlights = `https://www.makemytrip.com/flight/search?itinerary=${origin.airport}-${dest.airport}-${ddmmyyyy_slash}&tripType=O&paxType=A-${adults}_C-0_I-0&intl=false&cabinClass=E`;
   const rawCleartripFlights = `https://www.cleartrip.com/flights/results?adults=${adults}&childs=0&infants=0&class=Economy&depart_date=${ddmmyyyy_slash}&from=${origin.airport}&to=${dest.airport}`;
+  const rawGoibiboFlights = `https://www.goibibo.com/flights/air-${origin.airport}-${dest.airport}-${yyyymmdd_start}--${adults}-0-0-E-D/`;
+  const rawExpediaFlights = `https://www.expedia.co.in/Flights-Search?trip=oneway&leg1=from:${origin.airport},to:${dest.airport},departure:${ddmmyyyy_slash}TANYT&passengers=adults:${adults}&mode=search`;
+
+  // C. Hotels & Stays
+  const rawBookingHotels = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(dest.city)}&checkin=${yyyy_mm_dd_start}&checkout=${yyyy_mm_dd_end}&group_adults=${adults}&no_rooms=1&aid=8133105`;
+  const rawMmtHotels = `https://www.makemytrip.com/hotels/hotel-listing/?city=${encodeURIComponent(dest.city)}&checkin=${mmddyyyy_start}&checkout=${mmddyyyy_end}&roomStayQualifier=1e${adults}e0e`;
+  const rawGoibiboHotels = `https://www.goibibo.com/hotels/find-hotels-in-${encodeURIComponent(dest.city)}/${yyyymmdd_start}/${yyyymmdd_end}/1-${adults}-0/`;
+  const rawCleartripHotels = `https://www.cleartrip.com/hotels/results?city=${encodeURIComponent(dest.city)}&chk_in=${ddmmyyyy_slash}&chk_out=${ddmmyyyy_end_slash}&adults=${adults}&childs=0`;
   const rawExpediaHotels = `https://www.expedia.co.in/Hotel-Search?destination=${encodeURIComponent(dest.city)}&startDate=${yyyy_mm_dd_start}&endDate=${yyyy_mm_dd_end}&adults=${adults}`;
+
+  // D. Local Cabs & Tours
   const rawGoibiboCabs = `https://www.goibibo.com/cabs/listing?fromCity=${encodeURIComponent(origin.city)}&toCity=${encodeURIComponent(dest.city)}`;
+  const rawMmtCabs = `https://www.makemytrip.com/cabs/listing?fromCity=${encodeURIComponent(origin.city)}&toCity=${encodeURIComponent(dest.city)}`;
   const rawGygTours = `https://www.getyourguide.com/s/?q=${encodeURIComponent(dest.city)}&partner_id=${AFFILIATE_TRACKING.gygPartnerId}&utm_medium=${AFFILIATE_TRACKING.gygUtmMedium}`;
+  const rawKlookTours = `https://www.klook.com/en-IN/search/result/?query=${encodeURIComponent(dest.city)}`;
 
   // 2. Tracked Links with affiliate tracking IDs & redirect wrappers
   const bookingHotels = `${AFFILIATE_TRACKING.bookingHotelsCj}?url=${encodeURIComponent(rawBookingHotels)}`;
   const bookingFlights = `${AFFILIATE_TRACKING.bookingFlightsCj}?url=${encodeURIComponent(rawBookingFlights)}`;
   const gygTours = rawGygTours;
+  const klookTours = rawKlookTours;
   const mmtTrains = rawMmtTrains;
-  const mmtHotels = rawMmtHotels;
+  const goibiboTrains = rawGoibiboTrains;
+  const cleartripTrains = rawCleartripTrains;
+  const mmtFlights = rawMmtFlights;
   const cleartripFlights = rawCleartripFlights;
+  const goibiboFlights = rawGoibiboFlights;
+  const expediaFlights = rawExpediaFlights;
+  const mmtHotels = rawMmtHotels;
+  const goibiboHotels = rawGoibiboHotels;
+  const cleartripHotels = rawCleartripHotels;
   const expediaHotels = rawExpediaHotels;
   const goibiboCabs = rawGoibiboCabs;
+  const mmtCabs = rawMmtCabs;
 
   return {
     origin,
@@ -121,21 +149,45 @@ export const generateBookingLinks = (plan = {}) => {
     rawBookingHotels,
     rawBookingFlights,
     rawMmtHotels,
+    rawMmtFlights,
     rawMmtTrains,
+    rawMmtCabs,
     rawCleartripFlights,
-    rawExpediaHotels,
+    rawCleartripHotels,
+    rawCleartripTrains,
+    rawGoibiboFlights,
+    rawGoibiboHotels,
+    rawGoibiboTrains,
     rawGoibiboCabs,
+    rawExpediaHotels,
+    rawExpediaFlights,
     rawGygTours,
+    rawKlookTours,
 
-    // Active Approved Tracked Deep Links
+    // Category 1: Trains
     mmtTrains,
+    goibiboTrains,
+    cleartripTrains,
+
+    // Category 2: Flights
     bookingFlights,
+    mmtFlights,
     cleartripFlights,
+    goibiboFlights,
+    expediaFlights,
+
+    // Category 3: Hotels & Stays
     bookingHotels,
     mmtHotels,
+    goibiboHotels,
+    cleartripHotels,
     expediaHotels,
+
+    // Category 4: Local Cabs & Tours
     goibiboCabs,
-    gygTours
+    mmtCabs,
+    gygTours,
+    klookTours
   };
 };
 
@@ -173,16 +225,32 @@ export const getAffiliateUrl = (provider, plan = {}) => {
       return links.mmtHotels;
     case 'mmtTrains':
       return links.mmtTrains;
+    case 'mmtFlights':
+      return links.mmtFlights;
+    case 'mmtCabs':
+      return links.mmtCabs;
     case 'cleartrip':
     case 'cleartripFlights':
       return links.cleartripFlights;
+    case 'cleartripHotels':
+      return links.cleartripHotels;
+    case 'cleartripTrains':
+      return links.cleartripTrains;
     case 'expedia':
     case 'expediaHotels':
       return links.expediaHotels;
+    case 'expediaFlights':
+      return links.expediaFlights;
     case 'goibibo_cabs':
     case 'goibibo':
     case 'goibiboCabs':
       return links.goibiboCabs;
+    case 'goibiboTrains':
+      return links.goibiboTrains;
+    case 'goibiboFlights':
+      return links.goibiboFlights;
+    case 'goibiboHotels':
+      return links.goibiboHotels;
     case 'booking':
     case 'bookingHotels':
       return links.bookingHotels;
@@ -192,7 +260,8 @@ export const getAffiliateUrl = (provider, plan = {}) => {
     case 'gygTours':
       return links.gygTours;
     case 'klook':
-      return `https://www.klook.com/en-IN/search/?query=${encodeURIComponent(links.dest.city)}`;
+    case 'klookTours':
+      return links.klookTours;
     default:
       return 'https://bharatdarshanyatra.live';
   }
